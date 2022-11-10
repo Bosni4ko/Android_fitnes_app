@@ -1,9 +1,11 @@
 package com.coursework.fitnessapp;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.TextView;
+
+import android.view.View;
+
 
 import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -16,17 +18,14 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.coursework.fitnessapp.databinding.ActivityMainBinding;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private FloatingActionButton addFab;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -49,7 +48,38 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
+        setAddFabOnClickListener();
+//        navView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener(){
+//
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                System.out.println("Item id is: " + item.getItemId());
+//                System.out.println(R.id.navigation_home);
+//                switch (item.getItemId()){
+//                    case R.id.navigation_dashboard:
+//                        setAddFabOnClickListener();
+//                        break;
+//
+//                }
+//                return true;
+//            }
+//        } );
+
 
     }
+
+    private void setAddFabOnClickListener(){
+        addFab = findViewById(R.id.addFab);
+        addFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(MainActivity.this,CreateWorkoutActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+
 
 }
