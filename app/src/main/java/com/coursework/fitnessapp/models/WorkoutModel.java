@@ -7,17 +7,21 @@ public class WorkoutModel {
 
     private String id;
     private String name;
+    private String description;
     private ExerciseModel[] exerciseModels;
     private Date dateTime;
     private Period length;
     private String status;
+    private String type;
 
-    public WorkoutModel(String id, String name, ExerciseModel[] exerciseModels, Date dateTime) {
+    public WorkoutModel(String id, String name,String description, ExerciseModel[] exerciseModels, Date dateTime,String type) {
         this.id = id;
         this.name = name;
+        this.description = description;
         this.exerciseModels = exerciseModels;
         this.dateTime = dateTime;
         this.status = DEFAULT_STATUS;
+        this.type = type;
     }
 
     public String getId() {
@@ -34,6 +38,14 @@ public class WorkoutModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public ExerciseModel[] getExerciseModels() {
@@ -66,5 +78,13 @@ public class WorkoutModel {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

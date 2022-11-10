@@ -9,18 +9,21 @@ public class ExerciseModel {
     private String description;
     private String[] imageUrls;
     private String videoUrl;
+    private Period defaultLength;
     private Period length;
     private Integer defaultCount;
     private Integer count;
+    private String type;
 
-    public ExerciseModel(Integer id, String name, String description, String[] imageUrl, String videoUrl, Period length, Integer defaultCount) {
+    public ExerciseModel(Integer id, String name, String description, String[] imageUrl, String videoUrl, Period defaultlength, Integer defaultCount,String type) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.imageUrls = imageUrl == null ? null : imageUrl;
         this.videoUrl = videoUrl == null ? null : videoUrl;
-        this.length = length;
+        this.defaultLength = defaultlength;
         this.defaultCount = defaultCount;
+        this.type = type;
     }
 
     public Integer getId() {
@@ -47,12 +50,12 @@ public class ExerciseModel {
         this.description = description;
     }
 
-    public String[] getImageUrl() {
+    public String[] getImageUrls() {
         return imageUrls;
     }
 
-    public void setImageUrl(String[] imageUrl) {
-        this.imageUrls = imageUrl;
+    public void setImageUrls(String[] imageUrls) {
+        this.imageUrls = imageUrls;
     }
 
     public String getVideoUrl() {
@@ -87,4 +90,19 @@ public class ExerciseModel {
         this.count = count;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Period getDefaultLength() {
+        return defaultLength;
+    }
+
+    public void setDefaultLength(Period defaultLength) {
+        this.defaultLength = defaultLength;
+    }
 }
