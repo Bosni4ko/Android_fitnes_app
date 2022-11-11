@@ -1,6 +1,8 @@
-package com.coursework.fitnessapp;
+package com.coursework.fitnessapp.workout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -9,20 +11,34 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 
+import com.coursework.fitnessapp.R;
+import com.coursework.fitnessapp.models.ExerciseModel;
+
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class CreateWorkoutActivity extends AppCompatActivity {
     private DatePickerDialog datePickerDialog;
     private Button dateButton;
+    private RecyclerView exercisesRecycleView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_workout);
+
         initDatePicker();
         dateButton = findViewById(R.id.datePickerBtn);
         dateButton.setText(getTodaysDate());
+
+        ArrayList<ExerciseModel> exercises = new ArrayList<>();
+        ExercisesRecViewAdapter adapter = new ExercisesRecViewAdapter();
+        adapter.setExercises(exercises);
+        exercisesRecycleView = findViewById(R.id.exercisesRecycleView);
+        exercisesRecycleView.setAdapter(adapter);
+        exercisesRecycleView.setLayoutManager(new LinearLayoutManager(CreateWorkoutActivity.this));
+
     }
 
     private String getTodaysDate() {

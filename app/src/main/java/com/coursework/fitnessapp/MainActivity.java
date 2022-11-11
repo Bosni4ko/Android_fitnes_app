@@ -8,6 +8,7 @@ import android.view.View;
 
 
 import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
+import com.coursework.fitnessapp.workout.CreateWorkoutActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.RequiresApi;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         DataBaseHelper dataBaseHelper = new DataBaseHelper(MainActivity.this);
-        //dataBaseHelper.fillDataBase();
+        dataBaseHelper.fillDatabase();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(MainActivity.this,CreateWorkoutActivity.class);
+                Intent intent = new Intent(MainActivity.this, CreateWorkoutActivity.class);
                 startActivity(intent);
             }
         });

@@ -36,20 +36,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_SNUMBER = "SNumber";
     public static final String COLUMN_TYPE = "Type";
 
-    private Gson gson = new Gson();
-    public Reader reader;
 
-    {
-        try {
-            System.out.println("Path is: " + FileSystems.getDefault());
-            reader = Files.newBufferedReader(Paths.get("exercises.json"));
-        } catch (IOException e) {
-            System.out.println(e);
-            System.out.println("Reader failes");
-            //TODO:something
-        }
-    }
-    //public ArrayList<ExerciseModel> exercises= gson.fromJson(reader,new TypeToken<ArrayList<ExerciseModel>>(){}.getType());
 
     public DataBaseHelper(@Nullable Context context) {
         super(context, "fitness_app.db" , null, 1);
@@ -57,16 +44,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String createExerciseTableStatement = "CREATE TABLE " + EXERCISE_TABLE + " (" + COLUMN_ID + " INT PRIMARY KEY AUTOINCREMENT NOT NULL, " + COLUMN_NAME + " nvarchar(20) NOT NULL, " + COLUMN_DESCRIPTION + " Text," + COLUMN_VIDEO_URL + " Text," + COLUMN_LENGTH + " INT NOT NULL," + COLUMN_DEFAULT_COUNT + " INT NOT NULL," + COLUMN_TYPE + " nvarchar(12) NOT NULL )";
+        String createExerciseTableStatement = "CREATE TABLE " + EXERCISE_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " nvarchar(20) NOT NULL, " + COLUMN_DESCRIPTION + " Text," + COLUMN_VIDEO_URL + " Text," + COLUMN_LENGTH + " INT NOT NULL," + COLUMN_DEFAULT_COUNT + " INT NOT NULL," + COLUMN_TYPE + " nvarchar(12) NOT NULL )";
         sqLiteDatabase.execSQL(createExerciseTableStatement);
 
         String createWorkoutTableStatement = "CREATE TABLE " + WORKOUT_TABLE + "(" + COLUMN_ID + " nvarchar(12) PRIMARY KEY NOT NULL," + COLUMN_NAME + " nvarchar(20) NOT NULL," + COLUMN_DESCRIPTION + " Text,Date Date NOT NULL,Status nvarchar(10) NOT NULL," + COLUMN_TYPE + " nvarchar(12) NOT NULL)";
         sqLiteDatabase.execSQL(createWorkoutTableStatement);
 
-        String createImageUrlTableStatement = "CREATE TABLE " + IMAGE_URL_TABLE + " (" + COLUMN_ID + " INT PRIMARY KEY AUTOINCREMENT NOT NULL," + COLUMN_URL + " nvarchar(30)," + COLUMN_SNUMBER + " INT NOT NULL,FOREIGN KEY(Exercise_ID) REFERENCES " + EXERCISE_TABLE + "(" +COLUMN_ID+"))";
+        String createImageUrlTableStatement = "CREATE TABLE " + IMAGE_URL_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT ," + COLUMN_URL + " nvarchar(30)," + COLUMN_SNUMBER + " INT NOT NULL,Exercise_ID INTEGER NOT NULL,FOREIGN KEY(Exercise_ID) REFERENCES " + EXERCISE_TABLE + "(" +COLUMN_ID+"))";
         sqLiteDatabase.execSQL(createImageUrlTableStatement);
 
-        String createWorkoutExercisesTableStatement = "CREATE TABLE " + WORKOUT_EXERCISES_TABLE + " (" + COLUMN_ID + " INT PRIMARY KEY AUTOINCREMENT NOT NULL," + COLUMN_SNUMBER + " INT NOT NULL," + COLUMN_LENGTH +" INT NOT NULL, Count INT NOT NULL,FOREIGN KEY(Workout_ID) REFERENCES " + WORKOUT_TABLE +"(" +COLUMN_ID +"),FOREIGN KEY(Exercise_ID) REFERENCES " + EXERCISE_TABLE +"(" +COLUMN_ID +")  )";
+        String createWorkoutExercisesTableStatement = "CREATE TABLE " + WORKOUT_EXERCISES_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_SNUMBER + " INT NOT NULL," + COLUMN_LENGTH +" INT NOT NULL, Count INT NOT NULL,Workout_ID nvarchar(12) NOT NULL,Exercise_ID INTEGER NOT NULL,FOREIGN KEY(Workout_ID) REFERENCES " + WORKOUT_TABLE +"(" +COLUMN_ID +"),FOREIGN KEY(Exercise_ID) REFERENCES " + EXERCISE_TABLE +"(" +COLUMN_ID +")  )";
         sqLiteDatabase.execSQL(createWorkoutExercisesTableStatement);
     }
 
@@ -107,14 +94,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if(exercise.getVideoUrl() != null) {
             cv.put(COLUMN_VIDEO_URL,exercise.getVideoUrl());
         }
-        cv.put(COLUMN_LENGTH,exercise.getLength().toString());
+        cv.put(COLUMN_LENGTH, String.valueOf(exercise.getLength()));
         cv.put(COLUMN_DEFAULT_COUNT,exercise.getDefaultCount());
         cv.put(COLUMN_TYPE,exercise.getType());
         long insert = db.insert(EXERCISE_TABLE,null,cv);
         if(insert == -1){
             return false;
         }
-        else{
+        else if(exercise.getVideoUrl() != null){
             int counter = 0;
             for(String imageUrl : exercise.getImageUrls()){
                 imgCv.put(COLUMN_URL,imageUrl);
@@ -130,6 +117,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 return true;
             }
         }
+        else return true;
     }
 
     public boolean addWorkout(WorkoutModel workout){
@@ -155,6 +143,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 wrkExCv.put("Count", exercise.getCount());
                 wrkExCv.put("Workout_id", workout.getId());
                 wrkExCv.put("Exercise_ID", exercise.getId());
+                counter++;
             }
             insert = db.insert(WORKOUT_TABLE,null,wrkExCv);
             if(insert == -1){
@@ -163,6 +152,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             else {
                 return true;
             }
+        }
+    }
+
+    public void fillDatabase(){
+        ExerciseData exerciseData = new ExerciseData();
+        for(ExerciseModel exercise: exerciseData.exercises){
+            addExercise(exercise);
         }
     }
 
