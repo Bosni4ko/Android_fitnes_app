@@ -5,4 +5,7 @@
     <string name="title_notifications">Notifications</string>
     <string name="add_exercise_btn">Add exercise</string>
     <string name="date_placeholder">OCT 10 2022</string>
+    <string name="time_placeholder">Select time</string>
+    <string name="default_exercises">Default exercises</string>
+    <string name="custom_exercises">Custom exercises</string>
 </resources>

@@ -6,21 +6,37 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.TimePicker;
 
 import com.coursework.fitnessapp.R;
+import com.coursework.fitnessapp.exercises.DefaultExerciseActivity;
 import com.coursework.fitnessapp.models.ExerciseModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class CreateWorkoutActivity extends AppCompatActivity {
     private DatePickerDialog datePickerDialog;
     private Button dateButton;
+    private Button timeButton;
+    private Button addExerciseButton;
+    int hour;
+    int minute;
+    TimePickerDialog timePickerDialog;
     private RecyclerView exercisesRecycleView;
+
+    private Dialog dialog;
+    private Button addDefaultExercise;
+    private Button addCustomExercise;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +48,9 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         dateButton = findViewById(R.id.datePickerBtn);
         dateButton.setText(getTodaysDate());
 
+        initTimePicker();
+        timeButton = findViewById(R.id.timePickerBtn);
+
         ArrayList<ExerciseModel> exercises = new ArrayList<>();
         ExercisesRecViewAdapter adapter = new ExercisesRecViewAdapter();
         adapter.setExercises(exercises);
@@ -39,6 +58,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         exercisesRecycleView.setAdapter(adapter);
         exercisesRecycleView.setLayoutManager(new LinearLayoutManager(CreateWorkoutActivity.this));
 
+        addExerciseButton = findViewById(R.id.addExerciseBtn);
     }
 
     private String getTodaysDate() {
@@ -75,4 +95,48 @@ public class CreateWorkoutActivity extends AppCompatActivity {
     public void openDatePicker(View view) {
         datePickerDialog.show();
     }
+
+    private void initTimePicker(){
+        TimePickerDialog.OnTimeSetListener onTimeSetListener= new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                hour = selectedHour;
+                minute = selectedMinute;
+                timeButton.setText(String.format(Locale.getDefault(),"%02d:%02d",hour,minute));
+            }
+        };
+        int style = AlertDialog.THEME_HOLO_LIGHT;
+        timePickerDialog = new TimePickerDialog(CreateWorkoutActivity.this,style,onTimeSetListener,hour,minute,true);
+    }
+    public void openTimePicker(View view) {
+        timePickerDialog.setTitle("Select time");
+        timePickerDialog.show();
+    }
+
+    public void addExercise(View view) {
+        dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.choose_exercise_popup);
+
+        addDefaultExercise = dialog.findViewById(R.id.selectDefaultExercisesBtn);
+        addCustomExercise = dialog.findViewById(R.id.selectCustomExercisesBtn);
+        addDefaultExercise.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CreateWorkoutActivity.this, DefaultExerciseActivity.class);
+                startActivity(intent);
+            }
+        });
+        addCustomExercise.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        dialog.show();
+//        Intent intent = new Intent(CreateWorkoutActivity.this, ChooseExerciseTypeDialogActivity.class);
+//        startActivity(intent);
+    }
+
 }

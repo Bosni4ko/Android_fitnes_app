@@ -2,7 +2,6 @@ package com.coursework.fitnessapp.models;
 
 
 import java.time.Duration;
-import java.time.Period;
 
 public class ExerciseModel {
     private Integer id;
@@ -16,13 +15,13 @@ public class ExerciseModel {
     private Integer count;
     private String type;
 
-    public ExerciseModel(Integer id, String name, String description, String[] imageUrl, String videoUrl, Duration defaultlength, Integer defaultCount,String type) {
+    public ExerciseModel(Integer id, String name, String description, String[] imageUrl, String videoUrl, Duration defaultLength, Integer defaultCount,String type) {
         this.id = id == null ? null : id;
         this.name = name;
         this.description = description;
         this.imageUrls = imageUrl == null ? null : imageUrl;
         this.videoUrl = videoUrl == null ? null : videoUrl;
-        this.defaultLength = defaultlength;
+        this.defaultLength = defaultLength;
         this.defaultCount = defaultCount;
         this.type = type;
     }

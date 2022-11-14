@@ -7,7 +7,6 @@ import androidx.annotation.RequiresApi;
 import com.coursework.fitnessapp.models.ExerciseModel;
 
 import java.time.Duration;
-import java.time.Period;
 import java.util.ArrayList;
 
 public class ExerciseData

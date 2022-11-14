@@ -2,6 +2,7 @@ package com.coursework.fitnessapp.DataBaseHelper;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
@@ -12,13 +13,9 @@ import androidx.annotation.RequiresApi;
 
 import com.coursework.fitnessapp.models.ExerciseModel;
 import com.coursework.fitnessapp.models.WorkoutModel;
-import com.google.gson.Gson;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.time.Duration;
+import java.util.ArrayList;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class DataBaseHelper extends SQLiteOpenHelper {
@@ -55,34 +52,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         String createWorkoutExercisesTableStatement = "CREATE TABLE " + WORKOUT_EXERCISES_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_SNUMBER + " INT NOT NULL," + COLUMN_LENGTH +" INT NOT NULL, Count INT NOT NULL,Workout_ID nvarchar(12) NOT NULL,Exercise_ID INTEGER NOT NULL,FOREIGN KEY(Workout_ID) REFERENCES " + WORKOUT_TABLE +"(" +COLUMN_ID +"),FOREIGN KEY(Exercise_ID) REFERENCES " + EXERCISE_TABLE +"(" +COLUMN_ID +")  )";
         sqLiteDatabase.execSQL(createWorkoutExercisesTableStatement);
+
+        fillDatabase();
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+        fillDatabase();
     }
-
-//    public boolean fillDataBase(){
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        ContentValues cv = new ContentValues();
-//
-//        for(ExerciseModel exercise :exercises ) {
-//            cv.put(COLUMN_NAME,exercise.getName());
-//            cv.put(COLUMN_DESCRIPTION,exercise.getDescription());
-//            if(exercise.getVideoUrl() != null) {
-//                cv.put(COLUMN_VIDEO_URL,exercise.getVideoUrl());
-//            }
-//            cv.put(COLUMN_LENGTH,exercise.getLength().toString());
-//            cv.put(COLUMN_DEFAULT_COUNT,exercise.getDefaultCount());
-//        }
-//        long insert = db.insert(EXERCISE_TABLE,null,cv);
-//        if(insert == -1){
-//            return false;
-//        }
-//        else{
-//            return true;
-//        }
-//    }
 
     public boolean addExercise(ExerciseModel exercise){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -162,4 +139,28 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public ArrayList<ExerciseModel> getAllExercisesOfType(String type){
+        ArrayList<ExerciseModel> returnList = new ArrayList<>();
+        String queryString = "SELECT * FROM " + EXERCISE_TABLE + " WHERE " + COLUMN_TYPE + " = ?";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(queryString, new String[]{type});
+
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(0);
+                String exerciseName = cursor.getString(1);
+                String exerciseDescription = cursor.getString(2);
+                Duration exerciseLength = Duration.ofSeconds(cursor.getInt(4));
+                int exerciseCount = cursor.getInt(5);
+
+                ExerciseModel newExercise = new ExerciseModel(id,exerciseName,exerciseDescription,null,null,exerciseLength,exerciseCount,type);
+                returnList.add(newExercise);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return returnList;
+    }
 }
