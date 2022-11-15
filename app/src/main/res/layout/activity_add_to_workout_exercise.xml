@@ -68,7 +68,7 @@
         android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:marginTop="20dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/infoLayout">
@@ -80,7 +80,7 @@
             android:text="@string/description" />
 
         <com.ms.square.android.expandabletextview.ExpandableTextView
-            android:id="@+id/expand_text_view"
+            android:id="@+id/expand_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/exerciseDescriptionTitle"
@@ -90,7 +90,7 @@
             expandableTextView:maxCollapsedLines="4">
 
             <TextView
-                android:id="@+id/exerciseDescription"
+                android:id="@+id/expandable_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

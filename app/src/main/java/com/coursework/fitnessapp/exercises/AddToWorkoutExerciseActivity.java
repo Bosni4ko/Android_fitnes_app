@@ -15,6 +15,6 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_to_workout_exercise);
 
-        expTv = findViewById(R.id.expand_text_view);
+        expTv = findViewById(R.id.expand_description);
     }
 }

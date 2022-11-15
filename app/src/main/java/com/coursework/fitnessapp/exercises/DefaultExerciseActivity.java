@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 
 import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
 import com.coursework.fitnessapp.R;
@@ -34,4 +36,5 @@ public class DefaultExerciseActivity extends AppCompatActivity {
         exercisesRecView.setAdapter(adapter);
         exercisesRecView.setLayoutManager(new LinearLayoutManager(this));
     }
+
 }
