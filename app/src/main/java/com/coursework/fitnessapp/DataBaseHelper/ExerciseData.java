@@ -21,6 +21,7 @@ public class ExerciseData
                 "Long description.Long description.Long description.Long description.Long description.Long description.Long descriptionLong description",
                 null,
                 null,
+                null,
                 Duration.ofSeconds(30),
                 10,
                 "Default"
@@ -29,6 +30,7 @@ public class ExerciseData
                 null,
                 "TestName 2",
                 "Long description 2.Long description 2.Long description.Long description.Long description.Long description.Long descriptionLong description",
+                null,
                 null,
                 null,
                 Duration.ofSeconds(60),

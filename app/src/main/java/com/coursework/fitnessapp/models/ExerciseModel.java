@@ -7,6 +7,7 @@ public class ExerciseModel {
     private Integer id;
     private String name;
     private String description;
+    private String previewUrl;
     private String[] imageUrls;
     private String videoUrl;
     private Duration defaultLength;
@@ -15,10 +16,11 @@ public class ExerciseModel {
     private Integer count;
     private String type;
 
-    public ExerciseModel(Integer id, String name, String description, String[] imageUrl, String videoUrl, Duration defaultLength, Integer defaultCount,String type) {
+    public ExerciseModel(Integer id, String name, String description,String previewUrl, String[] imageUrl, String videoUrl, Duration defaultLength, Integer defaultCount,String type) {
         this.id = id == null ? null : id;
         this.name = name;
         this.description = description;
+        this.previewUrl = previewUrl == null ? null : previewUrl;
         this.imageUrls = imageUrl == null ? null : imageUrl;
         this.videoUrl = videoUrl == null ? null : videoUrl;
         this.defaultLength = defaultLength;
@@ -104,5 +106,13 @@ public class ExerciseModel {
 
     public void setDefaultLength(Duration defaultLength) {
         this.defaultLength = defaultLength;
+    }
+
+    public String getPreviewUrl() {
+        return previewUrl;
+    }
+
+    public void setPreviewUrl(String previewUrl) {
+        this.previewUrl = previewUrl;
     }
 }

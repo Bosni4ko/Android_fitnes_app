@@ -5,10 +5,13 @@
       <map>
         <entry key="..\:/Programing/fitness_app/app/src/main/res/drawable/ic_add_background.xml" value="0.206" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/drawable/ic_add_foreground.xml" value="0.206" />
+        <entry key="..\:/Programing/fitness_app/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.183" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.183" />
+        <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/activity_add_to_workout_exercise.xml" value="0.26721014492753625" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/activity_create_workout.xml" value="0.33" />
-        <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/activity_default_exercise.xml" value="0.1875" />
+        <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/activity_default_exercise.xml" value="0.1" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/add_exercise_to_workout.xml" value="0.26721014492753625" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/choose_exercise_popup.xml" value="0.365625" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/exercises_add_list_item.xml" value="0.26721014492753625" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/exercises_list_item.xml" value="0.365625" />

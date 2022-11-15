@@ -8,4 +8,5 @@
     <string name="time_placeholder">Select time</string>
     <string name="default_exercises">Default exercises</string>
     <string name="custom_exercises">Custom exercises</string>
+    <string name="description">Description</string>
 </resources>

@@ -40,6 +40,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.3.5'
     implementation 'androidx.navigation:navigation-ui:2.3.5'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.7'
+    implementation 'com.ms-square:expandableTextView:0.1.4'
 
     implementation 'com.google.android.material:material:1.7.0'
 

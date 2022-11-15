@@ -41,7 +41,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String createExerciseTableStatement = "CREATE TABLE " + EXERCISE_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " nvarchar(20) NOT NULL, " + COLUMN_DESCRIPTION + " Text," + COLUMN_VIDEO_URL + " Text," + COLUMN_LENGTH + " INT NOT NULL," + COLUMN_DEFAULT_COUNT + " INT NOT NULL," + COLUMN_TYPE + " nvarchar(12) NOT NULL )";
+        String createExerciseTableStatement = "CREATE TABLE " + EXERCISE_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " nvarchar(20) NOT NULL, " + COLUMN_DESCRIPTION + " Text,PreviewImgURL Text," + COLUMN_VIDEO_URL + " Text," + COLUMN_LENGTH + " INT NOT NULL," + COLUMN_DEFAULT_COUNT + " INT NOT NULL," + COLUMN_TYPE + " nvarchar(12) NOT NULL )";
         sqLiteDatabase.execSQL(createExerciseTableStatement);
 
         String createWorkoutTableStatement = "CREATE TABLE " + WORKOUT_TABLE + "(" + COLUMN_ID + " nvarchar(12) PRIMARY KEY NOT NULL," + COLUMN_NAME + " nvarchar(20) NOT NULL," + COLUMN_DESCRIPTION + " Text,Date Date NOT NULL,Status nvarchar(10) NOT NULL," + COLUMN_TYPE + " nvarchar(12) NOT NULL)";
@@ -58,7 +58,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        fillDatabase();
+        //fillDatabase();
     }
 
     public boolean addExercise(ExerciseModel exercise){
@@ -68,6 +68,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         cv.put(COLUMN_NAME,exercise.getName());
         cv.put(COLUMN_DESCRIPTION,exercise.getDescription());
+        if(exercise.getPreviewUrl() != null){
+            cv.put("PreviewImgURL",exercise.getPreviewUrl());
+        }
         if(exercise.getVideoUrl() != null) {
             cv.put(COLUMN_VIDEO_URL,exercise.getVideoUrl());
         }
@@ -155,7 +158,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 Duration exerciseLength = Duration.ofSeconds(cursor.getInt(4));
                 int exerciseCount = cursor.getInt(5);
 
-                ExerciseModel newExercise = new ExerciseModel(id,exerciseName,exerciseDescription,null,null,exerciseLength,exerciseCount,type);
+                ExerciseModel newExercise = new ExerciseModel(id,exerciseName,exerciseDescription,null,null,null,exerciseLength,exerciseCount,type);
                 returnList.add(newExercise);
             }while(cursor.moveToNext());
         }
