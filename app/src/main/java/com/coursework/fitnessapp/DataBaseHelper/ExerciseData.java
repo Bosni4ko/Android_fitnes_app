@@ -5,6 +5,7 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 import com.coursework.fitnessapp.models.ExerciseModel;
+import com.coursework.fitnessapp.supportclasses.TimeDuration;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class ExerciseData
                 null,
                 null,
                 null,
-                Duration.ofSeconds(30),
+                new TimeDuration("00:00:20"),
                 10,
                 "Default"
         ));
@@ -33,7 +34,7 @@ public class ExerciseData
                 null,
                 null,
                 null,
-                Duration.ofSeconds(60),
+                new TimeDuration("00:01:00"),
                 15,
                 "Default"
         ));

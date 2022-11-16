@@ -1,6 +1,8 @@
 package com.coursework.fitnessapp.models;
 
 
+import com.coursework.fitnessapp.supportclasses.TimeDuration;
+
 import java.time.Duration;
 
 public class ExerciseModel {
@@ -10,13 +12,13 @@ public class ExerciseModel {
     private String previewUrl;
     private String[] imageUrls;
     private String videoUrl;
-    private Duration defaultLength;
-    private Duration length;
-    private Integer defaultCount;
-    private Integer count;
+    private TimeDuration defaultLength;
+    private TimeDuration length;
+    private int defaultCount;
+    private int count;
     private String type;
 
-    public ExerciseModel(Integer id, String name, String description,String previewUrl, String[] imageUrl, String videoUrl, Duration defaultLength, Integer defaultCount,String type) {
+    public ExerciseModel(Integer id, String name, String description,String previewUrl, String[] imageUrl, String videoUrl, TimeDuration defaultLength, int defaultCount,String type) {
         this.id = id == null ? null : id;
         this.name = name;
         this.description = description;
@@ -26,6 +28,9 @@ public class ExerciseModel {
         this.defaultLength = defaultLength;
         this.defaultCount = defaultCount;
         this.type = type;
+    }
+    public ExerciseModel(){
+
     }
 
     public Integer getId() {
@@ -68,15 +73,15 @@ public class ExerciseModel {
         this.videoUrl = videoUrl;
     }
 
-    public Duration getLength() {
+    public TimeDuration getLength() {
         return length;
     }
 
-    public void setLength(Duration length) {
+    public void setLength(TimeDuration length) {
         this.length = length;
     }
 
-    public Integer getDefaultCount() {
+    public int getDefaultCount() {
         return defaultCount;
     }
 
@@ -84,7 +89,7 @@ public class ExerciseModel {
         this.defaultCount = defaultCount;
     }
 
-    public Integer getCount() {
+    public int getCount() {
         return count;
     }
 
@@ -100,11 +105,11 @@ public class ExerciseModel {
         this.type = type;
     }
 
-    public Duration getDefaultLength() {
+    public TimeDuration getDefaultLength() {
         return defaultLength;
     }
 
-    public void setDefaultLength(Duration defaultLength) {
+    public void setDefaultLength(TimeDuration defaultLength) {
         this.defaultLength = defaultLength;
     }
 

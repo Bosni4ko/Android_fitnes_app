@@ -39,7 +39,7 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(holder.parent.getContext(),AddToWorkoutExerciseActivity.class);
-                 //intent.putExtra("exercise", String.valueOf(exercise));
+                intent.putExtra("exercise", String.valueOf(exercise.getId()));
                 holder.parent.getContext().startActivity(intent);
             }
         });
