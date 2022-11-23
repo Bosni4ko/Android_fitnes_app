@@ -1,14 +1,19 @@
 package com.coursework.fitnessapp.workout;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.coursework.fitnessapp.R;
+import com.coursework.fitnessapp.exercises.AddToWorkoutExerciseActivity;
+import com.coursework.fitnessapp.exercises.ViewExerciseActivity;
 import com.coursework.fitnessapp.models.ExerciseModel;
 
 import java.util.ArrayList;
@@ -29,7 +34,27 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.exerciseName.setText(exercises.get(position).getName());
+        ExerciseModel exercise = exercises.get(position);
+        holder.exerciseName.setText(exercise.getName());
+        holder.exerciseDuration.setText(exercise.getLength().getToStringDuration());
+        holder.exerciseCount.setText(String.valueOf(exercise.getCount()));
+        holder.parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(holder.parent.getContext(), ViewExerciseActivity.class);
+                intent.putExtra("exercise", String.valueOf(exercise.getId()));
+                intent.putExtra("duration",exercise.getLength().getToStringDuration());
+                intent.putExtra("count",String.valueOf(exercise.getCount()));
+                ((Activity) holder.parent.getContext()).startActivityForResult(intent,1);
+            }
+        });
+        holder.removeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                exercises.remove(exercise);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -49,9 +74,17 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         private TextView exerciseName;
+        private TextView exerciseDuration;
+        private TextView exerciseCount;
+        private ImageButton removeBtn;
+        private View parent;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            parent = itemView.findViewById(R.id.parent);
             exerciseName = itemView.findViewById(R.id.txtExerciseName);
+            exerciseDuration = itemView.findViewById(R.id.exerciseDuration);
+            exerciseCount = itemView.findViewById(R.id.exerciseCount);
+            removeBtn = itemView.findViewById(R.id.removeExercise);
         }
     }
 }

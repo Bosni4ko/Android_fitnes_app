@@ -41,8 +41,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:id="@+id/exerciseLength"
+        <TextView
+            android:id="@+id/exerciseDuration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -53,84 +53,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/exerciseName">
 
-            <EditText
-                android:id="@+id/hours"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:inputType="number"
-                android:maxLength="2"
-                android:minWidth="48dp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <ImageButton
-                    android:id="@+id/hoursArrowUp"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/arrow_up" />
-
-                <ImageButton
-                    android:id="@+id/hoursArrowDown"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/arrow_down" />
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/minutes"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:inputType="number"
-                android:maxLength="2"
-                android:minWidth="48dp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <ImageButton
-                    android:id="@+id/minutesArrowUp"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/arrow_up" />
-
-                <ImageButton
-                    android:id="@+id/minutesArrowDown"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/arrow_down" />
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/seconds"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:inputType="number"
-                android:maxLength="2"
-                android:minWidth="48dp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <ImageButton
-                    android:id="@+id/secondsArrowUp"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/arrow_up" />
-
-                <ImageButton
-                    android:id="@+id/secondsArrowDown"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/arrow_down" />
-            </LinearLayout>
-        </LinearLayout>
+        </TextView>
 
 
         <LinearLayout
@@ -152,7 +75,7 @@
                 android:paddingRight="5dp"
                 android:text="@string/exerciseCount" />
 
-            <EditText
+            <TextView
                 android:id="@+id/exerciseCount"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -212,8 +135,6 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/arrow_up"/>
-            <!--                android:layout_toRightOf="@id/exerciseDescription"-->
-            <!--                android:layout_alignBottom="@id/exerciseDescription"-->
 
         </LinearLayout>
 
@@ -221,23 +142,13 @@
     </RelativeLayout>
 
     <Button
-        android:id="@+id/addExerciseBtn"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:text="@string/add_exercise_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/backBtn" />
-
-    <Button
         android:id="@+id/backBtn"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:text="@string/back"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/addExerciseBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/relativeLayout2"
         app:layout_constraintVertical_bias="0.85" />

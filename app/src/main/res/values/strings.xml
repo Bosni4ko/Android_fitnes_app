@@ -4,9 +4,14 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="add_exercise_btn">Add exercise</string>
+    <string name="add_workout_btn">Add workout</string>
+    <string name="back">Back</string>
     <string name="date_placeholder">OCT 10 2022</string>
     <string name="time_placeholder">Select time</string>
     <string name="default_exercises">Default exercises</string>
     <string name="custom_exercises">Custom exercises</string>
     <string name="description">Description</string>
+    <string name="exerciseCount">Count</string>
+    <string name="duration">Duration: </string>
+    <string name="quantity">Qnt: </string>
 </resources>

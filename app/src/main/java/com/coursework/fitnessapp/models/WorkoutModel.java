@@ -1,6 +1,12 @@
 package com.coursework.fitnessapp.models;
 
+import com.coursework.fitnessapp.supportclasses.TimeDuration;
+
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.Date;
 public class WorkoutModel {
     public static final String DEFAULT_STATUS = "default_status";
@@ -8,20 +14,22 @@ public class WorkoutModel {
     private String id;
     private String name;
     private String description;
-    private ExerciseModel[] exerciseModels;
-    private Date dateTime;
-    private Period length;
+    private ArrayList<ExerciseModel> exerciseModels;
+    private LocalDate date;
+    private LocalTime time;
+    private TimeDuration length;
     private String status;
     private String type;
 
-    public WorkoutModel(String id, String name,String description, ExerciseModel[] exerciseModels, Date dateTime,String type) {
+    public WorkoutModel(String id, String name,String description, ArrayList<ExerciseModel> exerciseModels, LocalDate date,LocalTime time,String type,String status) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.exerciseModels = exerciseModels;
-        this.dateTime = dateTime;
+        this.date = date;
         this.status = DEFAULT_STATUS;
         this.type = type;
+        this.status = status;
     }
 
     public String getId() {
@@ -48,27 +56,35 @@ public class WorkoutModel {
         this.description = description;
     }
 
-    public ExerciseModel[] getExerciseModels() {
+    public ArrayList<ExerciseModel> getExerciseModels() {
         return exerciseModels;
     }
 
-    public void setExerciseModels(ExerciseModel[] exerciseModels) {
+    public void setExerciseModels(ArrayList<ExerciseModel> exerciseModels) {
         this.exerciseModels = exerciseModels;
     }
 
-    public Date getDateTime() {
-        return dateTime;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setDateTime(Date dateTime) {
-        this.dateTime = dateTime;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public Period getLength() {
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
+    }
+
+    public TimeDuration getLength() {
         return length;
     }
 
-    public void setLength(Period length) {
+    public void setLength(TimeDuration length) {
         this.length = length;
     }
 

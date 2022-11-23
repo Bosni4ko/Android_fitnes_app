@@ -1,11 +1,13 @@
 package com.coursework.fitnessapp.exercises;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,7 +18,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecViewAdapter.ViewHolder> {
-
     private ArrayList<ExerciseModel> exercises;
     public ExercisesRecViewAdapter() {
     }
@@ -26,6 +27,7 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.exercises_add_list_item,parent,false);
         ViewHolder holder = new ViewHolder(view);
+
         return holder;
     }
 
@@ -35,12 +37,13 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
         holder.exerciseName.setText(exercises.get(position).getName());
         holder.exerciseCount.setText(exercises.get(position).getId().toString());
 
+
         holder.parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(holder.parent.getContext(),AddToWorkoutExerciseActivity.class);
                 intent.putExtra("exercise", String.valueOf(exercise.getId()));
-                holder.parent.getContext().startActivity(intent);
+                ((Activity) holder.parent.getContext()).startActivityForResult(intent,1);
             }
         });
     }

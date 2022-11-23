@@ -11,11 +11,14 @@ import android.os.Build;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.coursework.fitnessapp.enums.Enums;
 import com.coursework.fitnessapp.models.ExerciseModel;
 import com.coursework.fitnessapp.models.WorkoutModel;
 import com.coursework.fitnessapp.supportclasses.TimeDuration;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -107,9 +110,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         ContentValues wrkExCv = new ContentValues();
 
+        cv.put(COLUMN_ID,workout.getId());
         cv.put(COLUMN_NAME,workout.getName());
         cv.put(COLUMN_DESCRIPTION,workout.getDescription());
-        cv.put("Date", String.valueOf(workout.getDateTime()));
+        cv.put("Date", String.valueOf(workout.getDate()) +' '+ String.valueOf(workout.getTime()));
         cv.put("Status",workout.getStatus());
         cv.put(COLUMN_TYPE,workout.getType());
 
@@ -127,7 +131,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 wrkExCv.put("Exercise_ID", exercise.getId());
                 counter++;
             }
-            insert = db.insert(WORKOUT_TABLE,null,wrkExCv);
+            insert = db.insert(WORKOUT_EXERCISES_TABLE,null,wrkExCv);
             if(insert == -1){
                 return false;
             }
@@ -171,7 +175,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public ExerciseModel getExerciseById(int id){
         ExerciseModel exercise;
-        String queryString = "SELECT * FROM " + EXERCISE_TABLE + " WHERE " + COLUMN_ID + " = ?";
+        String queryString = "SELECT * FROM " + EXERCISE_TABLE + " WHERE " + COLUMN_ID + " = ?" ;
 
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -193,5 +197,45 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return exercise;
+    }
+
+    public ArrayList<WorkoutModel> getAllWorkoutsWithStatus(String status){
+        ArrayList<WorkoutModel> workouts = new ArrayList<WorkoutModel>();
+        String queryString = "SELECT * FROM " + WORKOUT_TABLE + " WHERE Status = ?";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, new String[]{status});
+        if(cursor.moveToFirst()){
+            do {
+                String id = cursor.getString(0);
+                String workoutName = cursor.getString(1);
+                String workoutDescription = cursor.getString(2);
+                String dateTime = cursor.getString(3);
+                String type = cursor.getString(5);
+                LocalDate date = LocalDate.parse(dateTime.substring(0,9), Enums.formatter);
+                LocalTime time= LocalTime.parse(dateTime.substring(11));
+
+                WorkoutModel newWorkout = new WorkoutModel(id,workoutName,workoutDescription,getAllExercisesOfWorkout(id),date,time,type,status);
+            }while (cursor.moveToNext());
+        }
+        return workouts;
+    }
+    public ArrayList<ExerciseModel> getAllExercisesOfWorkout(String workoutId){
+        ArrayList<ExerciseModel> exercises = new ArrayList<ExerciseModel>();
+        String queryString = "SELECT * FROM " + WORKOUT_EXERCISES_TABLE + " WHERE Workout_ID = ? ORDER BY " + COLUMN_SNUMBER + " ASC";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, new String[]{workoutId});
+        if(cursor.moveToFirst()){
+            do {
+                ExerciseModel newExercise;
+                TimeDuration duration = new TimeDuration(cursor.getString(2));
+                Integer count = Integer.parseInt(cursor.getString(3));
+                Integer exerciseId =  Integer.parseInt(cursor.getString(5));
+                newExercise = getExerciseById(exerciseId);
+                newExercise.setCount(count);
+                newExercise.setLength(duration);
+                exercises.add(newExercise);
+            }while (cursor.moveToNext());
+        }
+        return exercises;
     }
 }

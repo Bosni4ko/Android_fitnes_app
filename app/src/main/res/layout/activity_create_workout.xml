@@ -16,16 +16,16 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
+            android:id="@+id/addExerciseBtn"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/addExerciseBtn"
-            android:text="@string/add_exercise_btn"
-            android:onClick="addExercise"/>
+            android:onClick="addExercise"
+            android:text="@string/add_exercise_btn" />
 
     </RelativeLayout>
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/workoutName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -38,7 +38,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTextMultiLine"
+        android:id="@+id/workoutDescription"
         android:layout_width="235dp"
         android:layout_height="73dp"
         android:ems="10"
@@ -56,9 +56,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextPersonName"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName">
+        app:layout_constraintEnd_toEndOf="@+id/workoutName"
+        app:layout_constraintStart_toStartOf="@+id/workoutName"
+        app:layout_constraintTop_toBottomOf="@+id/workoutName">
 
         <Button
             android:id="@+id/datePickerBtn"
@@ -70,22 +70,22 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/addWorkoutBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="@string/add_workout_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="111dp"
-        android:layout_height="285dp"
         android:id="@+id/exercisesRecycleView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/editTextTextMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
 
     <Button
         android:id="@+id/timePickerBtn"
