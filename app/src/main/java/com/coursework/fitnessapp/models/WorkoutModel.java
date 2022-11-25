@@ -9,7 +9,6 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.Date;
 public class WorkoutModel {
-    public static final String DEFAULT_STATUS = "default_status";
 
     private String id;
     private String name;
@@ -27,7 +26,7 @@ public class WorkoutModel {
         this.description = description;
         this.exerciseModels = exerciseModels;
         this.date = date;
-        this.status = DEFAULT_STATUS;
+        this.time = time;
         this.type = type;
         this.status = status;
     }

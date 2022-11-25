@@ -11,7 +11,8 @@
     <string name="default_exercises">Default exercises</string>
     <string name="custom_exercises">Custom exercises</string>
     <string name="description">Description</string>
-    <string name="exerciseCount">Count</string>
+    <string name="exercise_count">Count</string>
     <string name="duration">Duration: </string>
     <string name="quantity">Qnt: </string>
+    <string name="delete">Delete</string>
 </resources>

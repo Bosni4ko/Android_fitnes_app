@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
 import com.coursework.fitnessapp.R;
 import com.coursework.fitnessapp.models.ExerciseModel;
+import com.coursework.fitnessapp.supportclasses.InputFilterMinMax;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 
 import java.time.Duration;
@@ -81,6 +83,9 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
         txtHours = findViewById(R.id.hours);
         txtMinutes = findViewById(R.id.minutes);
         txtSeconds = findViewById(R.id.seconds);
+        txtHours.setFilters(new InputFilter[]{new InputFilterMinMax(0,59)});
+        txtMinutes.setFilters(new InputFilter[]{new InputFilterMinMax(0,59)});
+        txtSeconds.setFilters(new InputFilter[]{new InputFilterMinMax(0,59)});
         hoursArrowUp = findViewById(R.id.hoursArrowUp);
         hoursArrowDown = findViewById(R.id.hoursArrowDown);
         minutesArrowUp = findViewById(R.id.minutesArrowUp);
@@ -145,7 +150,7 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
             catch (NumberFormatException e){
                 value = 0;
             }
-            if(increase && value < 99){
+            if(increase && (value < 60)){
                 value++;
             }
             else if(!increase && value > 0){

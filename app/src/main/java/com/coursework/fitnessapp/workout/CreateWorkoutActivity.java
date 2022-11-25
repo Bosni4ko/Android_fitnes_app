@@ -35,6 +35,7 @@ import com.coursework.fitnessapp.models.WorkoutModel;
 import com.coursework.fitnessapp.supportclasses.TimeDuration;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -79,12 +80,14 @@ public class CreateWorkoutActivity extends AppCompatActivity {
             @Override
             public void onActivityResult(ActivityResult result) {
                 dialog.cancel();
-                Bundle bundle = result.getData().getExtras();
-                ExerciseModel newExercise = dataBaseHelper.getExerciseById(Integer.parseInt(bundle.get("id").toString()));
-                newExercise.setCount(Integer.parseInt(bundle.get("count").toString()));
-                newExercise.setLength(new TimeDuration(bundle.get("length").toString()));
-                exercises.add(newExercise);
-                adapter.setExercises(exercises);
+                if(result.getData() != null){
+                    Bundle bundle = result.getData().getExtras();
+                    ExerciseModel newExercise = dataBaseHelper.getExerciseById(Integer.parseInt(bundle.get("id").toString()));
+                    newExercise.setCount(Integer.parseInt(bundle.get("count").toString()));
+                    newExercise.setLength(new TimeDuration(bundle.get("length").toString()));
+                    exercises.add(newExercise);
+                    adapter.setExercises(exercises);
+                }
             }
         });
     }
@@ -129,9 +132,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
                 LocalDate date = LocalDate.parse(dateButton.getText().toString(),Enums.formatter);
                 LocalTime time = LocalTime.parse(timeButton.getText().toString());
 
-                byte[] array = new byte[10];
-                new Random().nextBytes(array);
-                String generatedString = new String(array, Charset.forName("UTF-8"));
+                String generatedString = String.valueOf(Math.floor(Math.random() * (9*Math.pow(10,9))) + Math.pow(10,(9)));
                 String id;
                 if(name.length() > 10){
                     id = name.substring(0,9) + generatedString;
@@ -140,8 +141,10 @@ public class CreateWorkoutActivity extends AppCompatActivity {
                     id = name + generatedString;
                 }
                 String status = Enums.WorkoutStatus.WAITING.toString();
+                String type = Enums.WorkoutType.CUSTOM.toString();
 
-                WorkoutModel workout = new WorkoutModel(id,name,description,exercises,date,time,Enums.WorkoutType.CUSTOM.toString(),status);
+
+                WorkoutModel workout = new WorkoutModel(id,name,description,exercises,date,time,type,status);
                 dataBaseHelper.addWorkout(workout);
                 finish();
             }

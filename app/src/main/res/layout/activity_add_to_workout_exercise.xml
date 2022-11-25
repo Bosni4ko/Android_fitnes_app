@@ -150,7 +150,7 @@
                 android:gravity="center"
                 android:paddingLeft="10dp"
                 android:paddingRight="5dp"
-                android:text="@string/exerciseCount" />
+                android:text="@string/exercise_count" />
 
             <EditText
                 android:id="@+id/exerciseCount"

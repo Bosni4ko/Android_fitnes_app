@@ -18,4 +18,5 @@ public class Enums {
         CUSTOM
     }
     public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM uuuu");
+    public static DateTimeFormatter fromDbFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 }

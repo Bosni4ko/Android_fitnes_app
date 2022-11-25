@@ -11,11 +11,28 @@ public class TimeDuration {
     public TimeDuration(String duration){
         if(duration != null){
             List<String> timeValues= Arrays.asList(duration.split(":"));
-            System.out.println(duration);
             hours = timeValues.get(0);
             minutes = timeValues.get(1);
             seconds = timeValues.get(2);
         }
+    }
+    public TimeDuration(int seconds){
+        hours = String.valueOf(seconds / 3600);
+        if(hours.length() < 2){
+            hours = '0' + hours;
+        }
+        seconds = seconds%3600;
+        minutes = String.valueOf(seconds / 60);
+        if(minutes.length() < 2){
+            minutes = '0' + minutes;
+        }
+        seconds = seconds%60;
+        this.seconds = String.valueOf(seconds);
+        if(this.seconds.length() < 2){
+            this.seconds = '0' + this.seconds;
+        }
+
+
     }
     public TimeDuration(String hours, String minutes, String seconds) {
         this.hours = hours;
@@ -56,5 +73,10 @@ public class TimeDuration {
     public String getToStringDuration(){
 
         return (hours + ":" + minutes + ":" + seconds );
+    }
+    public Integer getTimeInSeconds(){
+        Integer timeInSeconds;
+        timeInSeconds = Integer.parseInt(hours) * 3600 + Integer.parseInt(minutes) * 60 + Integer.parseInt(seconds);
+        return timeInSeconds;
     }
 }

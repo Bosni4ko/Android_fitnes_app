@@ -14,13 +14,16 @@
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/activity_default_exercise.xml" value="0.1" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/activity_view_exercise.xml" value="0.33" />
+        <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/activity_view_workouts.xml" value="0.36666666666666664" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/add_exercise_to_workout.xml" value="0.26721014492753625" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/choose_exercise_popup.xml" value="0.365625" />
+        <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/confirm_delete_popup.xml" value="0.1778115501519757" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/exercises_add_list_item.xml" value="0.26721014492753625" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/exercises_list_item.xml" value="0.365625" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/fragment_dashboard.xml" value="0.33" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/fragment_notifications.xml" value="0.25" />
+        <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/workouts_list.xml" value="0.365625" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36666666666666664" />
       </map>
     </option>

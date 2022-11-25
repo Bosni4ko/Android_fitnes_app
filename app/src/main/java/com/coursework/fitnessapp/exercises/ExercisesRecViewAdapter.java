@@ -73,15 +73,6 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
             exerciseName = itemView.findViewById(R.id.exerciseName);
             exerciseCount = itemView.findViewById(R.id.exerciseCount);
 
-//            itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Intent intent = new Intent(itemView.getContext(),AddToWorkoutExerciseActivity.class);
-//                    //intent.putExtra("exercise", String.valueOf(exercise));
-//                    itemView.getContext().startActivity(intent);
-//
-//                }
-//            });
         }
     }
 }

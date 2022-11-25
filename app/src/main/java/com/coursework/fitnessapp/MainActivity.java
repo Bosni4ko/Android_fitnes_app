@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
         DataBaseHelper dataBaseHelper = new DataBaseHelper(MainActivity.this);
         //dataBaseHelper.fillDatabase();
+        //dataBaseHelper.fillDatabase();
+        //dataBaseHelper.fillDatabase();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

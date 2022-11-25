@@ -1,5 +1,6 @@
 package com.coursework.fitnessapp.ui.dashboard;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,14 +8,30 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
+import com.coursework.fitnessapp.R;
 import com.coursework.fitnessapp.databinding.FragmentDashboardBinding;
+import com.coursework.fitnessapp.enums.Enums;
+import com.coursework.fitnessapp.models.WorkoutModel;
+import com.coursework.fitnessapp.supportclasses.WorkoutSortComparator;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
+    private RecyclerView workoutsRecView;
+    private DataBaseHelper dataBaseHelper;
+    ArrayList<WorkoutModel> workouts;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -26,7 +43,22 @@ public class DashboardFragment extends Fragment {
 
         final TextView textView = binding.textDashboard;
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
         return root;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        dataBaseHelper = new DataBaseHelper(this.getContext());
+
+        WorkoutsRecViewAdapter adapter = new WorkoutsRecViewAdapter();
+        workouts = dataBaseHelper.getAllWorkoutsWithStatus(Enums.WorkoutStatus.WAITING.toString());
+        Collections.sort(workouts,new WorkoutSortComparator());
+        workoutsRecView = view.findViewById(R.id.workoutsRecView);
+        adapter.setWorkouts(workouts);
+        workoutsRecView.setAdapter(adapter);
+        workoutsRecView.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
 
     @Override
