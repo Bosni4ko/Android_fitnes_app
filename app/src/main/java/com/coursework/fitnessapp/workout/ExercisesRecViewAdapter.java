@@ -21,7 +21,11 @@ import java.util.ArrayList;
 public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecViewAdapter.ViewHolder>{
 
     private ArrayList<ExerciseModel> exercises = new ArrayList<>();
+    private boolean hasRemoveBtn = true;
     public ExercisesRecViewAdapter() {
+    }
+    public ExercisesRecViewAdapter(Boolean hasRemoveBtn) {
+        this.hasRemoveBtn = hasRemoveBtn;
     }
 
     @NonNull
@@ -48,13 +52,16 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
                 ((Activity) holder.parent.getContext()).startActivityForResult(intent,1);
             }
         });
-        holder.removeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                exercises.remove(exercise);
-                notifyDataSetChanged();
-            }
-        });
+        if(hasRemoveBtn){
+            holder.removeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    exercises.remove(exercise);
+                    notifyDataSetChanged();
+                }
+            });
+        }else holder.removeBtn.setVisibility(View.GONE);
+
     }
 
     @Override

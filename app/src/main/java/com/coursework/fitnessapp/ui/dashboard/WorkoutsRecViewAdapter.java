@@ -1,7 +1,9 @@
 package com.coursework.fitnessapp.ui.dashboard;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.coursework.fitnessapp.R;
 import com.coursework.fitnessapp.models.ExerciseModel;
 import com.coursework.fitnessapp.models.WorkoutModel;
 import com.coursework.fitnessapp.supportclasses.TimeDuration;
+import com.coursework.fitnessapp.workout.ViewWorkoutActivity;
 
 import java.util.ArrayList;
 
@@ -74,7 +77,9 @@ public class WorkoutsRecViewAdapter extends RecyclerView.Adapter<WorkoutsRecView
         holder.parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(holder.parent.getContext(), ViewWorkoutActivity.class);
+                intent.putExtra("id",workout.getId());
+                ((Activity) holder.parent.getContext()).startActivity(intent);
             }
         });
     }

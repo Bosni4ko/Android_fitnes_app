@@ -15,4 +15,5 @@
     <string name="duration">Duration: </string>
     <string name="quantity">Qnt: </string>
     <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
 </resources>

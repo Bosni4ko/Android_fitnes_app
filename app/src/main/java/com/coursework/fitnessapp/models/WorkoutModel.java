@@ -20,7 +20,10 @@ public class WorkoutModel {
     private String status;
     private String type;
 
-    public WorkoutModel(String id, String name,String description, ArrayList<ExerciseModel> exerciseModels, LocalDate date,LocalTime time,String type,String status) {
+    public WorkoutModel() {
+    }
+
+    public WorkoutModel(String id, String name, String description, ArrayList<ExerciseModel> exerciseModels, LocalDate date, LocalTime time, String type, String status) {
         this.id = id;
         this.name = name;
         this.description = description;

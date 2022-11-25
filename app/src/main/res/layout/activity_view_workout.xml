@@ -6,4 +6,140 @@
     android:layout_height="match_parent"
     tools:context=".workout.ViewWorkoutActivity">
 
+    <TextView
+        android:id="@+id/workoutName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="30dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/workoutName"
+        android:id="@+id/dateTimeLayout"
+        android:layout_marginTop="50dp">
+
+        <TextView
+            android:id="@+id/workoutDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/workoutTime"
+            android:layout_alignParentRight="true" />
+
+        <TextView
+            android:id="@+id/workoutDurationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/workoutDate"
+            android:text="@string/duration" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@id/workoutDuration"
+            android:layout_toRightOf="@id/workoutDurationText"
+            android:layout_below="@id/workoutDate"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/descriptionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/exercisesListLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateTimeLayout">
+
+        <TextView
+            android:id="@+id/workoutDescriptionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/description" />
+
+
+        <LinearLayout
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/workoutDescriptionTitle"
+            android:id="@+id/collapsedDescriptionLayout">
+            <TextView
+                android:id="@+id/workoutDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="326dp"/>
+
+            <ImageButton
+                android:id="@+id/expandDescription"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/arrow_down" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/workoutDescriptionTitle"
+            android:id="@+id/expandedDescriptionLayout"
+            android:visibility="gone">
+            <TextView
+                android:id="@+id/workoutExpandedDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="326dp"/>
+            <ImageButton
+                android:id="@+id/collapseDescription"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/arrow_up"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/exercisesListLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateTimeLayout"
+        android:orientation="vertical">
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/exercisesRecycleView"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/backBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/editWorkoutBtn"
+        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exercisesListLayout"
+        app:layout_constraintVertical_bias="0.8" />
+
+    <Button
+        android:id="@+id/editWorkoutBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/backBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.86"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/backBtn"
+        android:text="@string/edit"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -203,6 +203,30 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
         return exercise;
     }
+    public WorkoutModel getWorkoutById(String id){
+        WorkoutModel workout;
+        String queryString = "SELECT * FROM " + WORKOUT_TABLE + " WHERE " + COLUMN_ID + " = ?" ;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(queryString, new String[]{id});
+
+        if(cursor.moveToFirst()){
+            String workoutName = cursor.getString(1);
+            String workoutDescription = cursor.getString(2);
+            String dateTime = cursor.getString(3);
+            LocalDate date = LocalDate.parse(dateTime.substring(0,10), Enums.fromDbFormatter);
+            LocalTime time = LocalTime.parse(dateTime.substring(11));
+            String status = cursor.getString(4);
+            String type = cursor.getString(5);
+            ArrayList<ExerciseModel> exercises = getAllExercisesOfWorkout(id);
+            workout = new WorkoutModel(id,workoutName,workoutDescription,exercises,date,time,type,status);
+        }
+        else workout = new WorkoutModel();
+        cursor.close();
+        db.close();
+        return workout;
+    }
 
     public ArrayList<WorkoutModel> getAllWorkoutsWithStatus(String status){
         ArrayList<WorkoutModel> workouts = new ArrayList<WorkoutModel>();

@@ -14,10 +14,7 @@
         android:theme="@style/Theme.FitnessApp"
         tools:targetApi="31">
         <activity
-            android:name=".ViewWorkoutActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ViewWorkoutsActivity"
+            android:name=".workout.ViewWorkoutActivity"
             android:exported="false" />
         <activity
             android:name=".exercises.ViewExerciseActivity"
