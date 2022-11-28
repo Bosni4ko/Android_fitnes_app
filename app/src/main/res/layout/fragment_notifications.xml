@@ -7,7 +7,7 @@
     tools:context=".ui.notifications.NotificationsFragment">
 
     <TextView
-        android:id="@+id/text_notifications"
+        android:id="@+id/chooseExerciseTypeTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -18,5 +18,43 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.110000014"
+        android:text="@string/choose_exercise_type"/>
+
+    <Button
+        android:id="@+id/selectDefaultExerciseBtn"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/default_exercises"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chooseExerciseTypeTitle"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <Button
+        android:id="@+id/selectCustomExercisesBtn"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/custom_exercises"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/selectDefaultExerciseBtn"
+        app:layout_constraintStart_toStartOf="@+id/selectDefaultExerciseBtn"
+        app:layout_constraintTop_toBottomOf="@+id/selectDefaultExerciseBtn"
+        app:layout_constraintVertical_bias="0.100000024" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/purple_500"
+        app:backgroundTint="@color/purple_700"
+        app:rippleColor="@color/purple_200"
+        android:src="@drawable/ic_add_foreground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.96"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.86"
+        android:id="@+id/addFab"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

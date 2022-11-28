@@ -53,8 +53,13 @@ public class ViewExerciseActivity extends AppCompatActivity {
         int id = Integer.parseInt(intent.getStringExtra("exercise"));
 
         exercise = dataBaseHelper.getExerciseById(id);
-        exercise.setLength(new TimeDuration(intent.getStringExtra("duration")));
-        exercise.setCount(Integer.parseInt(intent.getStringExtra("count")));
+        if(intent.getStringExtra("duration") != null && intent.getStringExtra("count") != null){
+            exercise.setLength(new TimeDuration(intent.getStringExtra("duration")));
+            exercise.setCount(Integer.parseInt(intent.getStringExtra("count")));
+        }else {
+            exercise.setLength(exercise.getDefaultLength());
+            exercise.setCount(exercise.getDefaultCount());
+        }
         setExerciseValues();
     }
 
@@ -103,15 +108,16 @@ public class ViewExerciseActivity extends AppCompatActivity {
     View.OnClickListener changeDescription = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(!isExpanded){
+            if(!isExpanded && exerciseDescription.getLineCount() > 2){
                 expandedDescriptionLayout.setVisibility(View.VISIBLE);
                 collapsedDescriptionLayout.setVisibility(View.GONE);
+                isExpanded = !isExpanded;
             }
-            else {
+            else if(isExpanded && exerciseDescription.getLineCount() > 2) {
                 expandedDescriptionLayout.setVisibility(View.GONE);
                 collapsedDescriptionLayout.setVisibility(View.VISIBLE);
+                isExpanded = !isExpanded;
             }
-            isExpanded = !isExpanded;
         }
     };
     View.OnClickListener back = new View.OnClickListener() {

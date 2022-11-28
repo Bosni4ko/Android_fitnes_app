@@ -129,7 +129,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         else {
             int counter = 0;
             for (ExerciseModel exercise : workout.getExerciseModels()) {
-                System.out.println("Iteration: " + counter);
                 wrkExCv.put(COLUMN_SNUMBER, counter);
                 wrkExCv.put(COLUMN_LENGTH, exercise.getLength().getToStringDuration());
                 wrkExCv.put(COLUMN_COUNT, exercise.getCount());
@@ -137,7 +136,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 wrkExCv.put(COLUMN_EXERCISE_ID, exercise.getId());
                 counter++;
                 insert = db.insert(WORKOUT_EXERCISES_TABLE,null,wrkExCv);
-                System.out.println("Insert: " + insert);
                 if(insert == -1){
                     return false;
                 }
@@ -228,6 +226,37 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return workout;
     }
 
+    public void editWorkout(WorkoutModel workout){
+        SQLiteDatabase db = getWritableDatabase();
+        String queryString = "UPDATE " + WORKOUT_TABLE +
+                             " SET " + COLUMN_NAME + " = ?,"
+                                    + COLUMN_DESCRIPTION + " = ?,"
+                                    + COLUMN_DATE + " = ?" +
+                            " WHERE " + COLUMN_ID + " = ?";
+        //db.execSQL(queryString,new String[]{workout.getName(),workout.getDescription(),workout.getDate().toString() + ' ' + workout.getTime().toString(),workout.getId()});
+        queryString = "DELETE FROM " + WORKOUT_EXERCISES_TABLE + " WHERE " + COLUMN_WORKOUT_ID + " = ?";
+        db.execSQL(queryString,new String[]{workout.getId()});
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_NAME,workout.getName());
+        cv.put(COLUMN_DESCRIPTION,workout.getDescription());
+        cv.put(COLUMN_DATE,workout.getDate().toString() + ' ' + workout.getTime().toString());
+        db.update(WORKOUT_TABLE,cv,  COLUMN_ID + " = ?",new String[]{workout.getId()});
+
+        ContentValues wrkExCv = new ContentValues();
+        int counter = 0;
+        for (ExerciseModel exercise : workout.getExerciseModels()) {
+            System.out.println("Iteration: " + counter);
+            wrkExCv.put(COLUMN_SNUMBER, counter);
+            wrkExCv.put(COLUMN_LENGTH, exercise.getLength().getToStringDuration());
+            wrkExCv.put(COLUMN_COUNT, exercise.getCount());
+            wrkExCv.put(COLUMN_WORKOUT_ID, workout.getId());
+            wrkExCv.put(COLUMN_EXERCISE_ID, exercise.getId());
+            counter++;
+            db.insert(WORKOUT_EXERCISES_TABLE,null,wrkExCv);
+        }
+        db.close();
+
+    }
     public ArrayList<WorkoutModel> getAllWorkoutsWithStatus(String status){
         ArrayList<WorkoutModel> workouts = new ArrayList<WorkoutModel>();
         String queryString = "SELECT * FROM " + WORKOUT_TABLE + " WHERE " + COLUMN_STATUS + " = ?";

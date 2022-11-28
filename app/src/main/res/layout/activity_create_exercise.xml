@@ -2,10 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".exercises.AddToWorkoutExerciseActivity">
+    tools:context=".exercises.CreateExerciseActivity">
 
     <ImageView
         android:id="@+id/exercisePreviewImg"
@@ -31,15 +30,21 @@
         app:layout_constraintTop_toTopOf="@+id/exercisePreviewImg"
         app:layout_constraintVertical_bias="0.0">
 
-        <TextView
-            android:id="@+id/exerciseName"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:minWidth="100dp"
+            android:id="@+id/exerciseNameLayout"
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+            <EditText
+                android:id="@+id/exerciseName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/default_name" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:id="@+id/exerciseLength"
@@ -48,10 +53,9 @@
             android:ems="10"
             android:inputType="time"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/exerciseName">
+            app:layout_constraintTop_toBottomOf="@+id/exerciseNameLayout">
 
             <EditText
                 android:id="@+id/hours"
@@ -59,7 +63,8 @@
                 android:layout_height="match_parent"
                 android:inputType="number"
                 android:maxLength="2"
-                android:minWidth="48dp" />
+                android:minWidth="48dp"
+                android:text="00" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -85,7 +90,8 @@
                 android:layout_height="match_parent"
                 android:inputType="number"
                 android:maxLength="2"
-                android:minWidth="48dp" />
+                android:minWidth="48dp"
+                android:text="00" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -111,7 +117,8 @@
                 android:layout_height="match_parent"
                 android:inputType="number"
                 android:maxLength="2"
-                android:minWidth="48dp" />
+                android:minWidth="48dp"
+                android:text="00" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -132,17 +139,29 @@
             </LinearLayout>
         </LinearLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/exerciseDurationLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minWidth="200dp"
+            android:minHeight="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/exerciseLength" />
+
 
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/exerciseCountLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/exerciseName">
+            app:layout_constraintTop_toBottomOf="@+id/exerciseLength"
+            app:layout_constraintVertical_bias="0.8">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -158,69 +177,47 @@
                 android:layout_height="match_parent"
                 android:ems="10"
                 android:inputType="number"
-                android:textAlignment="center"
-                android:maxLength="6"/>
+                android:maxLength="6"
+                android:textAlignment="center" />
 
         </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/exerciseCountLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minWidth="200dp"
+            android:minHeight="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/exerciseDescriptionTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/description"
+        app:layout_constraintBottom_toTopOf="@+id/descriptionLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/descriptionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoLayout">
-
-        <TextView
-            android:id="@+id/exerciseDescriptionTitle"
-            android:layout_width="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/infoLayout"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/exerciseDescription"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/description" />
+            android:ems="10"
+            android:inputType="textMultiLine" />
 
-
-        <LinearLayout
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/exerciseDescriptionTitle"
-            android:id="@+id/collapsedDescriptionLayout">
-            <TextView
-                android:id="@+id/exerciseDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="326dp"/>
-
-            <ImageButton
-                android:id="@+id/expandDescription"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/arrow_down" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/exerciseDescriptionTitle"
-            android:id="@+id/expandedDescriptionLayout"
-            android:visibility="gone">
-            <TextView
-                android:id="@+id/exerciseExpandedDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="326dp"/>
-            <ImageButton
-                android:id="@+id/collapseDescription"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/arrow_up"/>
-            <!--                android:layout_toRightOf="@id/exerciseDescription"-->
-            <!--                android:layout_alignBottom="@id/exerciseDescription"-->
-
-        </LinearLayout>
-
-
-    </RelativeLayout>
-
+    </com.google.android.material.textfield.TextInputLayout>
     <Button
         android:id="@+id/addExerciseBtn"
         android:layout_width="150dp"
@@ -242,4 +239,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/descriptionLayout"
         app:layout_constraintVertical_bias="0.85" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

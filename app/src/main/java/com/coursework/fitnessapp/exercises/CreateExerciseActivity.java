@@ -8,39 +8,33 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.InputFilter;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Switch;
-import android.widget.TextView;
 
 import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
 import com.coursework.fitnessapp.R;
+import com.coursework.fitnessapp.enums.Enums;
 import com.coursework.fitnessapp.models.ExerciseModel;
+import com.coursework.fitnessapp.supportclasses.DurationFieldValidator;
 import com.coursework.fitnessapp.supportclasses.InputFilterMinMax;
-import com.ms.square.android.expandabletextview.ExpandableTextView;
+import com.coursework.fitnessapp.supportclasses.TimeDuration;
+import com.google.android.material.textfield.TextInputLayout;
 
-import java.time.Duration;
+public class CreateExerciseActivity extends AppCompatActivity {
 
-public class AddToWorkoutExerciseActivity extends AppCompatActivity {
+    private TextInputLayout exerciseNameLayout;
+    private TextInputLayout exerciseDescriptionLayout;
+    private TextInputLayout exerciseDurationLayout;
+    private TextInputLayout exerciseCountLayout;
 
-    private TextView exerciseName;
+    private EditText exerciseName;
+    private EditText exerciseDescription;
     private EditText exerciseCount;
     private ImageView exercisePreviewImg;
-    private TextView exerciseDescription;
-    private TextView exerciseExpandedDescription;
-    private ImageButton expandDescription;
-    private ImageButton collapseDescription;
-
-    private LinearLayout expandedDescriptionLayout;
-    private LinearLayout collapsedDescriptionLayout;
-    private Boolean isExpanded = false;
 
     private EditText txtHours;
     private EditText txtMinutes;
@@ -56,29 +50,26 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
     private Button backBtn;
 
     ExerciseModel exercise;
-
+    DataBaseHelper dataBaseHelper;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(AddToWorkoutExerciseActivity.this);
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_to_workout_exercise);
+        setContentView(R.layout.activity_create_exercise);
+        dataBaseHelper = new DataBaseHelper(CreateExerciseActivity.this);
         initLayout();
-        Intent intent = getIntent();
-        int id = Integer.parseInt(intent.getStringExtra("exercise"));
-
-        exercise = dataBaseHelper.getExerciseById(id);
-        setExerciseValues(exercise);
     }
-
     private void initLayout(){
         exerciseName = findViewById(R.id.exerciseName);
         exerciseCount = findViewById(R.id.exerciseCount);
         exercisePreviewImg = findViewById(R.id.exercisePreviewImg);
         exerciseDescription = findViewById(R.id.exerciseDescription);
-        exerciseExpandedDescription = findViewById(R.id.exerciseExpandedDescription);
+
+        exerciseNameLayout = findViewById(R.id.exerciseNameLayout);
+        exerciseDescriptionLayout = findViewById(R.id.descriptionLayout);
+        exerciseDurationLayout = findViewById(R.id.exerciseDurationLayout);
+        exerciseCountLayout = findViewById(R.id.exerciseCountLayout);
 
         txtHours = findViewById(R.id.hours);
         txtMinutes = findViewById(R.id.minutes);
@@ -92,13 +83,6 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
         minutesArrowDown = findViewById(R.id.minutesArrowDown);
         secondsArrowUp = findViewById(R.id.secondsArrowUp);
         secondsArrowDown = findViewById(R.id.secondsArrowDown);
-        expandDescription = findViewById(R.id.expandDescription);
-        collapseDescription = findViewById(R.id.collapseDescription);
-
-        expandedDescriptionLayout = findViewById(R.id.expandedDescriptionLayout);
-        collapsedDescriptionLayout = findViewById(R.id.collapsedDescriptionLayout);
-        expandDescription.setOnClickListener(changeDescription);
-        collapseDescription.setOnClickListener(changeDescription);
 
         hoursArrowUp.setOnClickListener(changeTimeListener);
         hoursArrowDown.setOnClickListener(changeTimeListener);
@@ -163,30 +147,19 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
             text.setText(resultString);
         }
     };
-    View.OnClickListener changeDescription = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if(!isExpanded && exerciseDescription.getLineCount() > 2){
-                expandedDescriptionLayout.setVisibility(View.VISIBLE);
-                collapsedDescriptionLayout.setVisibility(View.GONE);
-                isExpanded = !isExpanded;
-            }
-            else if(isExpanded && exerciseDescription.getLineCount() > 2) {
-                expandedDescriptionLayout.setVisibility(View.GONE);
-                collapsedDescriptionLayout.setVisibility(View.VISIBLE);
-                isExpanded = !isExpanded;
-            }
-        }
-    };
     View.OnClickListener addExercise = new View.OnClickListener() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void onClick(View view) {
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra("id",exercise.getId().toString());
-            returnIntent.putExtra("length",txtHours.getText().toString() + ":" + txtMinutes.getText().toString() + ":" + txtSeconds.getText().toString());
-            returnIntent.putExtra("count",exerciseCount.getText().toString());
-            setResult(Activity.RESULT_OK,returnIntent);
-            finish();
+            if(validateInput()){
+                String name = exerciseName.getText().toString();
+                String description = exerciseDescription.getText().toString();
+                TimeDuration duration = new TimeDuration(txtHours.getText().toString(),txtMinutes.getText().toString(),txtSeconds.getText().toString());
+                int count = Integer.parseInt(exerciseCount.getText().toString());
+                ExerciseModel newExercise = new ExerciseModel(null,name,description,null,null,null,duration,count, Enums.ExerciseType.Custom.toString());
+                dataBaseHelper.addExercise(newExercise);
+                finish();
+            }
         }
     };
     View.OnClickListener back = new View.OnClickListener() {
@@ -196,30 +169,24 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
         }
     };
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void setExerciseValues(ExerciseModel exercise){
-        exerciseName.setText(exercise.getName());
-        txtHours.setText(exercise.getDefaultLength().getHours());
-        txtMinutes.setText(exercise.getDefaultLength().getMinutes());
-        txtSeconds.setText(exercise.getDefaultLength().getSeconds());
-        exerciseCount.setText(String.valueOf(exercise.getDefaultCount()));
-        setDescription(exercise);
-        if(exercise.getPreviewUrl() != null){
-            exercisePreviewImg.setImageURI(Uri.parse(exercise.getPreviewUrl()));
-        }
-    }
-
-    private void setDescription(ExerciseModel exercise){
-        exerciseDescription.setText(exercise.getDescription());
-        exerciseExpandedDescription.setText(exercise.getDescription());
-        exerciseDescription.post(new Runnable() {
-            @Override
-            public void run() {
-                if(exerciseDescription.getLineCount() > 2){
-                    exerciseDescription.setMaxLines(2);
-                    expandDescription.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+    private boolean validateInput(){
+        boolean hasError = false;
+        if(exerciseName.getText().toString().isEmpty()){
+            exerciseNameLayout.setError(getResources().getString(R.string.empty_name_error));
+            hasError = true;
+        }else exerciseNameLayout.setError(null);
+        if(exerciseDescription.getText().toString().isEmpty()){
+            exerciseDescriptionLayout.setError(getResources().getString(R.string.empty_description_error));
+            hasError = true;
+        }else exerciseDescriptionLayout.setError(null);
+        if(!DurationFieldValidator.validate(txtHours.getText().toString()) && !DurationFieldValidator.validate(txtMinutes.getText().toString()) && !DurationFieldValidator.validate(txtSeconds.getText().toString())){
+            exerciseDurationLayout.setError(getResources().getString(R.string.zero_duration_error));
+            hasError = true;
+        }else exerciseDurationLayout.setError(null);
+        if(!DurationFieldValidator.validate(exerciseCount.getText().toString())){
+            exerciseCountLayout.setError(getResources().getString(R.string.zero_exercise_amount));
+            hasError = true;
+        }else exerciseCountLayout.setError(null);
+        return !hasError;
     }
 }

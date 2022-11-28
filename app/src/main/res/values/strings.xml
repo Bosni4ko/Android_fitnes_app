@@ -16,4 +16,15 @@
     <string name="quantity">Qnt: </string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
+    <string name="save_changes">Save changes</string>
+    <string name="choose_exercise_type">What exercises do you want to see?</string>
+    <string name="default_name">Name</string>
+    <string name="empty_exercises">You don\'t have any exercises</string>
+
+    <string name="empty_name_error">Name cannot be empty</string>
+    <string name="incorrect_date_time_error">You cannot set date and time before current</string>
+    <string name="empty_description_error">Description cannot be empty</string>
+    <string name="no_exercises_error">You should add at least 1 exercise</string>
+    <string name="zero_duration_error">Exercise duration cannot be 0</string>
+    <string name="zero_exercise_amount">Exercises amount cannot be 0</string>
 </resources>

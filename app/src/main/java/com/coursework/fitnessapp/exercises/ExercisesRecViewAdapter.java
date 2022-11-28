@@ -2,6 +2,7 @@ package com.coursework.fitnessapp.exercises;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +10,11 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.coursework.fitnessapp.R;
+import com.coursework.fitnessapp.enums.Enums;
 import com.coursework.fitnessapp.models.ExerciseModel;
 
 import java.io.Serializable;
@@ -19,7 +22,9 @@ import java.util.ArrayList;
 
 public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecViewAdapter.ViewHolder> {
     private ArrayList<ExerciseModel> exercises;
-    public ExercisesRecViewAdapter() {
+    private String action;
+    public ExercisesRecViewAdapter(String action) {
+        this.action = action;
     }
 
     @NonNull
@@ -39,11 +44,18 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
 
 
         holder.parent.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(holder.parent.getContext(),AddToWorkoutExerciseActivity.class);
-                intent.putExtra("exercise", String.valueOf(exercise.getId()));
-                ((Activity) holder.parent.getContext()).startActivityForResult(intent,1);
+                if(action == Enums.ExerciseAction.View.toString()){
+                    Intent intent = new Intent(holder.parent.getContext(),ViewExerciseActivity.class);
+                    intent.putExtra("exercise", String.valueOf(exercise.getId()));
+                    holder.parent.getContext().startActivity(intent);
+                }else {
+                    Intent intent = new Intent(holder.parent.getContext(),AddToWorkoutExerciseActivity.class);
+                    intent.putExtra("exercise", String.valueOf(exercise.getId()));
+                    ((Activity) holder.parent.getContext()).startActivityForResult(intent,1);
+                }
             }
         });
     }

@@ -61,6 +61,15 @@ public class ViewWorkoutActivity extends AppCompatActivity {
         setWorkoutData();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onResume() {
+        super.onResume();
+        workout = dataBaseHelper.getWorkoutById(workout.getId());
+        setWorkoutData();
+        adapter.setExercises(workout.getExerciseModels());
+    }
+
     private void initLayout(){
         name = findViewById(R.id.workoutName);
         date = findViewById(R.id.workoutDate);
@@ -81,6 +90,7 @@ public class ViewWorkoutActivity extends AppCompatActivity {
         backBtn = findViewById(R.id.backBtn);
         editBtn = findViewById(R.id.editWorkoutBtn);
         backBtn.setOnClickListener(back);
+        editBtn.setOnClickListener(editWorkout);
 
     }
     View.OnClickListener changeDescription = new View.OnClickListener() {
@@ -105,9 +115,12 @@ public class ViewWorkoutActivity extends AppCompatActivity {
         }
     };
     View.OnClickListener editWorkout = new View.OnClickListener() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void onClick(View view) {
-
+            Intent intent = new Intent(ViewWorkoutActivity.this,CreateWorkoutActivity.class);
+            intent.putExtra("id",workout.getId());
+            startActivity(intent);
         }
     };
 

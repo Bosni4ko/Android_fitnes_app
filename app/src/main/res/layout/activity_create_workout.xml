@@ -6,15 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".workout.CreateWorkoutActivity">
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/exercisesLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/exercisesRecycleView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxHeight="300dp"
+            app:layout_constraintBottom_toTopOf="@+id/workoutDescription"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
         <Button
             android:id="@+id/addExerciseBtn"
             android:layout_width="fill_parent"
@@ -22,53 +32,72 @@
             android:onClick="addExercise"
             android:text="@string/add_exercise_btn" />
 
-    </RelativeLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/workoutName"
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="200dp"
+        android:id="@+id/workoutNameLayout"
         android:layout_marginTop="40dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+        <EditText
+            android:id="@+id/workoutName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="@string/default_name" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/workoutDescription"
-        android:layout_width="235dp"
-        android:layout_height="73dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
         android:ems="10"
-        android:gravity="start|top"
-        android:inputType="textMultiLine"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
-        app:layout_constraintVertical_bias="0.608" />
+        app:layout_constraintTop_toBottomOf="@+id/exercisesLayout"
+        app:layout_constraintVertical_bias="0.45"
+        android:id="@+id/workoutDescriptionLayout">
+        <EditText
+            android:id="@+id/workoutDescription"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="start|top"
+            android:inputType="textMultiLine" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
-        app:layout_constraintEnd_toEndOf="@+id/workoutName"
-        app:layout_constraintStart_toStartOf="@+id/workoutName"
-        app:layout_constraintTop_toBottomOf="@+id/workoutName">
-
+        android:id="@+id/dateTimeLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/workoutNameLayout"
+        android:layout_marginTop="20dp"
+        android:gravity="center">
         <Button
             android:id="@+id/datePickerBtn"
-            android:layout_width="250dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="openDatePicker"
-            android:text="@string/date_placeholder" />
-
-    </LinearLayout>
-
+            android:onClick="openDatePicker" />
+        <Button
+            android:id="@+id/timePickerBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="openTimePicker"
+            app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
+            app:layout_constraintEnd_toEndOf="@+id/datePickerBtn"
+            app:layout_constraintStart_toStartOf="@+id/datePickerBtn"
+            app:layout_constraintTop_toBottomOf="@+id/datePickerBtn"
+            app:layout_constraintVertical_bias="0.19999999" />
+    </com.google.android.material.textfield.TextInputLayout>
     <Button
         android:id="@+id/addWorkoutBtn"
         android:layout_width="wrap_content"
@@ -76,27 +105,11 @@
         android:text="@string/add_workout_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/exercisesRecycleView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextMultiLine"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/workoutDescriptionLayout" />
 
-    <Button
-        android:id="@+id/timePickerBtn"
-        android:onClick="openTimePicker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/time_placeholder"
-        app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
-        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

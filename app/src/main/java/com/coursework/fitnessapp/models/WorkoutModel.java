@@ -2,12 +2,9 @@ package com.coursework.fitnessapp.models;
 
 import com.coursework.fitnessapp.supportclasses.TimeDuration;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.Period;
 import java.util.ArrayList;
-import java.util.Date;
 public class WorkoutModel {
 
     private String id;

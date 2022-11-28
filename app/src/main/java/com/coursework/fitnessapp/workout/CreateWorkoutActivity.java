@@ -23,27 +23,25 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
 import com.coursework.fitnessapp.R;
 import com.coursework.fitnessapp.enums.Enums;
-import com.coursework.fitnessapp.exercises.DefaultExerciseActivity;
+import com.coursework.fitnessapp.exercises.ViewExercisesActivity;
 import com.coursework.fitnessapp.models.ExerciseModel;
 import com.coursework.fitnessapp.models.WorkoutModel;
 import com.coursework.fitnessapp.supportclasses.TimeDuration;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Locale;
-import java.util.Random;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class CreateWorkoutActivity extends AppCompatActivity {
@@ -51,6 +49,12 @@ public class CreateWorkoutActivity extends AppCompatActivity {
     DataBaseHelper dataBaseHelper = new DataBaseHelper(CreateWorkoutActivity.this);
     private EditText workoutName;
     private EditText workoutDescription;
+
+    private TextInputLayout workoutNameLayout;
+    private TextInputLayout dateTimeLayout;
+    private TextInputLayout workoutDescriptionLayout;
+    private TextInputLayout exercisesLayout;
+
     private DatePickerDialog datePickerDialog;
     private Button dateButton;
     private Button timeButton;
@@ -63,18 +67,30 @@ public class CreateWorkoutActivity extends AppCompatActivity {
     private Dialog dialog;
     private Button addDefaultExercise;
     private Button addCustomExercise;
+    private Boolean isEditMode;
 
     private ArrayList<ExerciseModel> exercises;
+    private WorkoutModel workout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_workout);
 
-        exercises = new ArrayList<>();
+        Intent intent = getIntent();
+        if(intent.getExtras() == null){
+            exercises = new ArrayList<>();
+            isEditMode = false;
+        }
+        else {
+            isEditMode = true;
+            workout = dataBaseHelper.getWorkoutById(intent.getExtras().get("id").toString());
+            exercises = workout.getExerciseModels();
+        }
         ExercisesRecViewAdapter adapter = new ExercisesRecViewAdapter();
         adapter.setExercises(exercises);
         initLayout(adapter);
+
 
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
@@ -95,13 +111,16 @@ public class CreateWorkoutActivity extends AppCompatActivity {
     private void initLayout(ExercisesRecViewAdapter adapter){
         workoutName = findViewById(R.id.workoutName);
         workoutDescription = findViewById(R.id.workoutDescription);
+        workoutNameLayout = findViewById(R.id.workoutNameLayout);
+        dateTimeLayout = findViewById(R.id.dateTimeLayout);
+        workoutDescriptionLayout = findViewById(R.id.workoutDescriptionLayout);
+        exercisesLayout = findViewById(R.id.exercisesLayout);
 
-        initDatePicker();
         dateButton = findViewById(R.id.datePickerBtn);
-        dateButton.setText(getTodaysDate());
+        initDatePicker();
 
-        initTimePicker();
         timeButton = findViewById(R.id.timePickerBtn);
+        initTimePicker();
 
         exercisesRecycleView = findViewById(R.id.exercisesRecycleView);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN,0) {
@@ -124,6 +143,17 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         exercisesRecycleView.setLayoutManager(new LinearLayoutManager(CreateWorkoutActivity.this));
 
         addWorkout = findViewById(R.id.addWorkoutBtn);
+
+        if(isEditMode){
+            dateButton.setText(workout.getDate().format(Enums.formatter));
+            workoutName.setText(workout.getName());
+            workoutDescription.setText(workout.getDescription());
+            timeButton.setText(workout.getTime().toString());
+            addWorkout.setText(R.string.save_changes);
+        }
+        else {
+            dateButton.setText(getTodaysDate());
+        }
         addWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,10 +173,18 @@ public class CreateWorkoutActivity extends AppCompatActivity {
                 String status = Enums.WorkoutStatus.WAITING.toString();
                 String type = Enums.WorkoutType.CUSTOM.toString();
 
-
-                WorkoutModel workout = new WorkoutModel(id,name,description,exercises,date,time,type,status);
-                dataBaseHelper.addWorkout(workout);
-                finish();
+                WorkoutModel newWorkout;
+                if(validateInput()){
+                    if(isEditMode){
+                        newWorkout = new WorkoutModel(workout.getId(),name,description,exercises,date,time,type,status);
+                        dataBaseHelper.editWorkout(newWorkout);
+                    }
+                    else {
+                        newWorkout = new WorkoutModel(id,name,description,exercises,date,time,type,status);
+                        dataBaseHelper.addWorkout(newWorkout);
+                    }
+                    finish();
+                }
             }
         });
 
@@ -195,6 +233,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
                 timeButton.setText(String.format(Locale.getDefault(),"%02d:%02d",hour,minute));
             }
         };
+        timeButton.setText(String.format(Locale.getDefault(),"%02d:%02d",hour,minute));
         int style = AlertDialog.THEME_HOLO_LIGHT;
         timePickerDialog = new TimePickerDialog(CreateWorkoutActivity.this,style,onTimeSetListener,hour,minute,true);
     }
@@ -214,17 +253,45 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         addDefaultExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CreateWorkoutActivity.this, DefaultExerciseActivity.class);
+                Intent intent = new Intent(CreateWorkoutActivity.this, ViewExercisesActivity.class);
+                intent.putExtra("type",Enums.ExerciseType.Default);
+                intent.putExtra("action",Enums.ExerciseAction.Add);
                 activityResultLauncher.launch(intent);
             }
         });
         addCustomExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(CreateWorkoutActivity.this, ViewExercisesActivity.class);
+                intent.putExtra("type",Enums.ExerciseType.Custom);
+                intent.putExtra("action",Enums.ExerciseAction.Add);
+                activityResultLauncher.launch(intent);
             }
         });
         dialog.show();
+    }
+    public boolean validateInput(){
+        Boolean hasError = false;
+        if(workoutName.getText().toString().isEmpty()){
+            workoutNameLayout.setError(getResources().getString(R.string.empty_name_error));
+            hasError = true;
+        }
+        else workoutNameLayout.setError(null);
+        LocalDate setDate = LocalDate.parse(dateButton.getText().toString(),Enums.formatter);
+        LocalTime setTime = LocalTime.parse(timeButton.getText().toString());
+        if(setDate.isBefore(LocalDate.now()) || (setDate.equals(LocalDate.now()) && setTime.isBefore(LocalTime.now()))){
+            dateTimeLayout.setError(getResources().getString(R.string.incorrect_date_time_error));
+            hasError = true;
+        }
+        else dateTimeLayout.setError(null);
+        if(workoutDescription.getText().toString().isEmpty()){
+            workoutDescriptionLayout.setError(getResources().getString(R.string.empty_description_error));
+            hasError = true;
+        }else workoutDescriptionLayout.setError(null);
+        if(exercises.isEmpty()){
+            exercisesLayout.setError(getResources().getString(R.string.no_exercises_error));
+        }else exercisesLayout.setError(null);
+        return !hasError;
     }
 
 }

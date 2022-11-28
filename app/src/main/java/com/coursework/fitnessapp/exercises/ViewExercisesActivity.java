@@ -1,6 +1,5 @@
 package com.coursework.fitnessapp.exercises;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +11,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
 import com.coursework.fitnessapp.R;
@@ -19,24 +19,35 @@ import com.coursework.fitnessapp.models.ExerciseModel;
 
 import java.util.ArrayList;
 
-public class DefaultExerciseActivity extends AppCompatActivity {
+public class ViewExercisesActivity extends AppCompatActivity {
     ArrayList<ExerciseModel> exercises;
+    private String type;
+    private String action;
+    private TextView noExercisesText;
     private RecyclerView exercisesRecView;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_default_exercise);
+        setContentView(R.layout.activity_view_exercises);
 
+        Intent intent = getIntent();
+        type = intent.getExtras().get("type").toString();
+        action = intent.getExtras().get("action").toString();
         DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
-        exercises = dataBaseHelper.getAllExercisesOfType("Default");
+        exercises = dataBaseHelper.getAllExercisesOfType(type);
 
-        exercisesRecView = findViewById(R.id.exercisesRecycleView);
-        ExercisesRecViewAdapter adapter = new ExercisesRecViewAdapter();
-        adapter.setExercises(exercises);
+        if(!exercises.isEmpty()){
+            exercisesRecView = findViewById(R.id.exercisesRecycleView);
+            ExercisesRecViewAdapter adapter = new ExercisesRecViewAdapter(action);
+            adapter.setExercises(exercises);
+            exercisesRecView.setAdapter(adapter);
+            exercisesRecView.setLayoutManager(new LinearLayoutManager(this));
+        }else {
+            noExercisesText = findViewById(R.id.noExercisesText);
+            noExercisesText.setVisibility(View.VISIBLE);
+        }
 
-        exercisesRecView.setAdapter(adapter);
-        exercisesRecView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override

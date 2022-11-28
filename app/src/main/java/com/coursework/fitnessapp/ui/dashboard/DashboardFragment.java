@@ -30,6 +30,7 @@ public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
     private RecyclerView workoutsRecView;
+    private WorkoutsRecViewAdapter adapter;
     private DataBaseHelper dataBaseHelper;
     ArrayList<WorkoutModel> workouts;
 
@@ -52,13 +53,21 @@ public class DashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         dataBaseHelper = new DataBaseHelper(this.getContext());
 
-        WorkoutsRecViewAdapter adapter = new WorkoutsRecViewAdapter();
+        adapter = new WorkoutsRecViewAdapter();
         workouts = dataBaseHelper.getAllWorkoutsWithStatus(Enums.WorkoutStatus.WAITING.toString());
         Collections.sort(workouts,new WorkoutSortComparator());
         workoutsRecView = view.findViewById(R.id.workoutsRecView);
         adapter.setWorkouts(workouts);
         workoutsRecView.setAdapter(adapter);
         workoutsRecView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        workouts = dataBaseHelper.getAllWorkoutsWithStatus(Enums.WorkoutStatus.WAITING.toString());
+        Collections.sort(workouts,new WorkoutSortComparator());
+        adapter.setWorkouts(workouts);
     }
 
     @Override

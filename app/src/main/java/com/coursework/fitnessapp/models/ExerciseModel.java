@@ -3,7 +3,6 @@ package com.coursework.fitnessapp.models;
 
 import com.coursework.fitnessapp.supportclasses.TimeDuration;
 
-import java.time.Duration;
 
 public class ExerciseModel {
     private Integer id;
@@ -29,6 +28,7 @@ public class ExerciseModel {
         this.defaultCount = defaultCount;
         this.type = type;
     }
+
     public ExerciseModel(){
 
     }
