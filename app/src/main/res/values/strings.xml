@@ -27,6 +27,7 @@
     <string name="no_exercises_error">You should add at least 1 exercise</string>
     <string name="zero_duration_error">Exercise duration cannot be 0</string>
     <string name="zero_exercise_amount">Exercises amount cannot be 0</string>
+
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -35,5 +36,5 @@
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
+    <string name="login_failed">"Unknown error occurred.Please try again later."</string>
 </resources>
