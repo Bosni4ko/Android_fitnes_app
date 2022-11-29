@@ -51,6 +51,7 @@ public class CreateExerciseActivity extends AppCompatActivity {
 
     ExerciseModel exercise;
     DataBaseHelper dataBaseHelper;
+    Boolean isEditMode = false;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -58,7 +59,15 @@ public class CreateExerciseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_exercise);
         dataBaseHelper = new DataBaseHelper(CreateExerciseActivity.this);
+
         initLayout();
+        Intent intent = getIntent();
+        if(intent.getExtras() != null){
+            isEditMode = true;
+            int id = Integer.parseInt(intent.getExtras().get("id").toString());
+            exercise = dataBaseHelper.getExerciseById(id);
+            setExerciseValues();
+        }
     }
     private void initLayout(){
         exerciseName = findViewById(R.id.exerciseName);
@@ -157,7 +166,12 @@ public class CreateExerciseActivity extends AppCompatActivity {
                 TimeDuration duration = new TimeDuration(txtHours.getText().toString(),txtMinutes.getText().toString(),txtSeconds.getText().toString());
                 int count = Integer.parseInt(exerciseCount.getText().toString());
                 ExerciseModel newExercise = new ExerciseModel(null,name,description,null,null,null,duration,count, Enums.ExerciseType.Custom.toString());
-                dataBaseHelper.addExercise(newExercise);
+                if(isEditMode){
+                    newExercise.setId(exercise.getId());
+                    dataBaseHelper.editExercise(newExercise);
+                }else {
+                    dataBaseHelper.addExercise(newExercise);
+                }
                 finish();
             }
         }
@@ -169,6 +183,17 @@ public class CreateExerciseActivity extends AppCompatActivity {
         }
     };
 
+    public void setExerciseValues(){
+        exerciseName.setText(exercise.getName());
+        exerciseCount.setText(String.valueOf(exercise.getDefaultCount()));
+        exerciseDescription.setText(exercise.getDescription());
+        txtHours.setText(exercise.getDefaultLength().getHours());
+        txtMinutes.setText(exercise.getDefaultLength().getMinutes());
+        txtSeconds.setText(exercise.getDefaultLength().getSeconds());
+
+        addExerciseBtn.setText(R.string.save_changes);
+
+    }
     private boolean validateInput(){
         boolean hasError = false;
         if(exerciseName.getText().toString().isEmpty()){

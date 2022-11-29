@@ -152,4 +152,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/relativeLayout2"
         app:layout_constraintVertical_bias="0.85" />
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/backBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/backBtn"
+        app:layout_constraintTop_toTopOf="@+id/backBtn"
+        android:text="@string/edit"
+        android:id="@+id/editExerciseBtn"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -201,6 +201,32 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
         return exercise;
     }
+    public void editExercise(ExerciseModel exercise){
+        SQLiteDatabase db = getWritableDatabase();
+        String queryString = "DELETE FROM " + IMAGE_URL_TABLE + " WHERE " + COLUMN_EXERCISE_ID + " = ?";
+        db.execSQL(queryString,new String[]{String.valueOf(exercise.getId())});
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_NAME,exercise.getName());
+        cv.put(COLUMN_DESCRIPTION,exercise.getDescription());
+        cv.put(COLUMN_PREVIEW_IMG_URL,exercise.getPreviewUrl());
+        cv.put(COLUMN_VIDEO_URL,exercise.getVideoUrl());
+        cv.put(COLUMN_LENGTH,exercise.getDefaultLength().getToStringDuration());
+        cv.put(COLUMN_DEFAULT_COUNT,exercise.getDefaultCount());
+        cv.put(COLUMN_TYPE,exercise.getType());
+        db.update(EXERCISE_TABLE,cv,COLUMN_ID + " = ?",new String[]{String.valueOf(exercise.getId())});
+        ContentValues imgCv = new ContentValues();
+        if(exercise.getImageUrls() != null){
+            int counter = 0;
+            for(String imageUrl : exercise.getImageUrls()) {
+                imgCv.put(COLUMN_URL, imageUrl);
+                imgCv.put(COLUMN_SNUMBER, counter);
+                imgCv.put(COLUMN_EXERCISE_ID, exercise.getId());
+                counter++;
+                db.insert(IMAGE_URL_TABLE, null, imgCv);
+            }
+        }
+
+    }
     public WorkoutModel getWorkoutById(String id){
         WorkoutModel workout;
         String queryString = "SELECT * FROM " + WORKOUT_TABLE + " WHERE " + COLUMN_ID + " = ?" ;
@@ -228,13 +254,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public void editWorkout(WorkoutModel workout){
         SQLiteDatabase db = getWritableDatabase();
-        String queryString = "UPDATE " + WORKOUT_TABLE +
-                             " SET " + COLUMN_NAME + " = ?,"
-                                    + COLUMN_DESCRIPTION + " = ?,"
-                                    + COLUMN_DATE + " = ?" +
-                            " WHERE " + COLUMN_ID + " = ?";
-        //db.execSQL(queryString,new String[]{workout.getName(),workout.getDescription(),workout.getDate().toString() + ' ' + workout.getTime().toString(),workout.getId()});
-        queryString = "DELETE FROM " + WORKOUT_EXERCISES_TABLE + " WHERE " + COLUMN_WORKOUT_ID + " = ?";
+        String queryString = "DELETE FROM " + WORKOUT_EXERCISES_TABLE + " WHERE " + COLUMN_WORKOUT_ID + " = ?";
         db.execSQL(queryString,new String[]{workout.getId()});
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_NAME,workout.getName());

@@ -37,8 +37,10 @@ public class ViewExerciseActivity extends AppCompatActivity {
     private Boolean isExpanded = false;
 
     private Button backBtn;
+    private Button editExerciseBtn;
 
     ExerciseModel exercise;
+    DataBaseHelper dataBaseHelper;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -46,7 +48,7 @@ public class ViewExerciseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_exercise);
 
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(ViewExerciseActivity.this);
+        dataBaseHelper = new DataBaseHelper(ViewExerciseActivity.this);
 
         initLayout();
         Intent intent = getIntent();
@@ -81,11 +83,13 @@ public class ViewExerciseActivity extends AppCompatActivity {
 
         backBtn = findViewById(R.id.backBtn);
         backBtn.setOnClickListener(back);
+        editExerciseBtn = findViewById(R.id.editExerciseBtn);
+        editExerciseBtn.setOnClickListener(editExercise);
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setExerciseValues(){
         exerciseName.setText(exercise.getName());
-        exerciseDuration.setText(exercise.getLength().getToStringDuration());
+        exerciseDuration.setText(exercise.getDefaultLength().getToStringDuration());
         exerciseCount.setText(String.valueOf(exercise.getCount()));
         setDescription();
         if(exercise.getPreviewUrl() != null){
@@ -126,4 +130,20 @@ public class ViewExerciseActivity extends AppCompatActivity {
             finish();
         }
     };
+    View.OnClickListener editExercise = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(ViewExerciseActivity.this,CreateExerciseActivity.class);
+            intent.putExtra("id",exercise.getId());
+            startActivity(intent);
+        }
+    };
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onResume() {
+        super.onResume();
+        exercise = dataBaseHelper.getExerciseById(exercise.getId());
+        setExerciseValues();
+    }
 }
