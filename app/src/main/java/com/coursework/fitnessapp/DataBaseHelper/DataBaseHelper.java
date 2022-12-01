@@ -11,10 +11,13 @@ import android.os.Build;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.coursework.fitnessapp.MainActivity;
 import com.coursework.fitnessapp.enums.Enums;
 import com.coursework.fitnessapp.models.ExerciseModel;
 import com.coursework.fitnessapp.models.WorkoutModel;
 import com.coursework.fitnessapp.supportclasses.TimeDuration;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -42,18 +45,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_STATUS = "Status";
     public static final String COLUMN_EXERCISE_ID = "Exercise_ID";
     public static final String COLUMN_WORKOUT_ID = "Workout_ID";
+    public static final String COLUMN_USER_EMAIL = "User_Email";
 
+    private GoogleSignInAccount account;
 
     public DataBaseHelper(@Nullable Context context) {
         super(context, "fitness_app.db" , null, 1);
+        account = GoogleSignIn.getLastSignedInAccount(context);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String createExerciseTableStatement = "CREATE TABLE " + EXERCISE_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " nvarchar(20) NOT NULL, " + COLUMN_DESCRIPTION + " Text," + COLUMN_PREVIEW_IMG_URL + " Text," + COLUMN_VIDEO_URL + " Text," + COLUMN_LENGTH + " nvarchar(10) NOT NULL," + COLUMN_DEFAULT_COUNT + " INT NOT NULL," + COLUMN_TYPE + " nvarchar(12) NOT NULL )";
+        String createExerciseTableStatement = "CREATE TABLE " + EXERCISE_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " nvarchar(20) NOT NULL, " + COLUMN_DESCRIPTION + " Text," + COLUMN_PREVIEW_IMG_URL + " Text," + COLUMN_VIDEO_URL + " Text," + COLUMN_LENGTH + " nvarchar(10) NOT NULL," + COLUMN_DEFAULT_COUNT + " INT NOT NULL," + COLUMN_TYPE + " nvarchar(12) NOT NULL," + COLUMN_USER_EMAIL + " nvarchar(30) )";
         sqLiteDatabase.execSQL(createExerciseTableStatement);
 
-        String createWorkoutTableStatement = "CREATE TABLE " + WORKOUT_TABLE + "(" + COLUMN_ID + " nvarchar(12) PRIMARY KEY NOT NULL," + COLUMN_NAME + " nvarchar(20) NOT NULL," + COLUMN_DESCRIPTION + " Text," + COLUMN_DATE + " Date NOT NULL," + COLUMN_STATUS + " nvarchar(10) NOT NULL," + COLUMN_TYPE + " nvarchar(12) NOT NULL)";
+        String createWorkoutTableStatement = "CREATE TABLE " + WORKOUT_TABLE + "(" + COLUMN_ID + " nvarchar(12) PRIMARY KEY NOT NULL," + COLUMN_NAME + " nvarchar(20) NOT NULL," + COLUMN_DESCRIPTION + " Text," + COLUMN_DATE + " Date NOT NULL," + COLUMN_STATUS + " nvarchar(10) NOT NULL," + COLUMN_TYPE + " nvarchar(12) NOT NULL," + COLUMN_USER_EMAIL + " nvarchar(30))";
         sqLiteDatabase.execSQL(createWorkoutTableStatement);
 
         String createImageUrlTableStatement = "CREATE TABLE " + IMAGE_URL_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT ," + COLUMN_URL + " nvarchar(30)," + COLUMN_SNUMBER + " INT NOT NULL," + COLUMN_EXERCISE_ID + " INTEGER NOT NULL,FOREIGN KEY("+COLUMN_EXERCISE_ID+") REFERENCES " + EXERCISE_TABLE + "(" +COLUMN_ID+"))";
@@ -62,7 +68,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String createWorkoutExercisesTableStatement = "CREATE TABLE " + WORKOUT_EXERCISES_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_SNUMBER + " INT NOT NULL," + COLUMN_LENGTH + " INT NOT NULL, " + COLUMN_COUNT + " INT NOT NULL," + COLUMN_WORKOUT_ID + " nvarchar(12) NOT NULL," + COLUMN_EXERCISE_ID + " INTEGER NOT NULL,FOREIGN KEY(" + COLUMN_WORKOUT_ID + ") REFERENCES " + WORKOUT_TABLE +"(" +COLUMN_ID + "),FOREIGN KEY(" + COLUMN_EXERCISE_ID + ") REFERENCES " + EXERCISE_TABLE +"(" +COLUMN_ID +")  )";
         sqLiteDatabase.execSQL(createWorkoutExercisesTableStatement);
 
-        //fillDatabase();
+//        fillDatabase();
     }
 
     @Override
@@ -86,6 +92,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_LENGTH, exercise.getDefaultLength().getToStringDuration());
         cv.put(COLUMN_DEFAULT_COUNT,exercise.getDefaultCount());
         cv.put(COLUMN_TYPE,exercise.getType());
+        if(exercise.getType() == Enums.ExerciseType.Custom.toString()){
+            cv.put(COLUMN_USER_EMAIL,account.getEmail());
+        }
         long insert = db.insert(EXERCISE_TABLE,null,cv);
         if(insert == -1){
             return false;
@@ -121,7 +130,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_DATE, String.valueOf(workout.getDate()) +' '+ workout.getTime().toString());
         cv.put(COLUMN_STATUS,workout.getStatus());
         cv.put(COLUMN_TYPE,workout.getType());
-
+        if(workout.getType() == Enums.WorkoutType.CUSTOM.toString()){
+            cv.put(COLUMN_USER_EMAIL,account.getEmail());
+        }
         long insert = db.insert(WORKOUT_TABLE,null,cv);
         if(insert == -1){
             return false;
@@ -153,11 +164,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public ArrayList<ExerciseModel> getAllExercisesOfType(String type){
         ArrayList<ExerciseModel> returnList = new ArrayList<>();
-        String queryString = "SELECT * FROM " + EXERCISE_TABLE + " WHERE " + COLUMN_TYPE + " = ?";
-
         SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery(queryString, new String[]{type});
+        Cursor cursor;
+        if(type.equals(Enums.ExerciseType.Default.toString())){
+            String queryString = "SELECT * FROM " + EXERCISE_TABLE + " WHERE " + COLUMN_TYPE + " = ?";
+            cursor = db.rawQuery(queryString, new String[]{type});
+        }
+        else {
+            String queryString = "SELECT * FROM " + EXERCISE_TABLE + " WHERE " + COLUMN_TYPE + " = ? AND " + COLUMN_USER_EMAIL + " = ?";
+            cursor = db.rawQuery(queryString, new String[]{type,account.getEmail()});
+        }
 
         if(cursor.moveToFirst()){
             do{
@@ -202,38 +218,39 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return exercise;
     }
     public void editExercise(ExerciseModel exercise){
-        SQLiteDatabase db = getWritableDatabase();
-        String queryString = "DELETE FROM " + IMAGE_URL_TABLE + " WHERE " + COLUMN_EXERCISE_ID + " = ?";
-        db.execSQL(queryString,new String[]{String.valueOf(exercise.getId())});
-        ContentValues cv = new ContentValues();
-        cv.put(COLUMN_NAME,exercise.getName());
-        cv.put(COLUMN_DESCRIPTION,exercise.getDescription());
-        cv.put(COLUMN_PREVIEW_IMG_URL,exercise.getPreviewUrl());
-        cv.put(COLUMN_VIDEO_URL,exercise.getVideoUrl());
-        cv.put(COLUMN_LENGTH,exercise.getDefaultLength().getToStringDuration());
-        cv.put(COLUMN_DEFAULT_COUNT,exercise.getDefaultCount());
-        cv.put(COLUMN_TYPE,exercise.getType());
-        db.update(EXERCISE_TABLE,cv,COLUMN_ID + " = ?",new String[]{String.valueOf(exercise.getId())});
-        ContentValues imgCv = new ContentValues();
-        if(exercise.getImageUrls() != null){
-            int counter = 0;
-            for(String imageUrl : exercise.getImageUrls()) {
-                imgCv.put(COLUMN_URL, imageUrl);
-                imgCv.put(COLUMN_SNUMBER, counter);
-                imgCv.put(COLUMN_EXERCISE_ID, exercise.getId());
-                counter++;
-                db.insert(IMAGE_URL_TABLE, null, imgCv);
+        if(exercise.getType() != Enums.ExerciseType.Default.toString()){
+            SQLiteDatabase db = getWritableDatabase();
+            String queryString = "DELETE FROM " + IMAGE_URL_TABLE + " WHERE " + COLUMN_EXERCISE_ID + " = ?";
+            db.execSQL(queryString,new String[]{String.valueOf(exercise.getId())});
+            ContentValues cv = new ContentValues();
+            cv.put(COLUMN_NAME,exercise.getName());
+            cv.put(COLUMN_DESCRIPTION,exercise.getDescription());
+            cv.put(COLUMN_PREVIEW_IMG_URL,exercise.getPreviewUrl());
+            cv.put(COLUMN_VIDEO_URL,exercise.getVideoUrl());
+            cv.put(COLUMN_LENGTH,exercise.getDefaultLength().getToStringDuration());
+            cv.put(COLUMN_DEFAULT_COUNT,exercise.getDefaultCount());
+            cv.put(COLUMN_TYPE,exercise.getType());
+            db.update(EXERCISE_TABLE,cv,COLUMN_ID + " = ?",new String[]{String.valueOf(exercise.getId())});
+            ContentValues imgCv = new ContentValues();
+            if(exercise.getImageUrls() != null){
+                int counter = 0;
+                for(String imageUrl : exercise.getImageUrls()) {
+                    imgCv.put(COLUMN_URL, imageUrl);
+                    imgCv.put(COLUMN_SNUMBER, counter);
+                    imgCv.put(COLUMN_EXERCISE_ID, exercise.getId());
+                    counter++;
+                    db.insert(IMAGE_URL_TABLE, null, imgCv);
+                }
             }
         }
 
     }
     public WorkoutModel getWorkoutById(String id){
         WorkoutModel workout;
-        String queryString = "SELECT * FROM " + WORKOUT_TABLE + " WHERE " + COLUMN_ID + " = ?" ;
-
         SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery(queryString, new String[]{id});
+        Cursor cursor;
+        String queryString = "SELECT * FROM " + WORKOUT_TABLE + " WHERE " + COLUMN_ID + " = ? AND " + COLUMN_USER_EMAIL + " = ?" ;
+        cursor = db.rawQuery(queryString, new String[]{id,account.getEmail()});
 
         if(cursor.moveToFirst()){
             String workoutName = cursor.getString(1);
@@ -252,6 +269,36 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return workout;
     }
 
+    public ArrayList<WorkoutModel> getAllUserWorkouts(){
+        ArrayList<WorkoutModel> workouts = new ArrayList<>();
+
+        return  workouts;
+    }
+    public ArrayList<WorkoutModel> getWorkoutsByDate(String workoutDate){
+        ArrayList<WorkoutModel> workouts = new ArrayList<>();
+        WorkoutModel newWorkout;
+        String queryString = "SELECT * FROM " + WORKOUT_TABLE + " WHERE " + COLUMN_DATE + " >= ? AND " + COLUMN_USER_EMAIL + " = ?" ;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, new String[]{workoutDate + " 00:00",account.getEmail()});
+        if(cursor.moveToFirst()){
+            do {
+                String id = cursor.getString(0);
+                String workoutName = cursor.getString(1);
+                String workoutDescription = cursor.getString(2);
+                String dateTime = cursor.getString(3);
+                LocalDate date = LocalDate.parse(dateTime.substring(0,10), Enums.fromDbFormatter);
+                LocalTime time = LocalTime.parse(dateTime.substring(11));
+                String status = cursor.getString(4);
+                String type = cursor.getString(5);
+                ArrayList<ExerciseModel> exercises = getAllExercisesOfWorkout(id);
+                newWorkout = new WorkoutModel(id,workoutName,workoutDescription,exercises,date,time,type,status);
+                workouts.add(newWorkout);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return workouts;
+    }
     public void editWorkout(WorkoutModel workout){
         SQLiteDatabase db = getWritableDatabase();
         String queryString = "DELETE FROM " + WORKOUT_EXERCISES_TABLE + " WHERE " + COLUMN_WORKOUT_ID + " = ?";
@@ -279,9 +326,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
     public ArrayList<WorkoutModel> getAllWorkoutsWithStatus(String status){
         ArrayList<WorkoutModel> workouts = new ArrayList<WorkoutModel>();
-        String queryString = "SELECT * FROM " + WORKOUT_TABLE + " WHERE " + COLUMN_STATUS + " = ?";
+        String queryString = "SELECT * FROM " + WORKOUT_TABLE + " WHERE " + COLUMN_STATUS + " = ? AND " + COLUMN_USER_EMAIL + " = ?";
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(queryString, new String[]{status});
+        Cursor cursor = db.rawQuery(queryString, new String[]{status,account.getEmail()});
         if(cursor.moveToFirst()){
             do {
                 String id = cursor.getString(0);

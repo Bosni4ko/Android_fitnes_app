@@ -29,6 +29,7 @@ import java.util.Collections;
 public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
+    private TextView workoutsText;
     private RecyclerView workoutsRecView;
     private WorkoutsRecViewAdapter adapter;
     private DataBaseHelper dataBaseHelper;
@@ -42,8 +43,8 @@ public class DashboardFragment extends Fragment {
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textDashboard;
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+//        final TextView textView = binding.textDashboard;
+//        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         return root;
     }
@@ -54,20 +55,28 @@ public class DashboardFragment extends Fragment {
         dataBaseHelper = new DataBaseHelper(this.getContext());
 
         adapter = new WorkoutsRecViewAdapter();
-        workouts = dataBaseHelper.getAllWorkoutsWithStatus(Enums.WorkoutStatus.WAITING.toString());
-        Collections.sort(workouts,new WorkoutSortComparator());
         workoutsRecView = view.findViewById(R.id.workoutsRecView);
-        adapter.setWorkouts(workouts);
+        workoutsText = view.findViewById(R.id.workoutsText);
+        setFragmentContent();
         workoutsRecView.setAdapter(adapter);
         workoutsRecView.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    public void setFragmentContent(){
         workouts = dataBaseHelper.getAllWorkoutsWithStatus(Enums.WorkoutStatus.WAITING.toString());
         Collections.sort(workouts,new WorkoutSortComparator());
         adapter.setWorkouts(workouts);
+        if(workouts.isEmpty()){
+            workoutsText.setText(R.string.no_workouts);
+        }
+        else {
+            workoutsText.setText(R.string.your_workouts);
+        }
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        setFragmentContent();
     }
 
     @Override

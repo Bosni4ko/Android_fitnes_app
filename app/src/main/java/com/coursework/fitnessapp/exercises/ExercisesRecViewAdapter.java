@@ -47,7 +47,7 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-                if(action == Enums.ExerciseAction.View.toString()){
+                if(action.equals(Enums.ExerciseAction.View.toString())){
                     Intent intent = new Intent(holder.parent.getContext(),ViewExerciseActivity.class);
                     intent.putExtra("exercise", String.valueOf(exercise.getId()));
                     holder.parent.getContext().startActivity(intent);

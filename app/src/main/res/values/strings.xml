@@ -20,6 +20,11 @@
     <string name="choose_exercise_type">What exercises do you want to see?</string>
     <string name="default_name">Name</string>
     <string name="empty_exercises">You don\'t have any exercises</string>
+    <string name="next_workout">Next workout:</string>
+    <string name="no_workouts_today">You don\'t have any workouts today</string>
+    <string name="todays_workouts">Today\'s workouts:</string>
+    <string name="your_workouts">Your workouts</string>
+    <string name="no_workouts">You don\'t have any workouts</string>
 
     <string name="empty_name_error">Name cannot be empty</string>
     <string name="incorrect_date_time_error">You cannot set date and time before current</string>

@@ -46,7 +46,7 @@ import java.util.Locale;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class CreateWorkoutActivity extends AppCompatActivity {
     ActivityResultLauncher<Intent> activityResultLauncher;
-    DataBaseHelper dataBaseHelper = new DataBaseHelper(CreateWorkoutActivity.this);
+    DataBaseHelper dataBaseHelper;
     private EditText workoutName;
     private EditText workoutDescription;
 
@@ -77,6 +77,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_workout);
 
+        dataBaseHelper = new DataBaseHelper(CreateWorkoutActivity.this);
         Intent intent = getIntent();
         if(intent.getExtras() == null){
             exercises = new ArrayList<>();
@@ -218,7 +219,15 @@ public class CreateWorkoutActivity extends AppCompatActivity {
     }
 
     private String makeDateString(int day,int month,int year){
-        return day + " " + month + " " + year;
+        String dayString = String.valueOf(day);
+        String monthString = String.valueOf(month);
+        if(day < 10){
+            dayString = "0" + dayString;
+        }
+        if(month < 10){
+            monthString = "0" + monthString;
+        }
+        return dayString + " " + monthString + " " + year;
     }
     public void openDatePicker(View view) {
         datePickerDialog.show();
