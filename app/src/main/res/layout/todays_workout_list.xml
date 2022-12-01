@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/collapsedRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/workoutName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="50dp" />
+
+            <TextView
+                android:id="@+id/workoutTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@id/workoutName"
+                android:inputType="time" />
+
+            <TextView
+                android:id="@+id/workoutDurationText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/workoutName"
+                android:text="@string/duration" />
+
+            <TextView
+                android:id="@+id/workoutDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/workoutName"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@+id/workoutDurationText" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/workoutStatus"
+                android:layout_toLeftOf="@id/removeWorkout"
+                android:layout_marginRight="30dp"/>
+            <ImageButton
+                android:id="@+id/removeWorkout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_remove_cross" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/collapsedRelativeLayout"
+            android:id="@+id/expandedRelativeLayout">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="300dp"
+                android:id="@+id/workoutDescription"/>
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/startWorkoutBtn"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_start_arrow"
+                android:backgroundTint="@color/white"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>

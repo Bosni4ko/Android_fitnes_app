@@ -271,15 +271,36 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public ArrayList<WorkoutModel> getAllUserWorkouts(){
         ArrayList<WorkoutModel> workouts = new ArrayList<>();
-
+        SQLiteDatabase db = this.getReadableDatabase();
+        String queryString = "SELECT * FROM " + WORKOUT_TABLE + " WHERE " + COLUMN_USER_EMAIL + " = ?";
+        Cursor cursor = db.rawQuery(queryString, new String[]{account.getEmail()});
+        WorkoutModel newWorkout;
+        if(cursor.moveToFirst()){
+            do {
+                String id = cursor.getString(0);
+                String workoutName = cursor.getString(1);
+                String workoutDescription = cursor.getString(2);
+                String dateTime = cursor.getString(3);
+                LocalDate date = LocalDate.parse(dateTime.substring(0,10), Enums.fromDbFormatter);
+                LocalTime time = LocalTime.parse(dateTime.substring(11));
+                String status = cursor.getString(4);
+                String type = cursor.getString(5);
+                ArrayList<ExerciseModel> exercises = getAllExercisesOfWorkout(id);
+                newWorkout = new WorkoutModel(id,workoutName,workoutDescription,exercises,date,time,type,status);
+                workouts.add(newWorkout);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
         return  workouts;
     }
     public ArrayList<WorkoutModel> getWorkoutsByDate(String workoutDate){
+        workoutDate = String.format(workoutDate, Enums.formatter);
         ArrayList<WorkoutModel> workouts = new ArrayList<>();
         WorkoutModel newWorkout;
-        String queryString = "SELECT * FROM " + WORKOUT_TABLE + " WHERE " + COLUMN_DATE + " >= ? AND " + COLUMN_USER_EMAIL + " = ?" ;
+        String queryString = "SELECT * FROM " + WORKOUT_TABLE + " WHERE " + COLUMN_DATE + " >= ? AND " + COLUMN_USER_EMAIL + " = ? AND " + COLUMN_STATUS + " = ?" ;
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(queryString, new String[]{workoutDate + " 00:00",account.getEmail()});
+        Cursor cursor = db.rawQuery(queryString, new String[]{workoutDate + " 00:00",account.getEmail(),Enums.WorkoutStatus.WAITING.toString()});
         if(cursor.moveToFirst()){
             do {
                 String id = cursor.getString(0);
@@ -298,6 +319,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return workouts;
+    }
+    public void changeWorkoutStatus(String status){
+
     }
     public void editWorkout(WorkoutModel workout){
         SQLiteDatabase db = getWritableDatabase();

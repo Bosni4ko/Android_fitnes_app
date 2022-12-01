@@ -3,6 +3,7 @@ package com.coursework.fitnessapp.ui.home;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +15,14 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
+import com.coursework.fitnessapp.enums.Enums;
 import com.coursework.fitnessapp.models.WorkoutModel;
 import com.coursework.fitnessapp.supportclasses.WorkoutSortComparator;
+import com.coursework.fitnessapp.ui.dashboard.WorkoutsRecViewAdapter;
 import com.coursework.fitnessapp.workout.CreateWorkoutActivity;
 import com.coursework.fitnessapp.R;
 import com.coursework.fitnessapp.databinding.FragmentHomeBinding;
@@ -26,6 +30,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -36,11 +41,15 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private TextView todaysWorkoutsText;
     private TextView noWorkoutText;
+    private TextView nextWorkoutDate;
+    private TextView nextWorkoutTime;
     private RecyclerView workoutRecView;
     private FloatingActionButton addFab;
     private RelativeLayout notificationLayout;
+    private TodaysWorkoutsRecViewAdapter adapter;
 
     private ArrayList<WorkoutModel> workouts;
+    private Handler handler = new Handler();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -67,7 +76,12 @@ public class HomeFragment extends Fragment {
         todaysWorkoutsText = view.findViewById(R.id.todaysWorkoutsText);
         noWorkoutText = view.findViewById(R.id.noWorkoutText);
         workoutRecView = view.findViewById(R.id.workoutsRecView);
+        nextWorkoutDate = view.findViewById(R.id.nextWorkoutDate);
+        nextWorkoutTime= view.findViewById(R.id.nextWorkoutTime);
         addFab = view.findViewById(R.id.addFab);
+        adapter = new TodaysWorkoutsRecViewAdapter();
+        workoutRecView.setAdapter(adapter);
+        workoutRecView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         addFab.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -80,22 +94,46 @@ public class HomeFragment extends Fragment {
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setFragmentContent(){
-        workouts = dataBaseHelper.getWorkoutsByDate(new Date().toString());
+        workouts = dataBaseHelper.getWorkoutsByDate(LocalDate.now().toString());
         Collections.sort(workouts,new WorkoutSortComparator());
         if(!workouts.isEmpty()){
             todaysWorkoutsText.setVisibility(View.VISIBLE);
             noWorkoutText.setVisibility(View.GONE);
             WorkoutModel nextWorkout = workouts.get(0);
+
         }else {
             todaysWorkoutsText.setVisibility(View.GONE);
             noWorkoutText.setVisibility(View.VISIBLE);
         }
-        if(dataBaseHelper.getAllUserWorkouts().isEmpty()){
+        ArrayList<WorkoutModel> allUserWorkouts = dataBaseHelper.getAllUserWorkouts();
+        if(allUserWorkouts.isEmpty()){
             notificationLayout.setVisibility(View.GONE);
         }
         else {
+            Collections.sort(allUserWorkouts,new WorkoutSortComparator());
+            WorkoutModel nextWorkout = allUserWorkouts.get(0);
             notificationLayout.setVisibility(View.VISIBLE);
+            if(nextWorkout.getDate().format(Enums.formatter).equals(LocalDate.now().format(Enums.formatter))){
+                nextWorkoutDate.setText(R.string.today);
+                if(LocalTime.now().isAfter(allUserWorkouts.get(0).getTime())){
+                    Runnable checkTime = new Runnable() {
+                        @Override
+                        public void run() {
+                            if(nextWorkout.getTime().plusHours(1).isBefore(LocalTime.now())){
+                                dataBaseHelper.changeWorkoutStatus(Enums.WorkoutStatus.SKIPPED.toString());
+                                setFragmentContent();
+                            }
+                        }
+                    };
+                    handler.postDelayed(checkTime,10000);
+                    nextWorkoutTime.setText(R.string.now);
+                }else nextWorkoutTime.setText(nextWorkout.getTime().toString());
+            }else{
+                nextWorkoutDate.setText(nextWorkout.getDate().toString());
+                nextWorkoutTime.setText(nextWorkout.getTime().toString());
+            }
         }
+        adapter.setWorkouts(workouts);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -104,6 +142,7 @@ public class HomeFragment extends Fragment {
         super.onResume();
         setFragmentContent();
     }
+
 
     @Override
     public void onDestroyView() {

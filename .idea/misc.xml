@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Programing/fitness_app/app/src/main/res/drawable-anydpi/ic_start_arrow.xml" value="0.1565" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/drawable-v24/arrow_down.xml" value="0.279" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/drawable-v24/arrow_up.xml" value="0.279" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/drawable/ic_add_background.xml" value="0.206" />
@@ -30,6 +31,7 @@
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/fragment_dashboard.xml" value="0.33" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/fragment_home.xml" value="0.25" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/fragment_notifications.xml" value="0.25" />
+        <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/todays_workout_list.xml" value="0.33" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/layout/workouts_list.xml" value="0.365625" />
         <entry key="..\:/Programing/fitness_app/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36666666666666664" />
       </map>

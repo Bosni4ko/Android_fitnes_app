@@ -62,13 +62,24 @@ public class ViewExercisesActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                setResult(Activity.RESULT_OK, data);
+                finish();
+            }
+        }
+    }
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onResume() {
         super.onResume();
         exercises = dataBaseHelper.getAllExercisesOfType(type);
+        adapter.setExercises(exercises);
         if(!exercises.isEmpty()){
-            adapter.setExercises(exercises);
             noExercisesText.setVisibility(View.GONE);
         }else {
             noExercisesText.setVisibility(View.VISIBLE);
