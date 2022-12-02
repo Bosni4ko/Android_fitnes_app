@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/startWorkoutBtn"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/ic_start_arrow"
+                android:src="@drawable/ic_play_arrow"
                 android:backgroundTint="@color/white"/>
         </RelativeLayout>
     </RelativeLayout>

@@ -11,7 +11,8 @@ public class Enums {
     public enum WorkoutStatus{
         FINISHED,
         SKIPPED,
-        WAITING
+        WAITING,
+        STOPPED
     }
     public enum WorkoutType{
         DEFAULT,

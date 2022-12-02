@@ -331,6 +331,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_NAME,workout.getName());
         cv.put(COLUMN_DESCRIPTION,workout.getDescription());
         cv.put(COLUMN_DATE,workout.getDate().toString() + ' ' + workout.getTime().toString());
+        cv.put(COLUMN_STATUS,workout.getStatus());
         db.update(WORKOUT_TABLE,cv,  COLUMN_ID + " = ?",new String[]{workout.getId()});
 
         ContentValues wrkExCv = new ContentValues();

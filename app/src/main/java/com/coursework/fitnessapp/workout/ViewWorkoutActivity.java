@@ -133,6 +133,7 @@ public class ViewWorkoutActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(ViewWorkoutActivity.this,StartedWorkoutActivity.class);
+            intent.putExtra("id",workout.getId());
             startActivity(intent);
         }
     };

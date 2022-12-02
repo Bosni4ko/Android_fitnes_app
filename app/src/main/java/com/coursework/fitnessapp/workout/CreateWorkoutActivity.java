@@ -299,6 +299,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         }else workoutDescriptionLayout.setError(null);
         if(exercises.isEmpty()){
             exercisesLayout.setError(getResources().getString(R.string.no_exercises_error));
+            hasError = true;
         }else exercisesLayout.setError(null);
         return !hasError;
     }

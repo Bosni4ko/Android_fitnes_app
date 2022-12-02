@@ -26,8 +26,20 @@
 
         <TextView
             android:id="@+id/exerciseName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:id="@+id/exerciseTimer"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_below="@id/exerciseName" />
+
+        <TextView
+            android:id="@+id/exerciseAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/exerciseTimer" />
 
     </RelativeLayout>
 
@@ -44,23 +56,66 @@
     <TextView
         android:id="@+id/exerciseDescription"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:maxLines="8"
+        android:layout_height="160dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgCarouselLayout" />
 
+    <TextView
+        android:id="@+id/workoutTimerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:text="@string/time_remaining"
+        app:layout_constraintEnd_toStartOf="@+id/workoutTimer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exerciseDescription" />
+
+    <TextView
+        android:id="@+id/workoutTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/workoutTimerText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/workoutTimerText" />
+    <ImageButton
+        android:id="@+id/skipBtn"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_skip_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/startBtn"
+        app:layout_constraintEnd_toStartOf="@+id/startBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/startBtn"
+        android:scaleX="1.6"
+        android:scaleY="1.6"
+        android:scaleType="centerCrop"
+        android:backgroundTint="@color/white"/>
     <ImageButton
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:scaleX="2"
         android:scaleY="2"
-        android:src="@drawable/ic_start_arrow"
+        android:src="@drawable/ic_play_arrow"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/exerciseDescription"
         android:backgroundTint="@color/white"
         android:scaleType="centerCrop"
-        />
+        android:id="@+id/startBtn"/>
+
+    <ImageButton
+        android:id="@+id/stopBtn"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/ic_stop_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/startBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/startBtn"
+        app:layout_constraintTop_toTopOf="@+id/startBtn"
+        android:scaleY="1.5"
+        android:scaleX="1.5"
+        android:backgroundTint="@color/white"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

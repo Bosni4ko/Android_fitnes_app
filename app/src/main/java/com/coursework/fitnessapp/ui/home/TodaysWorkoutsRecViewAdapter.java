@@ -96,6 +96,7 @@ public class TodaysWorkoutsRecViewAdapter extends RecyclerView.Adapter<TodaysWor
                 Intent intent = new Intent(holder.parent.getContext(),ViewWorkoutActivity.class);
                 intent.putExtra("id",workout.getId());
                 intent.putExtra("action", Enums.WorkoutAction.Start.toString());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 holder.parent.getContext().startActivity(intent);
             }
         });
