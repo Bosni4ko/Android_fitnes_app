@@ -49,7 +49,7 @@ public class HomeFragment extends Fragment {
     private TodaysWorkoutsRecViewAdapter adapter;
 
     private ArrayList<WorkoutModel> workouts;
-    private Handler handler = new Handler();
+    private Thread thread;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -69,7 +69,8 @@ public class HomeFragment extends Fragment {
         dataBaseHelper = new DataBaseHelper(this.getContext());
         initLayout(view);
         setFragmentContent();
-
+        thread = new Thread(checkTime);
+        thread.start();
     }
 
     private void initLayout(View view){
@@ -99,44 +100,58 @@ public class HomeFragment extends Fragment {
         if(!workouts.isEmpty()){
             todaysWorkoutsText.setVisibility(View.VISIBLE);
             noWorkoutText.setVisibility(View.GONE);
-            WorkoutModel nextWorkout = workouts.get(0);
 
         }else {
             todaysWorkoutsText.setVisibility(View.GONE);
             noWorkoutText.setVisibility(View.VISIBLE);
         }
-        ArrayList<WorkoutModel> allUserWorkouts = dataBaseHelper.getAllUserWorkouts();
-        if(allUserWorkouts.isEmpty()){
-            notificationLayout.setVisibility(View.GONE);
-        }
-        else {
-            //TODO:fix now time thing
-            Collections.sort(allUserWorkouts,new WorkoutSortComparator());
-            WorkoutModel nextWorkout = allUserWorkouts.get(0);
-            notificationLayout.setVisibility(View.VISIBLE);
-            if(nextWorkout.getDate().format(Enums.formatter).equals(LocalDate.now().format(Enums.formatter))){
-                nextWorkoutDate.setText(R.string.today);
-                if(LocalTime.now().isAfter(allUserWorkouts.get(0).getTime())){
-                    Runnable checkTime = new Runnable() {
-                        @Override
-                        public void run() {
-                            if(nextWorkout.getTime().plusHours(1).isBefore(LocalTime.now())){
-                                dataBaseHelper.changeWorkoutStatus(Enums.WorkoutStatus.SKIPPED.toString());
-                                setFragmentContent();
-                            }
-                        }
-                    };
-                    handler.postDelayed(checkTime,10000);
-                    nextWorkoutTime.setText(R.string.now);
-                }else nextWorkoutTime.setText(nextWorkout.getTime().toString());
-            }else{
-                nextWorkoutDate.setText(nextWorkout.getDate().toString());
-                nextWorkoutTime.setText(nextWorkout.getTime().toString());
-            }
-        }
         adapter.setWorkouts(workouts);
     }
 
+    Runnable checkTime = new Runnable() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        public void run() {
+            ArrayList<WorkoutModel> allUserWorkouts = dataBaseHelper.getAllUserWorkouts();
+            if(allUserWorkouts.isEmpty()){
+                notificationLayout.setVisibility(View.GONE);
+            }
+            else {
+                //TODO:fix now time thing
+                Collections.sort(allUserWorkouts,new WorkoutSortComparator());
+                allUserWorkouts.removeIf(workout -> !workout.getStatus().equals(Enums.WorkoutStatus.WAITING.toString()));
+                WorkoutModel nextWorkout = allUserWorkouts.get(0);
+                notificationLayout.setVisibility(View.VISIBLE);
+                if(nextWorkout.getDate().format(Enums.formatter).equals(LocalDate.now().format(Enums.formatter))){
+                    nextWorkoutDate.setText(R.string.today);
+                    if(LocalTime.now().isAfter(allUserWorkouts.get(0).getTime())){
+                        getActivity().runOnUiThread(new Runnable() {
+                            @RequiresApi(api = Build.VERSION_CODES.O)
+                            @Override
+                            public void run() {
+                                if(nextWorkout.getTime().plusHours(1).isBefore(LocalTime.now())){
+                                    nextWorkout.setStatus(Enums.WorkoutStatus.SKIPPED.toString());
+                                    dataBaseHelper.editWorkout(nextWorkout);
+                                    setFragmentContent();
+                                }
+                            }
+                        });
+                        nextWorkoutTime.setText(R.string.now);
+                    }else nextWorkoutTime.setText(nextWorkout.getTime().toString());
+                }else{
+                    nextWorkoutDate.setText(nextWorkout.getDate().toString());
+                    nextWorkoutTime.setText(nextWorkout.getTime().toString());
+                }
+            }
+            try {
+                synchronized (this){
+                    wait(10000);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    };
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onResume() {
