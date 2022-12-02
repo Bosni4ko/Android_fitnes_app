@@ -110,6 +110,7 @@ public class HomeFragment extends Fragment {
             notificationLayout.setVisibility(View.GONE);
         }
         else {
+            //TODO:fix now time thing
             Collections.sort(allUserWorkouts,new WorkoutSortComparator());
             WorkoutModel nextWorkout = allUserWorkouts.get(0);
             notificationLayout.setVisibility(View.VISIBLE);

@@ -57,7 +57,7 @@ public class StartedWorkoutActivity extends AppCompatActivity {
         initLayout();
         setContent();
         r = new Runnable() {
-            private boolean isRunningTask = false;
+            private boolean isRunningTask = true;
             private boolean finishedWorkout = false;
             int exTimer = currentExercise.getLength().getTimeInSeconds();
             int wrkTimer = calculateFullDuration().getTimeInSeconds();
@@ -77,8 +77,15 @@ public class StartedWorkoutActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                exerciseTimer.setText(currentExercise.getLength().getToStringDuration());
-                                workoutTimer.setText(workoutDuration.getToStringDuration());
+                                if(!isRunningTask){
+                                    isRunningTask = true;
+                                    setContent();
+                                    //TODO:play sound
+                                }
+                                else {
+                                    exerciseTimer.setText(currentExercise.getLength().getToStringDuration());
+                                    workoutTimer.setText(workoutDuration.getToStringDuration());
+                                }
                             }
                         });
                         if (exTimer > 0) {
@@ -86,8 +93,14 @@ public class StartedWorkoutActivity extends AppCompatActivity {
                             wrkTimer--;
                             currentExercise.getLength().setTime(exTimer);
                             workoutDuration.setTime(wrkTimer);
-                        } else {
-
+                        } else if(workout.getExerciseModels().get(workout.getExerciseModels().indexOf(currentExercise) + 1) != null){
+                            currentExercise = workout.getExerciseModels().get(workout.getExerciseModels().indexOf(currentExercise) + 1);
+                            exTimer = currentExercise.getLength().getTimeInSeconds();
+                            taskBreak.run();
+                            isRunningTask = false;
+                            //TODO:play sound
+                        }else {
+                            //TODO:finish workout
                         }
                     }
                 }
@@ -95,6 +108,29 @@ public class StartedWorkoutActivity extends AppCompatActivity {
         };
         workoutThread = new Thread(r,"WorkoutProcess");
     }
+    Runnable taskBreak = new Runnable() {
+        int counter = 5;
+        @Override
+        public void run() {
+            while(counter >= 0){
+                //TODO:tick sound and change style
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        exerciseTimer.setText(String.valueOf(counter));
+                    }
+                });
+                try {
+                    synchronized (this){
+                        wait(1000);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                counter--;
+            }
+        }
+    };
     private void initLayout(){
         previewImg = findViewById(R.id.exercisePreviewImg);
         exerciseName = findViewById(R.id.exerciseName);

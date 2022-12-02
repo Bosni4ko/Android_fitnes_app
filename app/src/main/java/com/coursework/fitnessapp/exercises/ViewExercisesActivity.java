@@ -78,8 +78,8 @@ public class ViewExercisesActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         exercises = dataBaseHelper.getAllExercisesOfType(type);
-        adapter.setExercises(exercises);
         if(!exercises.isEmpty()){
+            adapter.setExercises(exercises);
             noExercisesText.setVisibility(View.GONE);
         }else {
             noExercisesText.setVisibility(View.VISIBLE);
