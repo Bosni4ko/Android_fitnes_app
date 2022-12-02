@@ -25,6 +25,10 @@ public class Enums {
         View,
         Add
     }
+    public enum WorkoutAction{
+        View,
+        Start
+    }
     public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM uuuu");
     public static DateTimeFormatter fromDbFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
 }

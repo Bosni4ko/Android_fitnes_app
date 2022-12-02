@@ -27,6 +27,7 @@
     <string name="no_workouts">You don\'t have any workouts</string>
     <string name="today">Today</string>
     <string name="now">Now</string>
+    <string name="start">Start</string>
 
     <string name="empty_name_error">Name cannot be empty</string>
     <string name="incorrect_date_time_error">You cannot set date and time before current</string>

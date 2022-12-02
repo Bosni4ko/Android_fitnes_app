@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
 import com.coursework.fitnessapp.R;
+import com.coursework.fitnessapp.enums.Enums;
 import com.coursework.fitnessapp.models.ExerciseModel;
 import com.coursework.fitnessapp.models.WorkoutModel;
 import com.coursework.fitnessapp.supportclasses.TimeDuration;
@@ -89,9 +90,13 @@ public class TodaysWorkoutsRecViewAdapter extends RecyclerView.Adapter<TodaysWor
             }
         });
         holder.startWorkoutBtn.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(holder.parent.getContext(),ViewWorkoutActivity.class);
+                intent.putExtra("id",workout.getId());
+                intent.putExtra("action", Enums.WorkoutAction.Start.toString());
+                holder.parent.getContext().startActivity(intent);
             }
         });
     }

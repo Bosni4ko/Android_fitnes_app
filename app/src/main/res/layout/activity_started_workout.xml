@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".workout.StartedWorkoutActivity">
+
+    <ImageView
+        android:id="@+id/exercisePreviewImg"
+        android:layout_width="175dp"
+        android:layout_height="200dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/default_preview_img" />
+
+    <RelativeLayout
+        android:id="@+id/infoLayout"
+        android:layout_width="235dp"
+        android:layout_height="200dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/exercisePreviewImg"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/exerciseName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/imgCarouselLayout"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infoLayout">
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/exerciseDescription"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:maxLines="8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgCarouselLayout" />
+
+    <ImageButton
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:scaleX="2"
+        android:scaleY="2"
+        android:src="@drawable/ic_start_arrow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exerciseDescription"
+        android:backgroundTint="@color/white"
+        android:scaleType="centerCrop"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
