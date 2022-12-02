@@ -32,7 +32,6 @@ public class TimeDuration {
             this.seconds = '0' + this.seconds;
         }
 
-
     }
     public TimeDuration(String hours, String minutes, String seconds) {
         this.hours = hours;
@@ -78,5 +77,22 @@ public class TimeDuration {
         Integer timeInSeconds;
         timeInSeconds = Integer.parseInt(hours) * 3600 + Integer.parseInt(minutes) * 60 + Integer.parseInt(seconds);
         return timeInSeconds;
+    }
+
+    public void setTime(int seconds){
+        hours = String.valueOf(seconds / 3600);
+        if(hours.length() < 2){
+            hours = '0' + hours;
+        }
+        seconds = seconds%3600;
+        minutes = String.valueOf(seconds / 60);
+        if(minutes.length() < 2){
+            minutes = '0' + minutes;
+        }
+        seconds = seconds%60;
+        this.seconds = String.valueOf(seconds);
+        if(this.seconds.length() < 2){
+            this.seconds = '0' + this.seconds;
+        }
     }
 }

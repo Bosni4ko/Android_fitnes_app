@@ -23,6 +23,7 @@ import com.coursework.fitnessapp.supportclasses.TimeDuration;
 import org.w3c.dom.Text;
 
 import java.net.URI;
+import java.util.concurrent.TimeUnit;
 
 public class StartedWorkoutActivity extends AppCompatActivity {
     private ImageView previewImg;
@@ -41,7 +42,9 @@ public class StartedWorkoutActivity extends AppCompatActivity {
     ExerciseModel currentExercise;
 
     private boolean isStarted = false;
-    private boolean isPaused = false;
+    private boolean isPaused = true;
+    private Thread workoutThread;
+    private Runnable r;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -51,9 +54,46 @@ public class StartedWorkoutActivity extends AppCompatActivity {
         dataBaseHelper = new DataBaseHelper(StartedWorkoutActivity.this);
         workout = dataBaseHelper.getWorkoutById((getIntent().getExtras().get("id")).toString());
         currentExercise = workout.getExerciseModels().get(0);
-        System.out.println("Current exercise is:" + currentExercise);
         initLayout();
         setContent();
+        r = new Runnable() {
+            private boolean isRunningTask = false;
+            private boolean finishedWorkout = false;
+            int exTimer = currentExercise.getLength().getTimeInSeconds();
+            int wrkTimer = calculateFullDuration().getTimeInSeconds();
+            TimeDuration workoutDuration = new TimeDuration(wrkTimer);
+            @Override
+            public void run() {
+                while (true){
+                    System.out.println("Thread is working");
+                    try {
+                        synchronized (this){
+                            wait(1000);
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if(!isPaused) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                exerciseTimer.setText(currentExercise.getLength().getToStringDuration());
+                                workoutTimer.setText(workoutDuration.getToStringDuration());
+                            }
+                        });
+                        if (exTimer > 0) {
+                            exTimer--;
+                            wrkTimer--;
+                            currentExercise.getLength().setTime(exTimer);
+                            workoutDuration.setTime(wrkTimer);
+                        } else {
+
+                        }
+                    }
+                }
+            }
+        };
+        workoutThread = new Thread(r,"WorkoutProcess");
     }
     private void initLayout(){
         previewImg = findViewById(R.id.exercisePreviewImg);
@@ -67,6 +107,7 @@ public class StartedWorkoutActivity extends AppCompatActivity {
         skipBtn = findViewById(R.id.skipBtn);
         stopBtn = findViewById(R.id.stopBtn);
 
+        playBtn.setOnClickListener(startWorkout);
         stopBtn.setOnClickListener(stopWorkout);
     }
 
@@ -85,8 +126,25 @@ public class StartedWorkoutActivity extends AppCompatActivity {
         for (ExerciseModel exercise:workout.getExerciseModels()){
             durationInt = durationInt + exercise.getLength().getTimeInSeconds();
         }
+        durationInt = durationInt + (workout.getExerciseModels().size() - 1) * 5;
         return new TimeDuration(durationInt);
     }
+
+    View.OnClickListener startWorkout = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if(!isStarted){
+                workoutThread.start();
+                isStarted = true;
+            }
+            if(isPaused){
+                playBtn.setImageResource(R.drawable.ic_pause_icon);
+            }else{
+                playBtn.setImageResource(R.drawable.ic_play_arrow);
+            }
+            isPaused = !isPaused;
+        }
+    };
     View.OnClickListener stopWorkout = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -107,6 +165,7 @@ public class StartedWorkoutActivity extends AppCompatActivity {
                             builder.setCancelable(true);
                         }
                     }).show();
+            workoutThread.destroy();
         }
     };
 }
