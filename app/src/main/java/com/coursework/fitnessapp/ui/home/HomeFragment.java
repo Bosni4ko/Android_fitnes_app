@@ -113,13 +113,20 @@ public class HomeFragment extends Fragment {
         @Override
         public void run() {
             ArrayList<WorkoutModel> allUserWorkouts = dataBaseHelper.getAllUserWorkouts();
+            Collections.sort(allUserWorkouts,new WorkoutSortComparator());
+            allUserWorkouts.removeIf(workout -> !workout.getStatus().equals(Enums.WorkoutStatus.WAITING.toString()));
             if(allUserWorkouts.isEmpty()){
-                notificationLayout.setVisibility(View.GONE);
+                getActivity().runOnUiThread(new Runnable() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void run() {
+                        notificationLayout.setVisibility(View.GONE);
+                    }
+                });
             }
             else {
                 //TODO:fix now time thing
-                Collections.sort(allUserWorkouts,new WorkoutSortComparator());
-                allUserWorkouts.removeIf(workout -> !workout.getStatus().equals(Enums.WorkoutStatus.WAITING.toString()));
+                System.out.println(allUserWorkouts);
                 WorkoutModel nextWorkout = allUserWorkouts.get(0);
                 notificationLayout.setVisibility(View.VISIBLE);
                 if(nextWorkout.getDate().format(Enums.formatter).equals(LocalDate.now().format(Enums.formatter))){
@@ -138,9 +145,19 @@ public class HomeFragment extends Fragment {
                         });
                         nextWorkoutTime.setText(R.string.now);
                     }else nextWorkoutTime.setText(nextWorkout.getTime().toString());
-                }else{
-                    nextWorkoutDate.setText(nextWorkout.getDate().toString());
-                    nextWorkoutTime.setText(nextWorkout.getTime().toString());
+                }else if(nextWorkout.getDate().isBefore(LocalDate.now())){
+                    nextWorkout.setStatus(Enums.WorkoutStatus.SKIPPED.toString());
+                    dataBaseHelper.editWorkout(nextWorkout);
+                    setFragmentContent();
+                }else {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @RequiresApi(api = Build.VERSION_CODES.O)
+                        @Override
+                        public void run() {
+                            nextWorkoutDate.setText(nextWorkout.getDate().toString());
+                            nextWorkoutTime.setText(nextWorkout.getTime().toString());
+                        }
+                    });
                 }
             }
             try {

@@ -317,7 +317,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             }while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
         return workouts;
     }
     public void changeWorkoutStatus(String status){
@@ -346,7 +345,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             counter++;
             db.insert(WORKOUT_EXERCISES_TABLE,null,wrkExCv);
         }
-        db.close();
 
     }
     public ArrayList<WorkoutModel> getAllWorkoutsWithStatus(String status){
