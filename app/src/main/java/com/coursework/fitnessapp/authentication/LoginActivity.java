@@ -27,7 +27,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
-    private SignInButton signInButton;
+    private SignInButton googleSignInButton;
     private TextInputLayout signInLayout;
     ActivityResultLauncher<Intent> activityResultLauncher;
     @Override
@@ -47,9 +47,9 @@ public class LoginActivity extends AppCompatActivity {
             goToApp();
         }
         signInLayout = findViewById(R.id.signInLayout);
-        signInButton = findViewById(R.id.signInBtn);
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
-        signInButton.setOnClickListener(new View.OnClickListener() {
+        googleSignInButton = findViewById(R.id.googleSignInBtn);
+        googleSignInButton.setSize(SignInButton.SIZE_STANDARD);
+        googleSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

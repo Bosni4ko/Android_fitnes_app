@@ -32,6 +32,11 @@
     <string name="stop_workout_title">Stop workout</string>
     <string name="stop_workout_confirmation">Are you sure you want to stop this workout?</string>
     <string name="stop">Stop</string>
+    <string name="email">Email address</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="register">Register</string>
+
 
     <string name="empty_name_error">Name cannot be empty</string>
     <string name="incorrect_date_time_error">You cannot set date and time before current</string>
