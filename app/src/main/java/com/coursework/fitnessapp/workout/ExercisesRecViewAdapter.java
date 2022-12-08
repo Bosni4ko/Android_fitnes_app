@@ -49,7 +49,7 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
                 intent.putExtra("exercise", String.valueOf(exercise.getId()));
                 intent.putExtra("duration",exercise.getLength().getToStringDuration());
                 intent.putExtra("count",String.valueOf(exercise.getCount()));
-                ((Activity) holder.parent.getContext()).startActivityForResult(intent,1);
+                holder.parent.getContext().startActivity(intent);
             }
         });
         if(hasRemoveBtn){

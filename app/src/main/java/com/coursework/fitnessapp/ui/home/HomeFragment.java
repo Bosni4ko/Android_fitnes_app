@@ -68,7 +68,6 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         dataBaseHelper = new DataBaseHelper(this.getContext());
         initLayout(view);
-        setFragmentContent();
         thread = new Thread(checkTime);
         thread.start();
     }

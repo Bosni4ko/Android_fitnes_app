@@ -55,13 +55,6 @@ public class ViewExerciseActivity extends AppCompatActivity {
         int id = Integer.parseInt(intent.getStringExtra("exercise"));
 
         exercise = dataBaseHelper.getExerciseById(id);
-        if(intent.getStringExtra("duration") != null && intent.getStringExtra("count") != null){
-            exercise.setLength(new TimeDuration(intent.getStringExtra("duration")));
-            exercise.setCount(Integer.parseInt(intent.getStringExtra("count")));
-        }else {
-            exercise.setLength(exercise.getDefaultLength());
-            exercise.setCount(exercise.getDefaultCount());
-        }
         setExerciseValues();
     }
 
@@ -89,8 +82,14 @@ public class ViewExerciseActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setExerciseValues(){
         exerciseName.setText(exercise.getName());
-        exerciseDuration.setText(exercise.getDefaultLength().getToStringDuration());
-        exerciseCount.setText(String.valueOf(exercise.getCount()));
+        Intent intent = getIntent();
+        if(intent.getStringExtra("duration") != null && intent.getStringExtra("count") != null){
+            exerciseDuration.setText(intent.getStringExtra("duration"));
+            exerciseCount.setText(String.valueOf(intent.getStringExtra("count")));
+        }else {
+            exerciseDuration.setText(exercise.getDefaultLength().getToStringDuration());
+            exerciseCount.setText(String.valueOf(exercise.getCount()));
+        }
         setDescription();
         if(exercise.getPreviewUrl() != null){
             exercisePreviewImg.setImageURI(Uri.parse(exercise.getPreviewUrl()));
