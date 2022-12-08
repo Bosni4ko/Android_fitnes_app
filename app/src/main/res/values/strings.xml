@@ -48,6 +48,7 @@
     <string name="no_exercises_error">You should add at least 1 exercise</string>
     <string name="zero_duration_error">Exercise duration cannot be 0</string>
     <string name="zero_exercise_amount">Exercises amount cannot be 0</string>
+    <string name="wrong_values">Please enter correct values!</string>
 
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>

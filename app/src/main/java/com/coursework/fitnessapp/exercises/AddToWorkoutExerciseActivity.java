@@ -21,6 +21,7 @@ import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
 import com.coursework.fitnessapp.R;
 import com.coursework.fitnessapp.models.ExerciseModel;
 import com.coursework.fitnessapp.supportclasses.InputFilterMinMax;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class AddToWorkoutExerciseActivity extends AppCompatActivity {
 
@@ -48,6 +49,8 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
 
     private Button addExerciseBtn;
     private Button backBtn;
+
+    private TextInputLayout errorLayout;
 
     ExerciseModel exercise;
 
@@ -93,6 +96,8 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
         collapsedDescriptionLayout = findViewById(R.id.collapsedDescriptionLayout);
         expandDescription.setOnClickListener(changeDescription);
         collapseDescription.setOnClickListener(changeDescription);
+
+        errorLayout = findViewById(R.id.errorLayout);
 
         hoursArrowUp.setOnClickListener(changeTimeListener);
         hoursArrowDown.setOnClickListener(changeTimeListener);
@@ -151,9 +156,7 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
                 value--;
             }
             String resultString = String.valueOf(value);
-            if(resultString.length() < 2){
-                resultString = "0" + resultString;
-            }
+            resultString = formatTimeValue(resultString);
             text.setText(resultString);
         }
     };
@@ -175,12 +178,14 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
     View.OnClickListener addExercise = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra("id",exercise.getId().toString());
-            returnIntent.putExtra("length",txtHours.getText().toString() + ":" + txtMinutes.getText().toString() + ":" + txtSeconds.getText().toString());
-            returnIntent.putExtra("count",exerciseCount.getText().toString());
-            setResult(Activity.RESULT_OK,returnIntent);
-            finish();
+            if(validateValues()){
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("id",exercise.getId().toString());
+                returnIntent.putExtra("length",formatTimeValue(txtHours.getText().toString()) + ":" + formatTimeValue(txtMinutes.getText().toString()) + ":" + formatTimeValue(txtSeconds.getText().toString()));
+                returnIntent.putExtra("count",exerciseCount.getText().toString());
+                setResult(Activity.RESULT_OK,returnIntent);
+                finish();
+            }
         }
     };
     View.OnClickListener back = new View.OnClickListener() {
@@ -190,6 +195,27 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
         }
     };
 
+    private String formatTimeValue(String timeValue){
+        while(timeValue.length() < 2){
+            timeValue = "0" + timeValue;
+        }
+        return timeValue;
+    }
+    private boolean validateValues(){
+        boolean isValid = true;
+        if((!editFieldIsValid(txtHours) && !editFieldIsValid(txtMinutes) && !editFieldIsValid(txtSeconds)) || !editFieldIsValid(exerciseCount)){
+            errorLayout.setError(getString(R.string.wrong_values));
+            isValid = false;
+        }
+        return isValid;
+    }
+    private boolean editFieldIsValid(EditText field){
+        boolean isValid = true;
+        if(field.getText().toString().equals("") || (Integer.parseInt(field.getText().toString()) < 1)){
+            isValid = false;
+        }
+        return  isValid;
+    }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setExerciseValues(ExerciseModel exercise){
         exerciseName.setText(exercise.getName());
