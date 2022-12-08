@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "292646329819",
+    "project_id": "fitness-app-8212f",
+    "storage_bucket": "fitness-app-8212f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:292646329819:android:03eea0fa2a1b8a067ddbfe",
+        "android_client_info": {
+          "package_name": "com.coursework.fitnessapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "292646329819-j1a978fgd4boqf0e52u6jpba2p97htgp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.coursework.fitnessapp",
+            "certificate_hash": "fd79435c9ebea5eef0380e4b6711bd760fc2632b"
+          }
+        },
+        {
+          "client_id": "292646329819-2qm0hfphv4ues088buacat7400ed57q1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXE6dLM5rVM8S7pu8aXEQS0MFbTJb5WoU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "292646329819-2qm0hfphv4ues088buacat7400ed57q1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

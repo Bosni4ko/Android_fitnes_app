@@ -3,6 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_logout">Logout</string>
     <string name="add_exercise_btn">Add exercise</string>
     <string name="add_workout_btn">Add workout</string>
     <string name="back">Back</string>
@@ -36,6 +37,9 @@
     <string name="password">Password</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="register">Register</string>
+    <string name="successful_registration">User has been registered successfully!</string>
+    <string name="failed_registration">Failed to register! Try again!</string>
+    <string name="verify_email">Check your email to verify your account</string>
 
 
     <string name="empty_name_error">Name cannot be empty</string>
@@ -49,9 +53,14 @@
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_sign_in_short">Sign in with google</string>
+    <string name="logout">Logout</string>
+    <string name="logout_message">Are you sure you want to logout</string>
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="invalid_email">Not a valid email</string>
+    <string name="invalid_password_short">Password must be at least 6 characters long</string>
+    <string name="invalid_password_long">Password must be less than 30 characters long</string>
     <string name="login_failed">"Unknown error occurred.Please try again later."</string>
+    <string name="invalid_credentials">Failed to login!Please check your credentials.</string>
 </resources>
