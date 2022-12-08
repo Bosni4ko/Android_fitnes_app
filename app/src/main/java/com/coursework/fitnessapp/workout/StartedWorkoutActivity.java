@@ -1,5 +1,6 @@
 package com.coursework.fitnessapp.workout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -43,6 +44,9 @@ public class StartedWorkoutActivity extends AppCompatActivity {
 
     private boolean isStarted = false;
     private boolean isPaused = true;
+    private boolean finishedWorkout = false;
+    private int exTimer;
+    private int wrkTimer;
     private Thread workoutThread;
     private Runnable r;
 
@@ -53,19 +57,23 @@ public class StartedWorkoutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_started_workout);
         dataBaseHelper = new DataBaseHelper(StartedWorkoutActivity.this);
         workout = dataBaseHelper.getWorkoutById((getIntent().getExtras().get("id")).toString());
-        currentExercise = workout.getExerciseModels().get(0);
+        if(savedInstanceState != null){
+            currentExercise = workout.getExerciseModels().get(savedInstanceState.getInt("current_exercise_index"));
+            exTimer = savedInstanceState.getInt("current_exercise_time_remaining");
+            wrkTimer = savedInstanceState.getInt("workout_time_remaining");
+        }else{
+            currentExercise = workout.getExerciseModels().get(0);
+            exTimer = currentExercise.getLength().getTimeInSeconds();
+            wrkTimer = calculateFullDuration().getTimeInSeconds();
+        }
         initLayout();
         setContent();
         r = new Runnable() {
             private boolean isRunningTask = true;
-            private boolean finishedWorkout = false;
-            int exTimer = currentExercise.getLength().getTimeInSeconds();
-            int wrkTimer = calculateFullDuration().getTimeInSeconds();
-            TimeDuration workoutDuration = new TimeDuration(wrkTimer);
             @Override
             public void run() {
+                TimeDuration workoutDuration = new TimeDuration(wrkTimer);
                 while (true){
-                    System.out.println("Thread is working");
                     try {
                         synchronized (this){
                             wait(1000);
@@ -204,4 +212,14 @@ public class StartedWorkoutActivity extends AppCompatActivity {
             workoutThread.destroy();
         }
     };
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(isStarted && !finishedWorkout){
+            outState.putInt("current_exercise_index",workout.getExerciseModels().indexOf(currentExercise));
+            outState.putInt("current_exercise_time_remaining",exTimer);
+            outState.putInt("workout_time_remaining",wrkTimer);
+        }
+    }
 }

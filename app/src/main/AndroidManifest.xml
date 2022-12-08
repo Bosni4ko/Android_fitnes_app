@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.coursework.fitnessapp">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"></uses-permission>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -47,6 +48,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name" />
+        <service android:name=".services.NextWorkoutNotificationService"></service>
     </application>
 
 </manifest>

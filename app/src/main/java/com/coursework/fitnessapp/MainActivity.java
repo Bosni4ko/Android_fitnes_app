@@ -1,6 +1,8 @@
 package com.coursework.fitnessapp;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -11,10 +13,14 @@ import android.view.View;
 
 
 import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
+import com.coursework.fitnessapp.authentication.LoginActivity;
+import com.coursework.fitnessapp.services.NextWorkoutNotificationService;
 import com.coursework.fitnessapp.workout.CreateWorkoutActivity;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
@@ -58,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
+        if(!workoutNotificationServiceRunning()){
+            Intent serviceIntent = new Intent(this, NextWorkoutNotificationService.class);
+            startForegroundService(serviceIntent);
+        }
     }
     private void logout(){
         AlertDialog.Builder builder =  new AlertDialog.Builder(this);
@@ -67,7 +77,14 @@ public class MainActivity extends AppCompatActivity {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        FirebaseAuth.getInstance().signOut();
+                        GoogleSignInOptions gso = new GoogleSignInOptions.
+                                Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
+                                build();
+                        GoogleSignInClient googleSignInClient=GoogleSignIn.getClient(getBaseContext(),gso);
+                        googleSignInClient.signOut();
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK | intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
                     }
                 }).setNeutralButton(R.string.back, new DialogInterface.OnClickListener() {
                     @Override
@@ -75,6 +92,16 @@ public class MainActivity extends AppCompatActivity {
                         builder.setCancelable(true);
                     }
                 }).show();
+    }
+
+    public boolean workoutNotificationServiceRunning(){
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for(ActivityManager.RunningServiceInfo service: activityManager.getRunningServices(Integer.MAX_VALUE)){
+            if(NextWorkoutNotificationService.class.getName().equals(service.service.getClassName())){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

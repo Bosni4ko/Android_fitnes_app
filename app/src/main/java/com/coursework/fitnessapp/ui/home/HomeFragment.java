@@ -126,7 +126,6 @@ public class HomeFragment extends Fragment {
             }
             else {
                 //TODO:fix now time thing
-                System.out.println(allUserWorkouts);
                 WorkoutModel nextWorkout = allUserWorkouts.get(0);
                 notificationLayout.setVisibility(View.VISIBLE);
                 if(nextWorkout.getDate().format(Enums.formatter).equals(LocalDate.now().format(Enums.formatter))){
