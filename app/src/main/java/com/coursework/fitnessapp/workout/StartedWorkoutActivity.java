@@ -51,6 +51,7 @@ public class StartedWorkoutActivity extends AppCompatActivity {
     TimeDuration workoutDuration;
     private Thread workoutThread;
     private Runnable r;
+    private boolean isRunningTask;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -63,9 +64,9 @@ public class StartedWorkoutActivity extends AppCompatActivity {
         initLayout();
         setContent();
         r = new Runnable() {
-            private boolean isRunningTask = true;
             @Override
             public void run() {
+                isRunningTask = true;
                 workoutDuration = new TimeDuration(wrkTimer);
                 while (true){
                     try {
@@ -152,6 +153,7 @@ public class StartedWorkoutActivity extends AppCompatActivity {
         stopBtn = findViewById(R.id.stopBtn);
 
         playBtn.setOnClickListener(startWorkout);
+        skipBtn.setOnClickListener(skipExercise);
         stopBtn.setOnClickListener(stopWorkout);
     }
 
@@ -167,8 +169,12 @@ public class StartedWorkoutActivity extends AppCompatActivity {
             workoutTimer.setText(workoutDuration.getToStringDuration());
         }else{
             exTimer = currentExercise.getLength().getTimeInSeconds();
-            wrkTimer = calculateFullDuration().getTimeInSeconds();
-            workoutTimer.setText(calculateFullDuration().getToStringDuration());
+            if(!isStarted){
+                wrkTimer = calculateFullDuration().getTimeInSeconds();
+                workoutTimer.setText(calculateFullDuration().getToStringDuration());
+            }else {
+                workoutTimer.setText(workoutDuration.getToStringDuration());
+            }
         }
         exerciseTimer.setText(currentExercise.getLength().getToStringDuration());
         if(currentExercise.getPreviewUrl() != null){
@@ -203,6 +209,16 @@ public class StartedWorkoutActivity extends AppCompatActivity {
             isPaused = !isPaused;
         }
     };
+    View.OnClickListener skipExercise = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if(isStarted && workout.getExerciseModels().indexOf(currentExercise) != (workout.getExerciseModels().size() - 1) && isRunningTask){
+                wrkTimer = wrkTimer - exTimer;
+                workoutDuration.setTime(wrkTimer);
+                exTimer = 0;
+            }
+        }
+    };
     View.OnClickListener stopWorkout = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -223,7 +239,6 @@ public class StartedWorkoutActivity extends AppCompatActivity {
                             builder.setCancelable(true);
                         }
                     }).show();
-            workoutThread.destroy();
         }
     };
 
