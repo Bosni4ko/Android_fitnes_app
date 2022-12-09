@@ -87,7 +87,6 @@ public class HomeFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-
                 startActivity(new Intent(getContext(), CreateWorkoutActivity.class));
             }
         });
@@ -125,7 +124,6 @@ public class HomeFragment extends Fragment {
                 });
             }
             else {
-                //TODO:fix now time thing
                 WorkoutModel nextWorkout = allUserWorkouts.get(0);
                 notificationLayout.setVisibility(View.VISIBLE);
                 getActivity().runOnUiThread(new Runnable() {

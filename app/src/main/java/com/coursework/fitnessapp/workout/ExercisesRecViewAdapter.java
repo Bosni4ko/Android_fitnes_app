@@ -2,6 +2,7 @@ package com.coursework.fitnessapp.workout;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +10,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.coursework.fitnessapp.R;
+import com.coursework.fitnessapp.enums.Enums;
 import com.coursework.fitnessapp.exercises.AddToWorkoutExerciseActivity;
 import com.coursework.fitnessapp.exercises.ViewExerciseActivity;
 import com.coursework.fitnessapp.models.ExerciseModel;
@@ -36,22 +39,25 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
         return holder;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ExerciseModel exercise = exercises.get(position);
         holder.exerciseName.setText(exercise.getName());
         holder.exerciseDuration.setText(exercise.getLength().getToStringDuration());
         holder.exerciseCount.setText(String.valueOf(exercise.getCount()));
-        holder.parent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(holder.parent.getContext(), ViewExerciseActivity.class);
-                intent.putExtra("exercise", String.valueOf(exercise.getId()));
-                intent.putExtra("duration",exercise.getLength().getToStringDuration());
-                intent.putExtra("count",String.valueOf(exercise.getCount()));
-                holder.parent.getContext().startActivity(intent);
-            }
-        });
+        if(!((Activity) holder.parent.getContext()).getIntent().getExtras().get("action").equals(Enums.WorkoutAction.Start.toString())){
+            holder.parent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(holder.parent.getContext(), ViewExerciseActivity.class);
+                    intent.putExtra("exercise", String.valueOf(exercise.getId()));
+                    intent.putExtra("duration",exercise.getLength().getToStringDuration());
+                    intent.putExtra("count",String.valueOf(exercise.getCount()));
+                    holder.parent.getContext().startActivity(intent);
+                }
+            });
+        }
         if(hasRemoveBtn){
             holder.removeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
