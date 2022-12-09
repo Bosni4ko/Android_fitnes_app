@@ -18,6 +18,7 @@ import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
 import com.coursework.fitnessapp.R;
 import com.coursework.fitnessapp.enums.Enums;
 import com.coursework.fitnessapp.models.ExerciseModel;
+import com.coursework.fitnessapp.models.SavedWorkoutProgressModel;
 import com.coursework.fitnessapp.models.WorkoutModel;
 import com.coursework.fitnessapp.supportclasses.TimeDuration;
 
@@ -47,6 +48,7 @@ public class StartedWorkoutActivity extends AppCompatActivity {
     private boolean finishedWorkout = false;
     private int exTimer;
     private int wrkTimer;
+    TimeDuration workoutDuration;
     private Thread workoutThread;
     private Runnable r;
 
@@ -57,22 +59,14 @@ public class StartedWorkoutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_started_workout);
         dataBaseHelper = new DataBaseHelper(StartedWorkoutActivity.this);
         workout = dataBaseHelper.getWorkoutById((getIntent().getExtras().get("id")).toString());
-        if(savedInstanceState != null){
-            currentExercise = workout.getExerciseModels().get(savedInstanceState.getInt("current_exercise_index"));
-            exTimer = savedInstanceState.getInt("current_exercise_time_remaining");
-            wrkTimer = savedInstanceState.getInt("workout_time_remaining");
-        }else{
-            currentExercise = workout.getExerciseModels().get(0);
-            exTimer = currentExercise.getLength().getTimeInSeconds();
-            wrkTimer = calculateFullDuration().getTimeInSeconds();
-        }
+        currentExercise = workout.getExerciseModels().get(0);
         initLayout();
         setContent();
         r = new Runnable() {
             private boolean isRunningTask = true;
             @Override
             public void run() {
-                TimeDuration workoutDuration = new TimeDuration(wrkTimer);
+                workoutDuration = new TimeDuration(wrkTimer);
                 while (true){
                     try {
                         synchronized (this){
@@ -101,7 +95,7 @@ public class StartedWorkoutActivity extends AppCompatActivity {
                             wrkTimer--;
                             currentExercise.getLength().setTime(exTimer);
                             workoutDuration.setTime(wrkTimer);
-                        } else if(workout.getExerciseModels().get(workout.getExerciseModels().indexOf(currentExercise) + 1) != null){
+                        } else if((workout.getExerciseModels().indexOf(currentExercise)) <= workout.getExerciseModels().size()-2){
                             currentExercise = workout.getExerciseModels().get(workout.getExerciseModels().indexOf(currentExercise) + 1);
                             exTimer = currentExercise.getLength().getTimeInSeconds();
                             taskBreak.run();
@@ -109,6 +103,7 @@ public class StartedWorkoutActivity extends AppCompatActivity {
                             //TODO:play sound
                         }else {
                             //TODO:finish workout
+                            dataBaseHelper.deleteCurrentWorkouts();
                         }
                     }
                 }
@@ -126,6 +121,7 @@ public class StartedWorkoutActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         exerciseTimer.setText(String.valueOf(counter));
+                        workoutTimer.setText(workoutDuration.getToStringDuration());
                     }
                 });
                 try {
@@ -136,7 +132,11 @@ public class StartedWorkoutActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 counter--;
+                wrkTimer--;
+                workoutDuration.setTime(wrkTimer);
             }
+            wrkTimer++;
+            workoutDuration.setTime(wrkTimer);
         }
     };
     private void initLayout(){
@@ -155,22 +155,36 @@ public class StartedWorkoutActivity extends AppCompatActivity {
         stopBtn.setOnClickListener(stopWorkout);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void setContent(){
+        SavedWorkoutProgressModel savedWorkoutProgress = dataBaseHelper.getCurrentWorkout();
+        if(workout.getId().equals(savedWorkoutProgress.getWorkoutId())){
+            currentExercise = workout.getExerciseModels().get(savedWorkoutProgress.getExerciseIndex());
+            exTimer = savedWorkoutProgress.getExTimer();
+            wrkTimer = savedWorkoutProgress.getWrkTimer();
+            workoutDuration = new TimeDuration(wrkTimer);
+            currentExercise.getLength().setTime(exTimer);
+            workoutTimer.setText(workoutDuration.getToStringDuration());
+        }else{
+            exTimer = currentExercise.getLength().getTimeInSeconds();
+            wrkTimer = calculateFullDuration().getTimeInSeconds();
+            workoutTimer.setText(calculateFullDuration().getToStringDuration());
+        }
+        exerciseTimer.setText(currentExercise.getLength().getToStringDuration());
         if(currentExercise.getPreviewUrl() != null){
             previewImg.setImageURI(Uri.parse(currentExercise.getPreviewUrl()));
         }else previewImg.setImageResource(R.drawable.default_preview_img);
         exerciseName.setText(currentExercise.getName());
-        exerciseTimer.setText(currentExercise.getLength().getToStringDuration());
         exerciseAmount.setText(String.valueOf(currentExercise.getCount()));
         exerciseDescription.setText(currentExercise.getDescription());
-        workoutTimer.setText(calculateFullDuration().getToStringDuration());
+        dataBaseHelper.deleteCurrentWorkouts();
     }
     private TimeDuration calculateFullDuration(){
         Integer durationInt = 0;
         for (ExerciseModel exercise:workout.getExerciseModels()){
             durationInt = durationInt + exercise.getLength().getTimeInSeconds();
         }
-        durationInt = durationInt + (workout.getExerciseModels().size() - 1) * 5;
+        durationInt = durationInt + (workout.getExerciseModels().size() - 1 - workout.getExerciseModels().indexOf(currentExercise)) * 5;
         return new TimeDuration(durationInt);
     }
 
@@ -213,13 +227,25 @@ public class StartedWorkoutActivity extends AppCompatActivity {
         }
     };
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
+    protected void onPause() {
+        super.onPause();
+        saveCurrentProgress();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        saveCurrentProgress();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void saveCurrentProgress(){
         if(isStarted && !finishedWorkout){
-            outState.putInt("current_exercise_index",workout.getExerciseModels().indexOf(currentExercise));
-            outState.putInt("current_exercise_time_remaining",exTimer);
-            outState.putInt("workout_time_remaining",wrkTimer);
+            SavedWorkoutProgressModel savedWorkoutProgress = new SavedWorkoutProgressModel(workout.getExerciseModels().indexOf(currentExercise),exTimer,wrkTimer,workout.getId());
+            dataBaseHelper.addCurrentWorkout(savedWorkoutProgress);
         }
     }
 }

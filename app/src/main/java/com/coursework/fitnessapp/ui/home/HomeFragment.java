@@ -68,6 +68,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         dataBaseHelper = new DataBaseHelper(this.getContext());
         initLayout(view);
+        //setFragmentContent();
         thread = new Thread(checkTime);
         thread.start();
     }
@@ -127,36 +128,30 @@ public class HomeFragment extends Fragment {
                 //TODO:fix now time thing
                 WorkoutModel nextWorkout = allUserWorkouts.get(0);
                 notificationLayout.setVisibility(View.VISIBLE);
-                if(nextWorkout.getDate().format(Enums.formatter).equals(LocalDate.now().format(Enums.formatter))){
-                    nextWorkoutDate.setText(R.string.today);
-                    if(LocalTime.now().isAfter(allUserWorkouts.get(0).getTime())){
-                        getActivity().runOnUiThread(new Runnable() {
-                            @RequiresApi(api = Build.VERSION_CODES.O)
-                            @Override
-                            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(nextWorkout.getDate().format(Enums.formatter).equals(LocalDate.now().format(Enums.formatter))){
+                            nextWorkoutDate.setText(R.string.today);
+                            if(LocalTime.now().isAfter(nextWorkout.getTime())){
                                 if(nextWorkout.getTime().plusHours(1).isBefore(LocalTime.now())){
                                     nextWorkout.setStatus(Enums.WorkoutStatus.SKIPPED.toString());
                                     dataBaseHelper.editWorkout(nextWorkout);
                                     setFragmentContent();
                                 }
+                                nextWorkoutTime.setText(R.string.now);
                             }
-                        });
-                        nextWorkoutTime.setText(R.string.now);
-                    }else nextWorkoutTime.setText(nextWorkout.getTime().toString());
-                }else if(nextWorkout.getDate().isBefore(LocalDate.now())){
-                    nextWorkout.setStatus(Enums.WorkoutStatus.SKIPPED.toString());
-                    dataBaseHelper.editWorkout(nextWorkout);
-                    setFragmentContent();
-                }else {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @RequiresApi(api = Build.VERSION_CODES.O)
-                        @Override
-                        public void run() {
+                            else nextWorkoutTime.setText(nextWorkout.getTime().toString());
+                        }else if(nextWorkout.getDate().isBefore(LocalDate.now())){
+                            nextWorkout.setStatus(Enums.WorkoutStatus.SKIPPED.toString());
+                            dataBaseHelper.editWorkout(nextWorkout);
+                            setFragmentContent();
+                        }else {
                             nextWorkoutDate.setText(nextWorkout.getDate().toString());
                             nextWorkoutTime.setText(nextWorkout.getTime().toString());
                         }
-                    });
-                }
+                    }
+                });
             }
             try {
                 synchronized (this){

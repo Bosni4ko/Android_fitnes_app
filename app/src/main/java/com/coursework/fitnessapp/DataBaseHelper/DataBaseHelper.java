@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi;
 import com.coursework.fitnessapp.MainActivity;
 import com.coursework.fitnessapp.enums.Enums;
 import com.coursework.fitnessapp.models.ExerciseModel;
+import com.coursework.fitnessapp.models.SavedWorkoutProgressModel;
 import com.coursework.fitnessapp.models.WorkoutModel;
 import com.coursework.fitnessapp.supportclasses.TimeDuration;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String EXERCISE_TABLE = "EXERCISE_TABLE";
     public static final String WORKOUT_TABLE = "WORKOUT_TABLE";
+    public static final String CURRENT_WORKOUT_TABLE = "CURRENT_WORKOUT_TABLE";
     public static final String COLUMN_URL = "URL";
     public static final String IMAGE_URL_TABLE = "IMAGE_" + COLUMN_URL + "_TABLE";
     public static final String WORKOUT_EXERCISES_TABLE = "WORKOUT_EXERCISES_TABLE";
@@ -68,7 +70,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String createWorkoutExercisesTableStatement = "CREATE TABLE " + WORKOUT_EXERCISES_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_SNUMBER + " INT NOT NULL," + COLUMN_LENGTH + " INT NOT NULL, " + COLUMN_COUNT + " INT NOT NULL," + COLUMN_WORKOUT_ID + " nvarchar(12) NOT NULL," + COLUMN_EXERCISE_ID + " INTEGER NOT NULL,FOREIGN KEY(" + COLUMN_WORKOUT_ID + ") REFERENCES " + WORKOUT_TABLE +"(" +COLUMN_ID + "),FOREIGN KEY(" + COLUMN_EXERCISE_ID + ") REFERENCES " + EXERCISE_TABLE +"(" +COLUMN_ID +")  )";
         sqLiteDatabase.execSQL(createWorkoutExercisesTableStatement);
 
-//        fillDatabase();
+        String createCurrentWorkoutTableStatement = "CREATE TABLE " + CURRENT_WORKOUT_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, Current_exercise_index INT NOT NULL, Current_exercise_timer INT NOT NULL, Current_workout_timer INT NOT NULL," + COLUMN_WORKOUT_ID + " nvarchar(12) NOT NULL,FOREIGN KEY(" + COLUMN_WORKOUT_ID + ") REFERENCES " + WORKOUT_TABLE +"(" +COLUMN_ID + ")) ";
+        sqLiteDatabase.execSQL(createCurrentWorkoutTableStatement);
+
+        //fillDatabase();
     }
 
     @Override
@@ -188,7 +193,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             }while(cursor.moveToNext());
         }
         cursor.close();
-        db.close();
         return returnList;
     }
 
@@ -214,7 +218,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             exercise = new ExerciseModel();
         }
         cursor.close();
-        db.close();
         return exercise;
     }
     public void editExercise(ExerciseModel exercise){
@@ -394,5 +397,38 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         queryString = "DELETE FROM " + WORKOUT_TABLE + " WHERE " + COLUMN_ID + " = ?";
         db.execSQL(queryString,new String[]{workoutId});
+    }
+
+    public void addCurrentWorkout(SavedWorkoutProgressModel savedWorkoutProgressModel){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put("Current_exercise_index",savedWorkoutProgressModel.getExerciseIndex());
+        cv.put("Current_exercise_timer",savedWorkoutProgressModel.getExTimer());
+        cv.put("Current_workout_timer",savedWorkoutProgressModel.getWrkTimer());
+        cv.put(COLUMN_WORKOUT_ID, savedWorkoutProgressModel.getWorkoutId());
+
+        db.insert(CURRENT_WORKOUT_TABLE,null,cv);
+    }
+
+    public SavedWorkoutProgressModel getCurrentWorkout(){
+        SavedWorkoutProgressModel savedWorkoutProgress = savedWorkoutProgress = new SavedWorkoutProgressModel();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String queryString = "SELECT * FROM " + CURRENT_WORKOUT_TABLE;
+        Cursor cursor = db.rawQuery(queryString,null);
+
+        if(cursor.moveToFirst()){
+            savedWorkoutProgress.setExerciseIndex(cursor.getInt(1));
+            savedWorkoutProgress.setExTimer(cursor.getInt(2));
+            savedWorkoutProgress.setWrkTimer(cursor.getInt(3));
+            savedWorkoutProgress.setWorkoutId(cursor.getString(4));
+        }
+
+        return savedWorkoutProgress;
+    }
+    public void deleteCurrentWorkouts(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String queryString = "DELETE FROM " + CURRENT_WORKOUT_TABLE;
+        db.execSQL(queryString);
     }
 }
