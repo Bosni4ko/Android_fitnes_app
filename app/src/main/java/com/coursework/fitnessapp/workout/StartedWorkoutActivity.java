@@ -5,7 +5,10 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,8 +54,9 @@ public class StartedWorkoutActivity extends AppCompatActivity {
     TimeDuration workoutDuration;
     private Thread workoutThread;
     private Runnable r;
+    private MediaPlayer mediaPlayer;
     private boolean isRunningTask;
-
+    private int counter;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,7 @@ public class StartedWorkoutActivity extends AppCompatActivity {
         currentExercise = workout.getExerciseModels().get(0);
         initLayout();
         setContent();
+        mediaPlayer = MediaPlayer.create(StartedWorkoutActivity.this, R.raw.simple_countdown_beep );
         r = new Runnable() {
             @Override
             public void run() {
@@ -113,11 +118,12 @@ public class StartedWorkoutActivity extends AppCompatActivity {
         workoutThread = new Thread(r,"WorkoutProcess");
     }
     Runnable taskBreak = new Runnable() {
-        int counter = 5;
         @Override
         public void run() {
+            counter = 5;
             while(counter >= 0){
                 //TODO:tick sound and change style
+                mediaPlayer.start();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -259,6 +265,9 @@ public class StartedWorkoutActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void saveCurrentProgress(){
         if(isStarted && !finishedWorkout){
+            if(!isRunningTask){
+                wrkTimer = wrkTimer - counter;
+            }
             SavedWorkoutProgressModel savedWorkoutProgress = new SavedWorkoutProgressModel(workout.getExerciseModels().indexOf(currentExercise),exTimer,wrkTimer,workout.getId());
             dataBaseHelper.addCurrentWorkout(savedWorkoutProgress);
         }
