@@ -46,18 +46,15 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
         holder.exerciseName.setText(exercise.getName());
         holder.exerciseDuration.setText(exercise.getLength().getToStringDuration());
         holder.exerciseCount.setText(String.valueOf(exercise.getCount()));
-        if(!((Activity) holder.parent.getContext()).getIntent().getExtras().get("action").equals(Enums.WorkoutAction.Start.toString())){
-            holder.parent.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(holder.parent.getContext(), ViewExerciseActivity.class);
-                    intent.putExtra("exercise", String.valueOf(exercise.getId()));
-                    intent.putExtra("duration",exercise.getLength().getToStringDuration());
-                    intent.putExtra("count",String.valueOf(exercise.getCount()));
-                    holder.parent.getContext().startActivity(intent);
-                }
-            });
-        }
+        holder.parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(holder.parent.getContext(), ViewExerciseActivity.class);
+                intent.putExtra("exercise", String.valueOf(exercise.getId()));
+                intent.putExtra("duration",exercise.getLength().getToStringDuration());
+                intent.putExtra("count",String.valueOf(exercise.getCount()));holder.parent.getContext().startActivity(intent);
+            }
+        });
         if(hasRemoveBtn){
             holder.removeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

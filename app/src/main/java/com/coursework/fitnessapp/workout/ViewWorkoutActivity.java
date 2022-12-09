@@ -85,8 +85,13 @@ public class ViewWorkoutActivity extends AppCompatActivity {
 
         expandedDescriptionLayout = findViewById(R.id.expandedDescriptionLayout);
         collapsedDescriptionLayout = findViewById(R.id.collapsedDescriptionLayout);
-        expandDescription.setOnClickListener(changeDescription);
-        collapseDescription.setOnClickListener(changeDescription);
+        if(workoutDescription.getLineCount() <= 2){
+            expandDescription.setVisibility(View.GONE);
+        }
+        else {
+            expandDescription.setOnClickListener(changeDescription);
+            collapseDescription.setOnClickListener(changeDescription);
+        }
 
         backBtn = findViewById(R.id.backBtn);
         editBtn = findViewById(R.id.editWorkoutBtn);
