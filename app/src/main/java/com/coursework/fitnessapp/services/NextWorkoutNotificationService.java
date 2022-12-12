@@ -72,6 +72,7 @@ public class NextWorkoutNotificationService extends Service {
                 }
                 ArrayList<WorkoutModel> workouts = dataBaseHelper.getWorkoutsByDate(LocalDate.now().toString());
                 Collections.sort(workouts,new WorkoutSortComparator());
+                workouts.removeIf(workout -> workout.getDate().isAfter(LocalDate.now()));
                 checkForSkippedWorkouts(workouts);
                 if(!workouts.isEmpty()){
                     WorkoutModel workout = workouts.get(0);
@@ -94,7 +95,7 @@ public class NextWorkoutNotificationService extends Service {
         }
         @RequiresApi(api = Build.VERSION_CODES.O)
         private ArrayList<WorkoutModel> checkForSkippedWorkouts(ArrayList<WorkoutModel> workouts){
-            while(!workouts.isEmpty() && workouts.get(0).getTime().isAfter(LocalTime.now().plusHours(1))){
+            while(!workouts.isEmpty() && workouts.get(0).getTime().plusHours(1).isBefore(LocalTime.now())){
                 workouts.get(0).setStatus(Enums.WorkoutStatus.SKIPPED.toString());
                 dataBaseHelper.editWorkout(workouts.get(0));
                 workouts.remove(0);

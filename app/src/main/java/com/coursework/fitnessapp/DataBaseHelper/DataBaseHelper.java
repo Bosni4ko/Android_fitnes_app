@@ -322,9 +322,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return workouts;
     }
-    public void changeWorkoutStatus(String status){
-
-    }
     public void editWorkout(WorkoutModel workout){
         SQLiteDatabase db = getWritableDatabase();
         String queryString = "DELETE FROM " + WORKOUT_EXERCISES_TABLE + " WHERE " + COLUMN_WORKOUT_ID + " = ?";
@@ -369,6 +366,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 workouts.add(newWorkout);
             }while (cursor.moveToNext());
         }
+        cursor.close();
         return workouts;
     }
     public ArrayList<ExerciseModel> getAllExercisesOfWorkout(String workoutId){
@@ -388,6 +386,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 exercises.add(newExercise);
             }while (cursor.moveToNext());
         }
+        cursor.close();
         return exercises;
     }
     public void deleteWorkout(String workoutId){
@@ -424,6 +423,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             savedWorkoutProgress.setWorkoutId(cursor.getString(4));
         }
 
+        cursor.close();
         return savedWorkoutProgress;
     }
     public void deleteCurrentWorkouts(){

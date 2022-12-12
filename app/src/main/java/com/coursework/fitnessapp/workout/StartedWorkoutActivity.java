@@ -12,6 +12,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.SoundEffectConstants;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -54,7 +55,7 @@ public class StartedWorkoutActivity extends AppCompatActivity {
     TimeDuration workoutDuration;
     private Thread workoutThread;
     private Runnable r;
-    private MediaPlayer mediaPlayer;
+    //private MediaPlayer mediaPlayer;
     private boolean isRunningTask;
     private int counter;
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -67,7 +68,7 @@ public class StartedWorkoutActivity extends AppCompatActivity {
         currentExercise = workout.getExerciseModels().get(0);
         initLayout();
         setContent();
-        mediaPlayer = MediaPlayer.create(StartedWorkoutActivity.this, R.raw.simple_countdown_beep );
+        //mediaPlayer = MediaPlayer.create(StartedWorkoutActivity.this, R.raw.simple_countdown_beep );
         r = new Runnable() {
             @Override
             public void run() {
@@ -123,7 +124,8 @@ public class StartedWorkoutActivity extends AppCompatActivity {
             counter = 5;
             while(counter >= 0){
                 //TODO:tick sound and change style
-                mediaPlayer.start();
+                //mediaPlayer.start();
+                //exerciseTimer.playSoundEffect(SoundEffectConstants.CLICK);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
