@@ -55,7 +55,6 @@ public class StartedWorkoutActivity extends AppCompatActivity {
     TimeDuration workoutDuration;
     private Thread workoutThread;
     private Runnable r;
-    //private MediaPlayer mediaPlayer;
     private boolean isRunningTask;
     private int counter;
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -68,7 +67,6 @@ public class StartedWorkoutActivity extends AppCompatActivity {
         currentExercise = workout.getExerciseModels().get(0);
         initLayout();
         setContent();
-        //mediaPlayer = MediaPlayer.create(StartedWorkoutActivity.this, R.raw.simple_countdown_beep );
         r = new Runnable() {
             @Override
             public void run() {
@@ -121,11 +119,12 @@ public class StartedWorkoutActivity extends AppCompatActivity {
     Runnable taskBreak = new Runnable() {
         @Override
         public void run() {
+            MediaPlayer mediaPlayer;
+            mediaPlayer = MediaPlayer.create(StartedWorkoutActivity.this,R.raw.simple_countdown_beep);
             counter = 5;
             while(counter >= 0){
                 //TODO:tick sound and change style
-                //mediaPlayer.start();
-                //exerciseTimer.playSoundEffect(SoundEffectConstants.CLICK);
+                mediaPlayer.start();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

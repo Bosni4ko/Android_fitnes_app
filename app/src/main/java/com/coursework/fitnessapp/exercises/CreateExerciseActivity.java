@@ -166,7 +166,7 @@ public class CreateExerciseActivity extends AppCompatActivity {
                 TimeDuration duration = new TimeDuration(txtHours.getText().toString(),txtMinutes.getText().toString(),txtSeconds.getText().toString());
                 int count = Integer.parseInt(exerciseCount.getText().toString());
                 ExerciseModel newExercise = new ExerciseModel(null,name,description,null,null,null,duration,count, Enums.ExerciseType.Custom.toString());
-                if(isEditMode){
+                if(isEditMode && !dataBaseHelper.getExerciseById(exercise.getId()).getType().equals(Enums.ExerciseType.Default.toString())){
                     newExercise.setId(exercise.getId());
                     dataBaseHelper.editExercise(newExercise);
                 }else {

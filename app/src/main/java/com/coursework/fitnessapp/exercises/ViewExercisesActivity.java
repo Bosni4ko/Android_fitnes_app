@@ -41,6 +41,7 @@ public class ViewExercisesActivity extends AppCompatActivity {
         action = intent.getExtras().get("action").toString();
         dataBaseHelper = new DataBaseHelper(this);
         exercises = dataBaseHelper.getAllExercisesOfType(type);
+        System.out.println(type);
 
         noExercisesText = findViewById(R.id.noExercisesText);
         if(!exercises.isEmpty()){

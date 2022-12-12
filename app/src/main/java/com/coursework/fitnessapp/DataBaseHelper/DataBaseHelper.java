@@ -97,7 +97,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_LENGTH, exercise.getDefaultLength().getToStringDuration());
         cv.put(COLUMN_DEFAULT_COUNT,exercise.getDefaultCount());
         cv.put(COLUMN_TYPE,exercise.getType());
-        if(exercise.getType() == Enums.ExerciseType.Custom.toString()){
+        System.out.println();
+        if(exercise.getType().equals( Enums.ExerciseType.Custom.toString())){
             cv.put(COLUMN_USER_EMAIL,account.getEmail());
         }
         long insert = db.insert(EXERCISE_TABLE,null,cv);
