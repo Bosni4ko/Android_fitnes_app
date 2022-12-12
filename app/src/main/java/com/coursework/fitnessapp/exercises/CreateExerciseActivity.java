@@ -2,6 +2,7 @@ package com.coursework.fitnessapp.exercises;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,10 +20,13 @@ import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
 import com.coursework.fitnessapp.R;
 import com.coursework.fitnessapp.enums.Enums;
 import com.coursework.fitnessapp.models.ExerciseModel;
+import com.coursework.fitnessapp.models.InternalStoragePhoto;
 import com.coursework.fitnessapp.supportclasses.DurationFieldValidator;
 import com.coursework.fitnessapp.supportclasses.InputFilterMinMax;
 import com.coursework.fitnessapp.supportclasses.TimeDuration;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.ArrayList;
 
 public class CreateExerciseActivity extends AppCompatActivity {
 
@@ -45,6 +49,7 @@ public class CreateExerciseActivity extends AppCompatActivity {
     private ImageButton minutesArrowDown;
     private ImageButton secondsArrowUp;
     private ImageButton secondsArrowDown;
+    private RecyclerView exerciseImagesRecView;
 
     private Button addExerciseBtn;
     private Button backBtn;
@@ -74,6 +79,7 @@ public class CreateExerciseActivity extends AppCompatActivity {
         exerciseCount = findViewById(R.id.exerciseCount);
         exercisePreviewImg = findViewById(R.id.exercisePreviewImg);
         exerciseDescription = findViewById(R.id.exerciseDescription);
+        exerciseImagesRecView = findViewById(R.id.exerciseImages);
 
         exerciseNameLayout = findViewById(R.id.exerciseNameLayout);
         exerciseDescriptionLayout = findViewById(R.id.descriptionLayout);
@@ -100,11 +106,20 @@ public class CreateExerciseActivity extends AppCompatActivity {
         secondsArrowUp.setOnClickListener(changeTimeListener);
         secondsArrowDown.setOnClickListener(changeTimeListener);
 
+
+        exerciseImagesRecView.setOnClickListener(addImages);
+
         addExerciseBtn = findViewById(R.id.addExerciseBtn);
         backBtn = findViewById(R.id.backBtn);
         addExerciseBtn.setOnClickListener(addExercise);
         backBtn.setOnClickListener(back);
     }
+    View.OnClickListener addImages = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+        }
+    };
     View.OnClickListener changeTimeListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -213,5 +228,9 @@ public class CreateExerciseActivity extends AppCompatActivity {
             hasError = true;
         }else exerciseCountLayout.setError(null);
         return !hasError;
+    }
+
+    private ArrayList<InternalStoragePhoto> loadPhotosFromInternalStorage(){
+
     }
 }

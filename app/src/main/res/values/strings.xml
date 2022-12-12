@@ -7,6 +7,7 @@
     <string name="add_exercise_btn">Add exercise</string>
     <string name="add_workout_btn">Add workout</string>
     <string name="back">Back</string>
+    <string name="remove">Remove</string>
     <string name="date_placeholder">OCT 10 2022</string>
     <string name="time_placeholder">Select time</string>
     <string name="default_exercises">Default exercises</string>
