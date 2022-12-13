@@ -35,11 +35,15 @@ public class ImagesRecViewAdapter extends RecyclerView.Adapter<ImagesRecViewAdap
 
     @Override
     public void onBindViewHolder(@NonNull ImagesRecViewAdapter.ViewHolder holder, int position) {
-
-        System.out.println("Image set: " + images.get(position).getImage());
-        //Glide.with(context).load(images.get(position).getImage().normalizeScheme()).into(holder.image);
-        holder.image.setImageURI(images.get(position).getImage().normalizeScheme());
-
+        Image image = images.get(position);
+        holder.image.setImageURI(image.getImage().normalizeScheme());
+        holder.removeImgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                images.remove(image);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override

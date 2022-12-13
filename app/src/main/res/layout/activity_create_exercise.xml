@@ -221,16 +221,23 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionLayout"
         android:id="@+id/imagesLayout">
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/exerciseImages" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/exerciseImages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/exerciseImages"
+            android:text="@string/add_images"
+            android:id="@+id/addImagesBtn"/>
     </RelativeLayout>
     <Button
         android:id="@+id/addExerciseBtn"
@@ -251,7 +258,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/addExerciseBtn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/descriptionLayout"
-        app:layout_constraintVertical_bias="0.85" />
+        app:layout_constraintTop_toBottomOf="@+id/imagesLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

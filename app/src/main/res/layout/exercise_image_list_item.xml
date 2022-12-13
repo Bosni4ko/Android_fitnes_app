@@ -10,8 +10,7 @@
         android:layout_height="130dp"
         app:cardCornerRadius="4dp"
         app:cardElevation="1dp"
-        app:cardMaxElevation="2dp"
-        android:layout_centerInParent="true">
+        app:cardMaxElevation="2dp">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">

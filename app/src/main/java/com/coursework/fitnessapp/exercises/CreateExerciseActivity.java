@@ -3,12 +3,14 @@ package com.coursework.fitnessapp.exercises;
 import static java.nio.file.Files.delete;
 import static java.nio.file.Files.readAllBytes;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.PackageManagerCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,6 +53,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
 
 public class CreateExerciseActivity extends AppCompatActivity {
@@ -77,6 +80,7 @@ public class CreateExerciseActivity extends AppCompatActivity {
     private ImageButton secondsArrowDown;
     private RecyclerView exerciseImagesRecView;
 
+    private Button addImagesBtn;
     private Button addExerciseBtn;
     private Button backBtn;
 
@@ -143,14 +147,42 @@ public class CreateExerciseActivity extends AppCompatActivity {
 
         adapter.setImages(images);
         exerciseImagesRecView.setAdapter(adapter);
-        exerciseImagesRecView.setLayoutManager(new LinearLayoutManager(this));
-        imagesLayout.setOnClickListener(addImages);
+        exerciseImagesRecView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT,0) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder dragged, @NonNull RecyclerView.ViewHolder target) {
+                int positionDragged = dragged.getAdapterPosition();
+                int positionTarget = target.getAdapterPosition();
+                Collections.swap(images,positionDragged,positionTarget);
+                adapter.notifyItemMoved(positionDragged,positionTarget);
+                return false;
+            }
 
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(exerciseImagesRecView);
+
+        exercisePreviewImg.setOnClickListener(addPreviewImage);
+        addImagesBtn = findViewById(R.id.addImagesBtn);
+        addImagesBtn.setOnClickListener(addImages);
         addExerciseBtn = findViewById(R.id.addExerciseBtn);
         backBtn = findViewById(R.id.backBtn);
         addExerciseBtn.setOnClickListener(addExercise);
         backBtn.setOnClickListener(back);
     }
+    View.OnClickListener addPreviewImage = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent,getString(R.string.select_pictures)),2);
+        }
+    };
     View.OnClickListener addImages = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -287,8 +319,14 @@ public class CreateExerciseActivity extends AppCompatActivity {
                 String imageURL = data.getData().toString();
                 images.add(new Image(Uri.parse(imageURL),getFileName(Uri.parse(imageURL))));
             }
+            adapter.setImages(images);
+        }else if(requestCode == 2 && resultCode == Activity.RESULT_OK){
+            if(data.getData() != null){
+                String imageURL = data.getData().toString();
+                exercisePreviewImg.setImageURI(Uri.parse(imageURL));
+            }
         }
-        adapter.setImages(images);
+
     }
 
     private String getFileName(Uri uri){

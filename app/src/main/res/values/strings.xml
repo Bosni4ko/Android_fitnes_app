@@ -18,6 +18,7 @@
     <string name="quantity">Qnt: </string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
+    <string name="add_images">Add images</string>
     <string name="save_changes">Save changes</string>
     <string name="choose_exercise_type">What exercises do you want to see?</string>
     <string name="default_name">Name</string>
