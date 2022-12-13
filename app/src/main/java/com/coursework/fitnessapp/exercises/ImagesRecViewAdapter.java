@@ -1,5 +1,8 @@
 package com.coursework.fitnessapp.exercises;
 
+import android.content.Context;
+import android.net.Uri;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -9,31 +12,47 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.coursework.fitnessapp.R;
+import com.coursework.fitnessapp.models.Image;
 import com.coursework.fitnessapp.models.InternalStoragePhoto;
 
 import java.util.ArrayList;
 
 import javax.xml.namespace.QName;
 
-public class ImagesRecViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class ImagesRecViewAdapter extends RecyclerView.Adapter<ImagesRecViewAdapter.ViewHolder>{
 
-    private ArrayList<InternalStoragePhoto> images;
+    private ArrayList<Image> images;
+    private Context context;
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+    public ImagesRecViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.exercise_image_list_item,parent,false);
+        context = view.getContext();
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ImagesRecViewAdapter.ViewHolder holder, int position) {
 
+        System.out.println("Image set: " + images.get(position).getImage());
+        //Glide.with(context).load(images.get(position).getImage().normalizeScheme()).into(holder.image);
+        holder.image.setImageURI(images.get(position).getImage().normalizeScheme());
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return images.size();
+    }
+
+    public void setImages(ArrayList<Image> images){
+        this.images = images;
+        notifyDataSetChanged();
+    }
+    public ArrayList<Image> getImages(){
+        return images;
     }
 
 

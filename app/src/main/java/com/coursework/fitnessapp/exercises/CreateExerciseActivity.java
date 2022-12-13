@@ -1,32 +1,57 @@
 package com.coursework.fitnessapp.exercises;
 
+import static java.nio.file.Files.delete;
+import static java.nio.file.Files.readAllBytes;
+
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PackageManagerCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.text.InputFilter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
+import com.coursework.fitnessapp.MainActivity;
 import com.coursework.fitnessapp.R;
 import com.coursework.fitnessapp.enums.Enums;
 import com.coursework.fitnessapp.models.ExerciseModel;
+import com.coursework.fitnessapp.models.Image;
 import com.coursework.fitnessapp.models.InternalStoragePhoto;
 import com.coursework.fitnessapp.supportclasses.DurationFieldValidator;
 import com.coursework.fitnessapp.supportclasses.InputFilterMinMax;
 import com.coursework.fitnessapp.supportclasses.TimeDuration;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Locale;
 
 public class CreateExerciseActivity extends AppCompatActivity {
 
@@ -34,6 +59,7 @@ public class CreateExerciseActivity extends AppCompatActivity {
     private TextInputLayout exerciseDescriptionLayout;
     private TextInputLayout exerciseDurationLayout;
     private TextInputLayout exerciseCountLayout;
+    private RelativeLayout imagesLayout;
 
     private EditText exerciseName;
     private EditText exerciseDescription;
@@ -57,7 +83,11 @@ public class CreateExerciseActivity extends AppCompatActivity {
     ExerciseModel exercise;
     DataBaseHelper dataBaseHelper;
     Boolean isEditMode = false;
+    ImagesRecViewAdapter adapter = new ImagesRecViewAdapter();
+    ArrayList<Image> images = new ArrayList<>();
+    ArrayList<InternalStoragePhoto> internalImages = new ArrayList<>();
 
+    private static final int Read_Permission = 101;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +103,10 @@ public class CreateExerciseActivity extends AppCompatActivity {
             exercise = dataBaseHelper.getExerciseById(id);
             setExerciseValues();
         }
+
+        if(ContextCompat.checkSelfPermission(CreateExerciseActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(CreateExerciseActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},Read_Permission);
+        }
     }
     private void initLayout(){
         exerciseName = findViewById(R.id.exerciseName);
@@ -81,6 +115,7 @@ public class CreateExerciseActivity extends AppCompatActivity {
         exerciseDescription = findViewById(R.id.exerciseDescription);
         exerciseImagesRecView = findViewById(R.id.exerciseImages);
 
+        imagesLayout = findViewById(R.id.imagesLayout);
         exerciseNameLayout = findViewById(R.id.exerciseNameLayout);
         exerciseDescriptionLayout = findViewById(R.id.descriptionLayout);
         exerciseDurationLayout = findViewById(R.id.exerciseDurationLayout);
@@ -106,8 +141,10 @@ public class CreateExerciseActivity extends AppCompatActivity {
         secondsArrowUp.setOnClickListener(changeTimeListener);
         secondsArrowDown.setOnClickListener(changeTimeListener);
 
-
-        exerciseImagesRecView.setOnClickListener(addImages);
+        adapter.setImages(images);
+        exerciseImagesRecView.setAdapter(adapter);
+        exerciseImagesRecView.setLayoutManager(new LinearLayoutManager(this));
+        imagesLayout.setOnClickListener(addImages);
 
         addExerciseBtn = findViewById(R.id.addExerciseBtn);
         backBtn = findViewById(R.id.backBtn);
@@ -117,7 +154,12 @@ public class CreateExerciseActivity extends AppCompatActivity {
     View.OnClickListener addImages = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent,getString(R.string.select_pictures)),1);
+            //TODO:maybe change startActivity
         }
     };
     View.OnClickListener changeTimeListener = new View.OnClickListener() {
@@ -230,7 +272,83 @@ public class CreateExerciseActivity extends AppCompatActivity {
         return !hasError;
     }
 
-    private ArrayList<InternalStoragePhoto> loadPhotosFromInternalStorage(){
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
+            if(data.getClipData() != null){
+                for(int i = 0;i < data.getClipData().getItemCount();i++){
+                    images.add(new Image(data.getClipData().getItemAt(i).getUri(),getFileName(data.getClipData().getItemAt(i).getUri())));
+                }
+
+            }
+            else if(data.getData() != null){
+                String imageURL = data.getData().toString();
+                images.add(new Image(Uri.parse(imageURL),getFileName(Uri.parse(imageURL))));
+            }
+        }
+        adapter.setImages(images);
+    }
+
+    private String getFileName(Uri uri){
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            if(result != null){
+                int cut = result.lastIndexOf('/');
+                if (cut != -1) {
+                    result = result.substring(cut + 1);
+                }
+            }
+        }
+        return result;
+    }
+    private Boolean savePhotoToInternalStorage(String fileName, Bitmap bmp){
+        try{
+            FileOutputStream fos = openFileOutput(fileName + ".jpg",MODE_PRIVATE);
+            if(!bmp.compress(Bitmap.CompressFormat.JPEG, 95,fos)){
+                throw new IOException("Couldn't save bitmap");
+            }
+            fos.close();
+            return true;
+        }catch (IOException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private ArrayList<InternalStoragePhoto> loadPhotosFromInternalStorage(){
+        ArrayList<InternalStoragePhoto> internalImages = new ArrayList<>();
+        File[] files = getFilesDir().listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File file,String name) {
+               return(file.canRead() && file.isFile() && name.endsWith(".jpg"));
+            }
+        });
+        Arrays.stream(files).map(file -> {
+            try {
+                Bitmap bmp = BitmapFactory.decodeByteArray(Files.readAllBytes(file.toPath()),0, Files.readAllBytes(file.toPath()).length);
+                internalImages.add(new InternalStoragePhoto(file.getName(),bmp));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        });
+        return internalImages;
+    }
+
+    private boolean deleteImageFromInternalStorage(String fileName){
+        return deleteFile(fileName);
     }
 }

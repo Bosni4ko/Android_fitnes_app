@@ -5,6 +5,12 @@ import android.graphics.Bitmap;
 public class InternalStoragePhoto {
     private String name;
     private Bitmap bmp;
+
+    public InternalStoragePhoto(String name, Bitmap bmp) {
+        this.name = name;
+        this.bmp = bmp;
+    }
+
     public String getName() {
         return name;
     }

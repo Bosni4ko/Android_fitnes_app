@@ -41,6 +41,7 @@
     <string name="successful_registration">User has been registered successfully!</string>
     <string name="failed_registration">Failed to register! Try again!</string>
     <string name="verify_email">Check your email to verify your account</string>
+    <string name="select_pictures">Select pictures</string>
 
 
     <string name="empty_name_error">Name cannot be empty</string>
@@ -65,6 +66,7 @@
     <string name="invalid_password_long">Password must be less than 30 characters long</string>
     <string name="login_failed">"Unknown error occurred.Please try again later."</string>
     <string name="invalid_credentials">Failed to login!Please check your credentials.</string>
+
 
     <string name="workout_notification_title">Don\'t miss your today\'s workout: </string>
     <string name="workout_notification_at"> at </string>
