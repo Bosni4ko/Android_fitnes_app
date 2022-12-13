@@ -1,18 +1,14 @@
 package com.coursework.fitnessapp.workout;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.SoundEffectConstants;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -25,11 +21,6 @@ import com.coursework.fitnessapp.models.ExerciseModel;
 import com.coursework.fitnessapp.models.SavedWorkoutProgressModel;
 import com.coursework.fitnessapp.models.WorkoutModel;
 import com.coursework.fitnessapp.supportclasses.TimeDuration;
-
-import org.w3c.dom.Text;
-
-import java.net.URI;
-import java.util.concurrent.TimeUnit;
 
 public class StartedWorkoutActivity extends AppCompatActivity {
     private ImageView previewImg;
@@ -184,8 +175,8 @@ public class StartedWorkoutActivity extends AppCompatActivity {
             }
         }
         exerciseTimer.setText(currentExercise.getLength().getToStringDuration());
-        if(currentExercise.getPreviewUrl() != null){
-            previewImg.setImageURI(Uri.parse(currentExercise.getPreviewUrl()));
+        if(currentExercise.getPreviewImageName() != null){
+            previewImg.setImageURI(Uri.parse(currentExercise.getPreviewImageName()));
         }else previewImg.setImageResource(R.drawable.default_preview_img);
         exerciseName.setText(currentExercise.getName());
         exerciseAmount.setText(String.valueOf(currentExercise.getCount()));

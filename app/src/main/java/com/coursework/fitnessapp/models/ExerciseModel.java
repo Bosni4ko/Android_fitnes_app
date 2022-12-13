@@ -8,8 +8,8 @@ public class ExerciseModel {
     private Integer id;
     private String name;
     private String description;
-    private String previewUrl;
-    private String[] imageUrls;
+    private String previewImageName;
+    private String[] imageNames;
     private String videoUrl;
     private TimeDuration defaultLength;
     private TimeDuration length;
@@ -17,12 +17,12 @@ public class ExerciseModel {
     private int count;
     private String type;
 
-    public ExerciseModel(Integer id, String name, String description,String previewUrl, String[] imageUrl, String videoUrl, TimeDuration defaultLength, int defaultCount,String type) {
+    public ExerciseModel(Integer id, String name, String description, String previewImageName, String[] imageUrl, String videoUrl, TimeDuration defaultLength, int defaultCount, String type) {
         this.id = id == null ? null : id;
         this.name = name;
         this.description = description;
-        this.previewUrl = previewUrl == null ? null : previewUrl;
-        this.imageUrls = imageUrl == null ? null : imageUrl;
+        this.previewImageName = previewImageName == null ? null : previewImageName;
+        this.imageNames = imageUrl == null ? null : imageUrl;
         this.videoUrl = videoUrl == null ? null : videoUrl;
         this.defaultLength = defaultLength;
         this.defaultCount = defaultCount;
@@ -57,12 +57,12 @@ public class ExerciseModel {
         this.description = description;
     }
 
-    public String[] getImageUrls() {
-        return imageUrls;
+    public String[] getImageNames() {
+        return imageNames;
     }
 
-    public void setImageUrls(String[] imageUrls) {
-        this.imageUrls = imageUrls;
+    public void setImageNames(String[] imageNames) {
+        this.imageNames = imageNames;
     }
 
     public String getVideoUrl() {
@@ -113,11 +113,11 @@ public class ExerciseModel {
         this.defaultLength = defaultLength;
     }
 
-    public String getPreviewUrl() {
-        return previewUrl;
+    public String getPreviewImageName() {
+        return previewImageName;
     }
 
-    public void setPreviewUrl(String previewUrl) {
-        this.previewUrl = previewUrl;
+    public void setPreviewImageName(String previewImageName) {
+        this.previewImageName = previewImageName;
     }
 }

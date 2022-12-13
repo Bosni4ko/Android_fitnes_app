@@ -24,6 +24,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.InputFilter;
 import android.view.View;
@@ -85,6 +86,7 @@ public class CreateExerciseActivity extends AppCompatActivity {
     private Button backBtn;
 
     ExerciseModel exercise;
+    Image previewImage;
     DataBaseHelper dataBaseHelper;
     Boolean isEditMode = false;
     ImagesRecViewAdapter adapter = new ImagesRecViewAdapter();
@@ -254,12 +256,32 @@ public class CreateExerciseActivity extends AppCompatActivity {
                 String description = exerciseDescription.getText().toString();
                 TimeDuration duration = new TimeDuration(txtHours.getText().toString(),txtMinutes.getText().toString(),txtSeconds.getText().toString());
                 int count = Integer.parseInt(exerciseCount.getText().toString());
-                ExerciseModel newExercise = new ExerciseModel(null,name,description,null,null,null,duration,count, Enums.ExerciseType.Custom.toString());
+                if(previewImage == null){
+                    previewImage = new Image(null,null);
+                }else {
+                    try {
+                        InternalStoragePhoto.saveImageToInternalStorage(previewImage.getName(), MediaStore.Images.Media.getBitmap(CreateExerciseActivity.this.getContentResolver(),previewImage.getImage()),CreateExerciseActivity.this);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                previewImage.setName(previewImage.getName() + String.valueOf(Math.floor(Math.random() * (9*Math.pow(10,9))) + Math.pow(10,(9))));
+                ExerciseModel newExercise = new ExerciseModel(null,name,description,previewImage.getName(),null,null,duration,count, Enums.ExerciseType.Custom.toString());
                 if(isEditMode && !dataBaseHelper.getExerciseById(exercise.getId()).getType().equals(Enums.ExerciseType.Default.toString())){
                     newExercise.setId(exercise.getId());
                     dataBaseHelper.editExercise(newExercise);
+                    //TODO:delete old
                 }else {
                     dataBaseHelper.addExercise(newExercise);
+                }
+                images = adapter.getImages();
+                for (Image imageToSave:images) {
+                    imageToSave.setName(imageToSave.getName() + String.valueOf(Math.floor(Math.random() * (9*Math.pow(10,9))) + Math.pow(10,(9))));
+                    try {
+                        InternalStoragePhoto.saveImageToInternalStorage(imageToSave.getName(), MediaStore.Images.Media.getBitmap(CreateExerciseActivity.this.getContentResolver(),imageToSave.getImage()),CreateExerciseActivity.this);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 finish();
             }
@@ -324,6 +346,7 @@ public class CreateExerciseActivity extends AppCompatActivity {
             if(data.getData() != null){
                 String imageURL = data.getData().toString();
                 exercisePreviewImg.setImageURI(Uri.parse(imageURL));
+                previewImage = new Image(Uri.parse(imageURL),getFileName(Uri.parse(imageURL)));
             }
         }
 
@@ -352,41 +375,5 @@ public class CreateExerciseActivity extends AppCompatActivity {
         }
         return result;
     }
-    private Boolean savePhotoToInternalStorage(String fileName, Bitmap bmp){
-        try{
-            FileOutputStream fos = openFileOutput(fileName + ".jpg",MODE_PRIVATE);
-            if(!bmp.compress(Bitmap.CompressFormat.JPEG, 95,fos)){
-                throw new IOException("Couldn't save bitmap");
-            }
-            fos.close();
-            return true;
-        }catch (IOException e){
-            e.printStackTrace();
-            return false;
-        }
-    }
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private ArrayList<InternalStoragePhoto> loadPhotosFromInternalStorage(){
-        ArrayList<InternalStoragePhoto> internalImages = new ArrayList<>();
-        File[] files = getFilesDir().listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File file,String name) {
-               return(file.canRead() && file.isFile() && name.endsWith(".jpg"));
-            }
-        });
-        Arrays.stream(files).map(file -> {
-            try {
-                Bitmap bmp = BitmapFactory.decodeByteArray(Files.readAllBytes(file.toPath()),0, Files.readAllBytes(file.toPath()).length);
-                internalImages.add(new InternalStoragePhoto(file.getName(),bmp));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        });
-        return internalImages;
-    }
 
-    private boolean deleteImageFromInternalStorage(String fileName){
-        return deleteFile(fileName);
-    }
 }

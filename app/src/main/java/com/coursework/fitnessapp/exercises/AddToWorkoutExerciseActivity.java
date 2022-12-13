@@ -224,8 +224,8 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
         txtSeconds.setText(exercise.getDefaultLength().getSeconds());
         exerciseCount.setText(String.valueOf(exercise.getDefaultCount()));
         setDescription(exercise);
-        if(exercise.getPreviewUrl() != null){
-            exercisePreviewImg.setImageURI(Uri.parse(exercise.getPreviewUrl()));
+        if(exercise.getPreviewImageName() != null){
+            exercisePreviewImg.setImageURI(Uri.parse(exercise.getPreviewImageName()));
         }
     }
 

@@ -3,14 +3,12 @@ package com.coursework.fitnessapp.exercises;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,7 +17,6 @@ import android.widget.TextView;
 import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
 import com.coursework.fitnessapp.R;
 import com.coursework.fitnessapp.models.ExerciseModel;
-import com.coursework.fitnessapp.supportclasses.TimeDuration;
 
 public class ViewExerciseActivity extends AppCompatActivity {
 
@@ -91,8 +88,8 @@ public class ViewExerciseActivity extends AppCompatActivity {
             exerciseCount.setText(String.valueOf(exercise.getCount()));
         }
         setDescription();
-        if(exercise.getPreviewUrl() != null){
-            exercisePreviewImg.setImageURI(Uri.parse(exercise.getPreviewUrl()));
+        if(exercise.getPreviewImageName() != null){
+            exercisePreviewImg.setImageURI(Uri.parse(exercise.getPreviewImageName()));
         }
     }
     private void setDescription(){

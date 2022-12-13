@@ -11,7 +11,6 @@ import android.os.Build;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.coursework.fitnessapp.MainActivity;
 import com.coursework.fitnessapp.enums.Enums;
 import com.coursework.fitnessapp.models.ExerciseModel;
 import com.coursework.fitnessapp.models.SavedWorkoutProgressModel;
@@ -20,7 +19,6 @@ import com.coursework.fitnessapp.supportclasses.TimeDuration;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -30,8 +28,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String EXERCISE_TABLE = "EXERCISE_TABLE";
     public static final String WORKOUT_TABLE = "WORKOUT_TABLE";
     public static final String CURRENT_WORKOUT_TABLE = "CURRENT_WORKOUT_TABLE";
-    public static final String COLUMN_URL = "URL";
-    public static final String IMAGE_URL_TABLE = "IMAGE_" + COLUMN_URL + "_TABLE";
+    public static final String IMAGE_NAME_TABLE = "IMAGE_NAME_TABLE";
     public static final String WORKOUT_EXERCISES_TABLE = "WORKOUT_EXERCISES_TABLE";
     public static final String COLUMN_ID = "ID";
     public static final String COLUMN_NAME = "Name";
@@ -64,7 +61,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String createWorkoutTableStatement = "CREATE TABLE " + WORKOUT_TABLE + "(" + COLUMN_ID + " nvarchar(12) PRIMARY KEY NOT NULL," + COLUMN_NAME + " nvarchar(30) NOT NULL," + COLUMN_DESCRIPTION + " Text NOT NULL," + COLUMN_DATE + " Date NOT NULL," + COLUMN_STATUS + " nvarchar(10) NOT NULL," + COLUMN_TYPE + " nvarchar(12) NOT NULL," + COLUMN_USER_EMAIL + " nvarchar(30) NOT NULL)";
         sqLiteDatabase.execSQL(createWorkoutTableStatement);
 
-        String createImageUrlTableStatement = "CREATE TABLE " + IMAGE_URL_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT ," + COLUMN_URL + " nvarchar(30)," + COLUMN_SNUMBER + " INT NOT NULL," + COLUMN_EXERCISE_ID + " INTEGER NOT NULL,FOREIGN KEY("+COLUMN_EXERCISE_ID+") REFERENCES " + EXERCISE_TABLE + "(" +COLUMN_ID+"))";
+        String createImageUrlTableStatement = "CREATE TABLE " + IMAGE_NAME_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT ," + COLUMN_NAME + " nvarchar(30)," + COLUMN_SNUMBER + " INT NOT NULL," + COLUMN_EXERCISE_ID + " INTEGER NOT NULL,FOREIGN KEY("+COLUMN_EXERCISE_ID+") REFERENCES " + EXERCISE_TABLE + "(" +COLUMN_ID+"))";
         sqLiteDatabase.execSQL(createImageUrlTableStatement);
 
         String createWorkoutExercisesTableStatement = "CREATE TABLE " + WORKOUT_EXERCISES_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_SNUMBER + " INT NOT NULL," + COLUMN_LENGTH + " INT NOT NULL, " + COLUMN_COUNT + " INT NOT NULL," + COLUMN_WORKOUT_ID + " nvarchar(12) NOT NULL," + COLUMN_EXERCISE_ID + " INTEGER NOT NULL,FOREIGN KEY(" + COLUMN_WORKOUT_ID + ") REFERENCES " + WORKOUT_TABLE +"(" +COLUMN_ID + "),FOREIGN KEY(" + COLUMN_EXERCISE_ID + ") REFERENCES " + EXERCISE_TABLE +"(" +COLUMN_ID +")  )";
@@ -88,8 +85,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         cv.put(COLUMN_NAME,exercise.getName());
         cv.put(COLUMN_DESCRIPTION,exercise.getDescription());
-        if(exercise.getPreviewUrl() != null){
-            cv.put(COLUMN_PREVIEW_IMG_URL,exercise.getPreviewUrl());
+        if(exercise.getPreviewImageName() != null){
+            cv.put(COLUMN_PREVIEW_IMG_URL,exercise.getPreviewImageName());
         }
         if(exercise.getVideoUrl() != null) {
             cv.put(COLUMN_VIDEO_URL,exercise.getVideoUrl());
@@ -105,14 +102,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if(insert == -1){
             return false;
         }
-        else if(exercise.getImageUrls() != null){
+        else if(exercise.getImageNames() != null){
             int counter = 0;
-            for(String imageUrl : exercise.getImageUrls()){
-                imgCv.put(COLUMN_URL,imageUrl);
+            for(String imageName : exercise.getImageNames()){
+                imgCv.put(COLUMN_NAME,imageName);
                 imgCv.put(COLUMN_SNUMBER,counter);
                 imgCv.put(COLUMN_EXERCISE_ID,exercise.getId());
                 counter++;
-                insert = db.insert(IMAGE_URL_TABLE,null,imgCv);
+                insert = db.insert(IMAGE_NAME_TABLE,null,imgCv);
                 if(insert == -1){
                     return false;
                 }
@@ -224,26 +221,26 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void editExercise(ExerciseModel exercise){
         if(exercise.getType() != Enums.ExerciseType.Default.toString()){
             SQLiteDatabase db = getWritableDatabase();
-            String queryString = "DELETE FROM " + IMAGE_URL_TABLE + " WHERE " + COLUMN_EXERCISE_ID + " = ?";
+            String queryString = "DELETE FROM " + IMAGE_NAME_TABLE + " WHERE " + COLUMN_EXERCISE_ID + " = ?";
             db.execSQL(queryString,new String[]{String.valueOf(exercise.getId())});
             ContentValues cv = new ContentValues();
             cv.put(COLUMN_NAME,exercise.getName());
             cv.put(COLUMN_DESCRIPTION,exercise.getDescription());
-            cv.put(COLUMN_PREVIEW_IMG_URL,exercise.getPreviewUrl());
+            cv.put(COLUMN_PREVIEW_IMG_URL,exercise.getPreviewImageName());
             cv.put(COLUMN_VIDEO_URL,exercise.getVideoUrl());
             cv.put(COLUMN_LENGTH,exercise.getDefaultLength().getToStringDuration());
             cv.put(COLUMN_DEFAULT_COUNT,exercise.getDefaultCount());
             cv.put(COLUMN_TYPE,exercise.getType());
             db.update(EXERCISE_TABLE,cv,COLUMN_ID + " = ?",new String[]{String.valueOf(exercise.getId())});
             ContentValues imgCv = new ContentValues();
-            if(exercise.getImageUrls() != null){
+            if(exercise.getImageNames() != null){
                 int counter = 0;
-                for(String imageUrl : exercise.getImageUrls()) {
-                    imgCv.put(COLUMN_URL, imageUrl);
+                for(String imageName : exercise.getImageNames()) {
+                    imgCv.put(COLUMN_NAME, imageName);
                     imgCv.put(COLUMN_SNUMBER, counter);
                     imgCv.put(COLUMN_EXERCISE_ID, exercise.getId());
                     counter++;
-                    db.insert(IMAGE_URL_TABLE, null, imgCv);
+                    db.insert(IMAGE_NAME_TABLE, null, imgCv);
                 }
             }
         }
