@@ -85,6 +85,7 @@ public class CreateExerciseActivity extends AppCompatActivity {
     private Button addExerciseBtn;
     private Button backBtn;
 
+    Boolean isPreviewImageSet = false;
     ExerciseModel exercise;
     Image previewImage;
     DataBaseHelper dataBaseHelper;
@@ -256,17 +257,27 @@ public class CreateExerciseActivity extends AppCompatActivity {
                 String description = exerciseDescription.getText().toString();
                 TimeDuration duration = new TimeDuration(txtHours.getText().toString(),txtMinutes.getText().toString(),txtSeconds.getText().toString());
                 int count = Integer.parseInt(exerciseCount.getText().toString());
-                if(previewImage == null){
+                if(exercisePreviewImg == null){
                     previewImage = new Image(null,null);
                 }else {
                     try {
                         InternalStoragePhoto.saveImageToInternalStorage(previewImage.getName(), MediaStore.Images.Media.getBitmap(CreateExerciseActivity.this.getContentResolver(),previewImage.getImage()),CreateExerciseActivity.this);
+                        previewImage.setName(previewImage.getName() + String.valueOf(Math.floor(Math.random() * (9*Math.pow(10,9))) + Math.pow(10,(9))));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-                previewImage.setName(previewImage.getName() + String.valueOf(Math.floor(Math.random() * (9*Math.pow(10,9))) + Math.pow(10,(9))));
-                ExerciseModel newExercise = new ExerciseModel(null,name,description,previewImage.getName(),null,null,duration,count, Enums.ExerciseType.Custom.toString());
+                ArrayList<String> imageNames = new ArrayList<>();
+                for (Image imageToSave:images) {
+                    imageToSave.setName(imageToSave.getName() + String.valueOf(Math.floor(Math.random() * (9*Math.pow(10,9))) + Math.pow(10,(9))));
+                    try {
+                        InternalStoragePhoto.saveImageToInternalStorage(imageToSave.getName(), MediaStore.Images.Media.getBitmap(CreateExerciseActivity.this.getContentResolver(),imageToSave.getImage()),CreateExerciseActivity.this);
+                        imageNames.add(imageToSave.getName());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                ExerciseModel newExercise = new ExerciseModel(null,name,description,previewImage.getName(),imageNames,null,duration,count, Enums.ExerciseType.Custom.toString());
                 if(isEditMode && !dataBaseHelper.getExerciseById(exercise.getId()).getType().equals(Enums.ExerciseType.Default.toString())){
                     newExercise.setId(exercise.getId());
                     dataBaseHelper.editExercise(newExercise);
@@ -275,14 +286,6 @@ public class CreateExerciseActivity extends AppCompatActivity {
                     dataBaseHelper.addExercise(newExercise);
                 }
                 images = adapter.getImages();
-                for (Image imageToSave:images) {
-                    imageToSave.setName(imageToSave.getName() + String.valueOf(Math.floor(Math.random() * (9*Math.pow(10,9))) + Math.pow(10,(9))));
-                    try {
-                        InternalStoragePhoto.saveImageToInternalStorage(imageToSave.getName(), MediaStore.Images.Media.getBitmap(CreateExerciseActivity.this.getContentResolver(),imageToSave.getImage()),CreateExerciseActivity.this);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
                 finish();
             }
         }

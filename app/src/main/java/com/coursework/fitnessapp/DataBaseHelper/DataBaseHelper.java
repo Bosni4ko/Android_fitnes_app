@@ -122,6 +122,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         else return true;
     }
 
+    public boolean deleteExercise(int id){
+        SQLiteDatabase db = getWritableDatabase();
+        System.out.println(!getExerciseById(id).getType().equals(Enums.ExerciseType.Default.toString()));
+        System.out.println(exerciseBelongToWorkout(id));
+        if(!getExerciseById(id).getType().equals(Enums.ExerciseType.Default.toString()) && !exerciseBelongToWorkout(id)){
+            //db.delete(IMAGE_NAME_TABLE,COLUMN_EXERCISE_ID + " = ?",new String[]{String.valueOf(id)});
+            db.delete(EXERCISE_TABLE, COLUMN_ID + " = ?",new String[]{String.valueOf(id)});
+            return true;
+        }
+        else return false;
+
+    }
     public boolean addWorkout(WorkoutModel workout){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -205,11 +217,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
             String exerciseName = cursor.getString(1);
             String exerciseDescription = cursor.getString(2);
+            String previewImageName = cursor.getString(3);
             TimeDuration exerciseLength = new TimeDuration(cursor.getString(5)) ;
             int exerciseCount = cursor.getInt(6);
             String type = cursor.getString(7);
 
-            exercise = new ExerciseModel(id,exerciseName,exerciseDescription,null,null,null,exerciseLength,exerciseCount,type);
+            exercise = new ExerciseModel(id,exerciseName,exerciseDescription,previewImageName,null,null,exerciseLength,exerciseCount,type);
 
         }
         else {
@@ -386,6 +399,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return exercises;
+    }
+    public boolean exerciseBelongToWorkout(int id){
+        String queryString = "SELECT * FROM " + WORKOUT_EXERCISES_TABLE + " WHERE " + COLUMN_EXERCISE_ID + " = ?";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(id)});
+        if(cursor.moveToFirst()){
+            return true;
+        }
+        else return false;
     }
     public void deleteWorkout(String workoutId){
         String queryString = "DELETE FROM " + WORKOUT_EXERCISES_TABLE + " WHERE " + COLUMN_WORKOUT_ID + " = ?";

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
 import com.coursework.fitnessapp.R;
 import com.coursework.fitnessapp.models.ExerciseModel;
+import com.coursework.fitnessapp.models.InternalStoragePhoto;
 
 public class ViewExerciseActivity extends AppCompatActivity {
 
@@ -89,7 +90,7 @@ public class ViewExerciseActivity extends AppCompatActivity {
         }
         setDescription();
         if(exercise.getPreviewImageName() != null){
-            exercisePreviewImg.setImageURI(Uri.parse(exercise.getPreviewImageName()));
+            exercisePreviewImg.setImageBitmap(InternalStoragePhoto.loadImageFromInternalStorage(ViewExerciseActivity.this,exercise.getPreviewImageName()).get(0).getBmp());
         }
     }
     private void setDescription(){

@@ -1,7 +1,9 @@
 package com.coursework.fitnessapp.exercises;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -10,12 +12,14 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
 import com.coursework.fitnessapp.R;
 import com.coursework.fitnessapp.enums.Enums;
 import com.coursework.fitnessapp.models.ExerciseModel;
@@ -31,17 +35,20 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
     private String action;
     private String type;
     Context context;
+    DataBaseHelper dataBaseHelper;
     public ExercisesRecViewAdapter(String action,String type) {
         this.action = action;
         this.type = type;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.exercises_add_list_item,parent,false);
         ViewHolder holder = new ViewHolder(view);
         context = parent.getContext();
+        dataBaseHelper = new DataBaseHelper(context);
         return holder;
     }
 
@@ -62,7 +69,32 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
             holder.removeExerciseBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    AlertDialog.Builder builder =  new AlertDialog.Builder(holder.parent.getContext());
+                    builder.setTitle("Are you sure")
+                            .setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                @RequiresApi(api = Build.VERSION_CODES.O)
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    if(dataBaseHelper.deleteExercise(exercise.getId())){
+                                        InternalStoragePhoto.deleteImageFromInternalStorage(exercise.getPreviewImageName()+".jpg",context);
+                                        if(exercise.getImageNames() != null){
+                                            for (String image:exercise.getImageNames()) {
+                                                InternalStoragePhoto.deleteImageFromInternalStorage(image+".jpg",context);
+                                            }
+                                        }
+                                        exercises.remove(exercise);
+                                        notifyDataSetChanged();
+                                    }
+                                    else {
+                                        Toast.makeText(context, R.string.delete_exercise_error,Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            }).setNeutralButton(R.string.back, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    builder.setCancelable(true);
+                                }
+                            }).show();
                 }
             });
         }

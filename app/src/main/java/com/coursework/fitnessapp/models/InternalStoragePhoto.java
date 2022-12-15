@@ -54,14 +54,18 @@ public class InternalStoragePhoto {
         }
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static ArrayList<InternalStoragePhoto> loadImageFromInternalStorage(Context context,String name){
+    public static ArrayList<InternalStoragePhoto> loadImageFromInternalStorage(Context context,String fileName){
         ArrayList<InternalStoragePhoto> internalImages = new ArrayList<>();
         File[] files = context.getFilesDir().listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File file,String name) {
-                return(file.canRead() && file.isFile() && name.startsWith(name));
+                System.out.println("Name: " + name);
+                System.out.println("DB name: " + fileName);
+                System.out.println(name.startsWith(fileName));
+                return(file.canRead() && file.canRead() && name.startsWith(fileName));
             }
         });
+        System.out.println("File amount" + files.length);
         Arrays.stream(files).map(file -> {
             try {
                 Bitmap bmp = BitmapFactory.decodeByteArray(Files.readAllBytes(file.toPath()),0, Files.readAllBytes(file.toPath()).length);
@@ -74,7 +78,7 @@ public class InternalStoragePhoto {
         return internalImages;
     }
 
-    public boolean deleteImageFromInternalStorage(String fileName,Context context){
+    public static boolean deleteImageFromInternalStorage(String fileName,Context context){
         return context.deleteFile(fileName);
     }
 }
