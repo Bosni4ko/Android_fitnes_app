@@ -1,11 +1,14 @@
 package com.coursework.fitnessapp.exercises;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -16,6 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.coursework.fitnessapp.R;
 import com.coursework.fitnessapp.enums.Enums;
 import com.coursework.fitnessapp.models.ExerciseModel;
+import com.coursework.fitnessapp.models.InternalStoragePhoto;
+
+import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,8 +29,11 @@ import java.util.ArrayList;
 public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecViewAdapter.ViewHolder> {
     private ArrayList<ExerciseModel> exercises;
     private String action;
-    public ExercisesRecViewAdapter(String action) {
+    private String type;
+    Context context;
+    public ExercisesRecViewAdapter(String action,String type) {
         this.action = action;
+        this.type = type;
     }
 
     @NonNull
@@ -32,16 +41,31 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.exercises_add_list_item,parent,false);
         ViewHolder holder = new ViewHolder(view);
-
+        context = parent.getContext();
         return holder;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ExerciseModel exercise = exercises.get(position);
-        holder.exerciseName.setText(exercises.get(position).getName());
-        holder.exerciseCount.setText(exercises.get(position).getId().toString());
+        holder.exerciseName.setText(exercise.getName());
+        holder.exerciseCount.setText(String.valueOf(exercise.getDefaultCount()));
+        holder.exerciseLength.setText(exercise.getDefaultLength().getToStringDuration());
+        if(exercise.getPreviewImageName()!= null){
+            holder.exercisePreviewImg.setImageBitmap(InternalStoragePhoto.loadImageFromInternalStorage(context,exercise.getPreviewImageName()).get(0).getBmp());
+        }
+        if(type.equals(Enums.ExerciseType.Default.toString())){
+            holder.removeExerciseBtn.setVisibility(View.GONE);
+        }
+        else {
+            holder.removeExerciseBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
+                }
+            });
+        }
 
         holder.parent.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -78,12 +102,18 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
     public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView exerciseName;
         private TextView exerciseCount;
+        private TextView exerciseLength;
+        private ImageView exercisePreviewImg;
+        private ImageButton removeExerciseBtn;
         private View parent;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             parent = itemView.findViewById(R.id.parent);
             exerciseName = itemView.findViewById(R.id.exerciseName);
             exerciseCount = itemView.findViewById(R.id.exerciseCount);
+            exerciseLength = itemView.findViewById(R.id.exerciseLength);
+            exercisePreviewImg = itemView.findViewById(R.id.exercisePreviewImg);
+            removeExerciseBtn = itemView.findViewById(R.id.removeExercise);
 
         }
     }

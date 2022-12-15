@@ -46,7 +46,7 @@ public class ViewExercisesActivity extends AppCompatActivity {
         noExercisesText = findViewById(R.id.noExercisesText);
         if(!exercises.isEmpty()){
             exercisesRecView = findViewById(R.id.exercisesRecycleView);
-            adapter = new ExercisesRecViewAdapter(action);
+            adapter = new ExercisesRecViewAdapter(action,type);
             adapter.setExercises(exercises);
             exercisesRecView.setAdapter(adapter);
             exercisesRecView.setLayoutManager(new LinearLayoutManager(this));

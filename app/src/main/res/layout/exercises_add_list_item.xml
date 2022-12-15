@@ -3,33 +3,45 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:id="@+id/parent">
+    android:id="@+id/parent"
+    android:gravity="center_vertical">
 
-    <RelativeLayout
-        android:layout_width="50dp"
-        android:layout_height="50dp">
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/exercisePreviewImg"
+        android:src="@drawable/default_preview_img"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:minWidth="20dp"/>
-    </RelativeLayout>
     <TextView
         android:id="@+id/exerciseName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
+        android:layout_marginLeft="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/quantity"
         android:layout_marginLeft="20dp"/>
     <TextView
         android:id="@+id/exerciseCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:layout_marginLeft="20dp"/>
+        android:text="TextView" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="@string/duration"/>
     <TextView
         android:id="@+id/exerciseLength"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:layout_marginLeft="20dp"/>
+        android:text="TextView"/>
+    <ImageButton
+        android:id="@+id/removeExercise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_remove_cross"
+        android:backgroundTint="@color/white" />
 </LinearLayout>

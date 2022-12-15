@@ -54,12 +54,12 @@ public class InternalStoragePhoto {
         }
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public ArrayList<InternalStoragePhoto> loadImagesFromInternalStorage(Context context){
+    public static ArrayList<InternalStoragePhoto> loadImageFromInternalStorage(Context context,String name){
         ArrayList<InternalStoragePhoto> internalImages = new ArrayList<>();
         File[] files = context.getFilesDir().listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File file,String name) {
-                return(file.canRead() && file.isFile() && name.endsWith(".jpg"));
+                return(file.canRead() && file.isFile() && name.startsWith(name));
             }
         });
         Arrays.stream(files).map(file -> {
