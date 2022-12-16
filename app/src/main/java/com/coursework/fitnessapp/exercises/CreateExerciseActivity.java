@@ -261,13 +261,14 @@ public class CreateExerciseActivity extends AppCompatActivity {
                     previewImage = new Image(null,null);
                 }else {
                     try {
-                        InternalStoragePhoto.saveImageToInternalStorage(previewImage.getName(), MediaStore.Images.Media.getBitmap(CreateExerciseActivity.this.getContentResolver(),previewImage.getImage()),CreateExerciseActivity.this);
                         previewImage.setName(previewImage.getName() + String.valueOf(Math.floor(Math.random() * (9*Math.pow(10,9))) + Math.pow(10,(9))));
+                        InternalStoragePhoto.saveImageToInternalStorage(previewImage.getName(), MediaStore.Images.Media.getBitmap(CreateExerciseActivity.this.getContentResolver(),previewImage.getImage()),CreateExerciseActivity.this);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
                 ArrayList<String> imageNames = new ArrayList<>();
+                images = adapter.getImages();
                 for (Image imageToSave:images) {
                     imageToSave.setName(imageToSave.getName() + String.valueOf(Math.floor(Math.random() * (9*Math.pow(10,9))) + Math.pow(10,(9))));
                     try {
@@ -297,6 +298,7 @@ public class CreateExerciseActivity extends AppCompatActivity {
         }
     };
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void setExerciseValues(){
         exerciseName.setText(exercise.getName());
         exerciseCount.setText(String.valueOf(exercise.getDefaultCount()));
@@ -306,6 +308,9 @@ public class CreateExerciseActivity extends AppCompatActivity {
         txtSeconds.setText(exercise.getDefaultLength().getSeconds());
 
         addExerciseBtn.setText(R.string.save_changes);
+        if(exercise.getPreviewImageName() != null){
+            exercisePreviewImg.setImageBitmap(InternalStoragePhoto.loadImageFromInternalStorage(CreateExerciseActivity.this,exercise.getPreviewImageName()).get(0).getBmp());
+        }
 
     }
     private boolean validateInput(){

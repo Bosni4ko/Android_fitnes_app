@@ -103,7 +103,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             return false;
         }
         else if(exercise.getImageNames() != null){
+            Cursor cursor = db.rawQuery("SELECT last_insert_rowid()",new String[]{});
+            cursor.moveToFirst();
+            exercise.setId(cursor.getInt(0));
             int counter = 0;
+            System.out.println("Exercises are: "  + exercise.getImageNames());
             for(String imageName : exercise.getImageNames()){
                 imgCv.put(COLUMN_NAME,imageName);
                 imgCv.put(COLUMN_SNUMBER,counter);
@@ -112,9 +116,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 insert = db.insert(IMAGE_NAME_TABLE,null,imgCv);
                 if(insert == -1){
                     return false;
-                }
-                else {
-                    return true;
                 }
             }
             return true;
@@ -195,10 +196,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 int id = cursor.getInt(0);
                 String exerciseName = cursor.getString(1);
                 String exerciseDescription = cursor.getString(2);
-                TimeDuration exerciseLength = new TimeDuration(cursor.getString(4)) ;
-                int exerciseCount = cursor.getInt(5);
-
-                ExerciseModel newExercise = new ExerciseModel(id,exerciseName,exerciseDescription,null,null,null,exerciseLength,exerciseCount,type);
+                String previewImageName = cursor.getString(3);
+                TimeDuration exerciseLength = new TimeDuration(cursor.getString(5)) ;
+                int exerciseCount = cursor.getInt(6);
+                ExerciseModel newExercise = new ExerciseModel(id,exerciseName,exerciseDescription,previewImageName,null,null,exerciseLength,exerciseCount,type);
                 returnList.add(newExercise);
             }while(cursor.moveToNext());
         }
@@ -222,7 +223,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             int exerciseCount = cursor.getInt(6);
             String type = cursor.getString(7);
 
-            exercise = new ExerciseModel(id,exerciseName,exerciseDescription,previewImageName,null,null,exerciseLength,exerciseCount,type);
+            ArrayList<String> imageNames = new ArrayList<>();
+            queryString = "SELECT * FROM " + IMAGE_NAME_TABLE + " WHERE " + COLUMN_EXERCISE_ID + " = ? ORDER BY " + COLUMN_SNUMBER + " ASC" ;
+            cursor = db.rawQuery(queryString, new String[]{String.valueOf(id)});
+            if(cursor.moveToFirst()){
+                do {
+                    imageNames.add(cursor.getString(1));
+;                }while (cursor.moveToNext());
+            }
+            exercise = new ExerciseModel(id,exerciseName,exerciseDescription,previewImageName,imageNames,null,exerciseLength,exerciseCount,type);
 
         }
         else {

@@ -4,7 +4,6 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +17,10 @@ import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
 import com.coursework.fitnessapp.R;
 import com.coursework.fitnessapp.models.ExerciseModel;
 import com.coursework.fitnessapp.models.InternalStoragePhoto;
+
+
+import java.io.File;
+import java.util.ArrayList;
 
 public class ViewExerciseActivity extends AppCompatActivity {
 
@@ -86,12 +89,18 @@ public class ViewExerciseActivity extends AppCompatActivity {
             exerciseCount.setText(String.valueOf(intent.getStringExtra("count")));
         }else {
             exerciseDuration.setText(exercise.getDefaultLength().getToStringDuration());
-            exerciseCount.setText(String.valueOf(exercise.getCount()));
+            exerciseCount.setText(String.valueOf(exercise.getDefaultCount()));
         }
         setDescription();
         if(exercise.getPreviewImageName() != null){
             exercisePreviewImg.setImageBitmap(InternalStoragePhoto.loadImageFromInternalStorage(ViewExerciseActivity.this,exercise.getPreviewImageName()).get(0).getBmp());
         }
+        if(exercise.getImageNames() != null){
+            for (String imageName:exercise.getImageNames()) {
+
+            }
+        }
+
     }
     private void setDescription(){
         exerciseDescription.setText(exercise.getDescription());

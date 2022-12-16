@@ -59,25 +59,34 @@ public class InternalStoragePhoto {
         File[] files = context.getFilesDir().listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File file,String name) {
-                System.out.println("Name: " + name);
-                System.out.println("DB name: " + fileName);
-                System.out.println(name.startsWith(fileName));
                 return(file.canRead() && file.canRead() && name.startsWith(fileName));
             }
         });
-        System.out.println("File amount" + files.length);
-        Arrays.stream(files).map(file -> {
+        for (File file:files) {
             try {
-                Bitmap bmp = BitmapFactory.decodeByteArray(Files.readAllBytes(file.toPath()),0, Files.readAllBytes(file.toPath()).length);
-                internalImages.add(new InternalStoragePhoto(file.getName(),bmp));
+                Bitmap bmp = BitmapFactory.decodeByteArray(Files.readAllBytes(file.toPath()), 0, Files.readAllBytes(file.toPath()).length);
+                internalImages.add(new InternalStoragePhoto(file.getName(), bmp));
             } catch (IOException e) {
                 e.printStackTrace();
+                return null;
             }
-            return null;
-        });
+        }
         return internalImages;
     }
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static ArrayList<String> loadImagePathsFromInternalStorage(Context context, String fileName){
+        ArrayList<String> filePaths = new ArrayList<>();
+        File[] files = context.getFilesDir().listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File file,String name) {
+                return(file.canRead() && file.canRead() && name.startsWith(fileName));
+            }
+        });
+        for (File file:files) {
+            filePaths.add(file.toPath().toString());
+        }
+        return filePaths;
+    }
     public static boolean deleteImageFromInternalStorage(String fileName,Context context){
         return context.deleteFile(fileName);
     }

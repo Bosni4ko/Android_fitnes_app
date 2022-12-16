@@ -103,15 +103,16 @@
 
 
         <LinearLayout
+            android:id="@+id/collapsedDescriptionLayout"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/exerciseDescriptionTitle"
-            android:id="@+id/collapsedDescriptionLayout">
+            android:layout_below="@+id/exerciseDescriptionTitle">
+
             <TextView
                 android:id="@+id/exerciseDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="326dp"/>
+                android:maxWidth="326dp" />
 
             <ImageButton
                 android:id="@+id/expandDescription"
@@ -150,8 +151,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/relativeLayout2"
-        app:layout_constraintVertical_bias="0.85" />
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
 
     <Button
         android:layout_width="150dp"
