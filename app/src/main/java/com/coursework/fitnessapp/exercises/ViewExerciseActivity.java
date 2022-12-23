@@ -2,6 +2,8 @@ package com.coursework.fitnessapp.exercises;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Build;
@@ -32,6 +34,7 @@ public class ViewExerciseActivity extends AppCompatActivity {
     private TextView exerciseExpandedDescription;
     private ImageButton expandDescription;
     private ImageButton collapseDescription;
+    private RecyclerView imagesRecView;
 
     private LinearLayout expandedDescriptionLayout;
     private LinearLayout collapsedDescriptionLayout;
@@ -40,6 +43,7 @@ public class ViewExerciseActivity extends AppCompatActivity {
     private Button backBtn;
     private Button editExerciseBtn;
 
+    ViewImagesRecViewAdapter adapter;
     ExerciseModel exercise;
     DataBaseHelper dataBaseHelper;
 
@@ -66,6 +70,7 @@ public class ViewExerciseActivity extends AppCompatActivity {
         exercisePreviewImg = findViewById(R.id.exercisePreviewImg);
         exerciseDescription = findViewById(R.id.exerciseDescription);
         exerciseExpandedDescription = findViewById(R.id.exerciseExpandedDescription);
+        imagesRecView = findViewById(R.id.exerciseImages);
 
         expandDescription = findViewById(R.id.expandDescription);
         collapseDescription = findViewById(R.id.collapseDescription);
@@ -96,9 +101,10 @@ public class ViewExerciseActivity extends AppCompatActivity {
             exercisePreviewImg.setImageBitmap(InternalStoragePhoto.loadImageFromInternalStorage(ViewExerciseActivity.this,exercise.getPreviewImageName()).get(0).getBmp());
         }
         if(exercise.getImageNames() != null){
-            for (String imageName:exercise.getImageNames()) {
-
-            }
+            adapter = new ViewImagesRecViewAdapter();
+            adapter.setImages(exercise.getImageNames());
+            imagesRecView.setAdapter(adapter);
+            imagesRecView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         }
 
     }

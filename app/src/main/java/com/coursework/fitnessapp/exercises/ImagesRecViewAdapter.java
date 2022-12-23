@@ -2,6 +2,7 @@ package com.coursework.fitnessapp.exercises;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -33,14 +35,22 @@ public class ImagesRecViewAdapter extends RecyclerView.Adapter<ImagesRecViewAdap
         return new ViewHolder(view);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull ImagesRecViewAdapter.ViewHolder holder, int position) {
         Image image = images.get(position);
-        holder.image.setImageURI(image.getImage().normalizeScheme());
+        if(image.getImage() != null){
+            holder.image.setImageURI(image.getImage().normalizeScheme());
+        }else {
+            holder.image.setImageBitmap(InternalStoragePhoto.loadImageFromInternalStorage(context, image.getName()).get(0).getBmp());
+        }
         holder.removeImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 images.remove(image);
+                if(image.getImage() == null){
+                    InternalStoragePhoto.deleteImageFromInternalStorage(image.getName(),context);
+                }
                 notifyDataSetChanged();
             }
         });

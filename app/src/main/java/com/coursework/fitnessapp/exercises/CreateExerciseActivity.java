@@ -92,7 +92,6 @@ public class CreateExerciseActivity extends AppCompatActivity {
     Boolean isEditMode = false;
     ImagesRecViewAdapter adapter = new ImagesRecViewAdapter();
     ArrayList<Image> images = new ArrayList<>();
-    ArrayList<InternalStoragePhoto> internalImages = new ArrayList<>();
 
     private static final int Read_Permission = 101;
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -257,7 +256,7 @@ public class CreateExerciseActivity extends AppCompatActivity {
                 String description = exerciseDescription.getText().toString();
                 TimeDuration duration = new TimeDuration(txtHours.getText().toString(),txtMinutes.getText().toString(),txtSeconds.getText().toString());
                 int count = Integer.parseInt(exerciseCount.getText().toString());
-                if(exercisePreviewImg == null){
+                if(previewImage == null){
                     previewImage = new Image(null,null);
                 }else {
                     try {
@@ -282,7 +281,6 @@ public class CreateExerciseActivity extends AppCompatActivity {
                 if(isEditMode && !dataBaseHelper.getExerciseById(exercise.getId()).getType().equals(Enums.ExerciseType.Default.toString())){
                     newExercise.setId(exercise.getId());
                     dataBaseHelper.editExercise(newExercise);
-                    //TODO:delete old
                 }else {
                     dataBaseHelper.addExercise(newExercise);
                 }
@@ -308,8 +306,13 @@ public class CreateExerciseActivity extends AppCompatActivity {
         txtSeconds.setText(exercise.getDefaultLength().getSeconds());
 
         addExerciseBtn.setText(R.string.save_changes);
+        System.out.println(exercise.getPreviewImageName() != null);
         if(exercise.getPreviewImageName() != null){
             exercisePreviewImg.setImageBitmap(InternalStoragePhoto.loadImageFromInternalStorage(CreateExerciseActivity.this,exercise.getPreviewImageName()).get(0).getBmp());
+        }
+        for (String exerciseImage: exercise.getImageNames()) {
+            images.add(new Image(null,exerciseImage));
+            adapter.setImages(images);
         }
 
     }
@@ -353,6 +356,9 @@ public class CreateExerciseActivity extends AppCompatActivity {
         }else if(requestCode == 2 && resultCode == Activity.RESULT_OK){
             if(data.getData() != null){
                 String imageURL = data.getData().toString();
+                if(exercise.getPreviewImageName() != null){
+                    InternalStoragePhoto.deleteImageFromInternalStorage(exercise.getPreviewImageName(),CreateExerciseActivity.this);
+                }
                 exercisePreviewImg.setImageURI(Uri.parse(imageURL));
                 previewImage = new Image(Uri.parse(imageURL),getFileName(Uri.parse(imageURL)));
             }
