@@ -98,7 +98,9 @@ public class StartedWorkoutActivity extends AppCompatActivity {
                             isRunningTask = false;
                             //TODO:play sound
                         }else {
-                            //TODO:finish workout
+                            //TODO:play sound
+                            workout.setStatus(Enums.WorkoutStatus.FINISHED.toString());
+                            dataBaseHelper.editWorkout(workout);
                             dataBaseHelper.deleteCurrentWorkouts();
                         }
                     }

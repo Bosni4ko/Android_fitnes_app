@@ -24,6 +24,7 @@ import com.coursework.fitnessapp.R;
 import com.coursework.fitnessapp.enums.Enums;
 import com.coursework.fitnessapp.models.ExerciseModel;
 import com.coursework.fitnessapp.models.InternalStoragePhoto;
+import com.coursework.fitnessapp.models.WorkoutModel;
 
 import org.w3c.dom.Text;
 
@@ -75,7 +76,14 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
                                 @RequiresApi(api = Build.VERSION_CODES.O)
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    if(dataBaseHelper.deleteExercise(exercise.getId())){
+                                    Boolean inWorkout = false;
+                                    for (WorkoutModel workout:dataBaseHelper.getAllUserWorkouts()) {
+                                        if(workout.getExerciseModels().contains(exercise)){
+                                            inWorkout = true;
+                                            break;
+                                        }
+                                    }
+                                    if(!inWorkout && dataBaseHelper.deleteExercise(exercise.getId())){
                                         InternalStoragePhoto.deleteImageFromInternalStorage(exercise.getPreviewImageName()+".jpg",context);
                                         if(exercise.getImageNames() != null){
                                             for (String image:exercise.getImageNames()) {

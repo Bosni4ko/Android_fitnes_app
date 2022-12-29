@@ -83,7 +83,6 @@ public class CreateExerciseActivity extends AppCompatActivity {
 
     private Button addImagesBtn;
     private Button addExerciseBtn;
-    private Button backBtn;
 
     Boolean isPreviewImageSet = false;
     ExerciseModel exercise;
@@ -171,9 +170,7 @@ public class CreateExerciseActivity extends AppCompatActivity {
         addImagesBtn = findViewById(R.id.addImagesBtn);
         addImagesBtn.setOnClickListener(addImages);
         addExerciseBtn = findViewById(R.id.addExerciseBtn);
-        backBtn = findViewById(R.id.backBtn);
         addExerciseBtn.setOnClickListener(addExercise);
-        backBtn.setOnClickListener(back);
     }
     View.OnClickListener addPreviewImage = new View.OnClickListener() {
         @Override
@@ -289,12 +286,7 @@ public class CreateExerciseActivity extends AppCompatActivity {
             }
         }
     };
-    View.OnClickListener back = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            finish();
-        }
-    };
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setExerciseValues(){

@@ -12,7 +12,9 @@ public class Enums {
         FINISHED,
         SKIPPED,
         WAITING,
-        STOPPED
+        STOPPED,
+        STARTED
+        //TODO:started
     }
     public enum WorkoutType{
         DEFAULT,

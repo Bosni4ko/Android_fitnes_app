@@ -48,7 +48,6 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
     private ImageButton secondsArrowDown;
 
     private Button addExerciseBtn;
-    private Button backBtn;
 
     private TextInputLayout errorLayout;
 
@@ -107,9 +106,7 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
         secondsArrowDown.setOnClickListener(changeTimeListener);
 
         addExerciseBtn = findViewById(R.id.addExerciseBtn);
-        backBtn = findViewById(R.id.backBtn);
         addExerciseBtn.setOnClickListener(addExercise);
-        backBtn.setOnClickListener(back);
     }
     View.OnClickListener changeTimeListener = new View.OnClickListener() {
         @Override
@@ -186,12 +183,6 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
                 setResult(Activity.RESULT_OK,returnIntent);
                 finish();
             }
-        }
-    };
-    View.OnClickListener back = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            finish();
         }
     };
 

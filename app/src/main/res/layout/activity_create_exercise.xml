@@ -31,9 +31,9 @@
         app:layout_constraintVertical_bias="0.0">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minWidth="100dp"
+            android:layout_width="200dp"
+            android:paddingLeft="10dp"
             android:id="@+id/exerciseNameLayout"
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -197,25 +197,34 @@
         android:id="@+id/exerciseDescriptionTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
         android:text="@string/description"
-        app:layout_constraintBottom_toTopOf="@+id/descriptionLayout"
+        android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infoLayout" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/descriptionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoLayout"
-        android:orientation="vertical">
+        app:layout_constraintTop_toBottomOf="@+id/exerciseDescriptionTitle">
+
         <EditText
             android:id="@+id/exerciseDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textMultiLine" />
+            android:inputType="textMultiLine"
+            android:maxLines="5"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -225,7 +234,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionLayout"
-        android:id="@+id/imagesLayout">
+        android:id="@+id/imagesLayout"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="6dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/exerciseImages"
@@ -239,25 +250,16 @@
             android:text="@string/add_images"
             android:id="@+id/addImagesBtn"/>
     </RelativeLayout>
+
     <Button
         android:id="@+id/addExerciseBtn"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="@string/add_exercise_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/backBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/imagesLayout"
+        android:layout_marginTop="20dp"/>
 
-    <Button
-        android:id="@+id/backBtn"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="@string/back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/addExerciseBtn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imagesLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

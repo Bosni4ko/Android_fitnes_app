@@ -96,7 +96,9 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
-                dialog.cancel();
+                if(dialog != null){
+                    dialog.cancel();
+                }
                 if(result.getData() != null){
                     Bundle bundle = result.getData().getExtras();
                     ExerciseModel newExercise = dataBaseHelper.getExerciseById(Integer.parseInt(bundle.get("id").toString()));

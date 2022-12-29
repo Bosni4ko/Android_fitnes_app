@@ -88,6 +88,6 @@ public class InternalStoragePhoto {
         return filePaths;
     }
     public static boolean deleteImageFromInternalStorage(String fileName,Context context){
-        return context.deleteFile(fileName);
+        return context.deleteFile(fileName+".jpg");
     }
 }

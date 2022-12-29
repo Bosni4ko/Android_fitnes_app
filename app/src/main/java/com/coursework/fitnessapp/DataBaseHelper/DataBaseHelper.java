@@ -203,6 +203,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             }while(cursor.moveToNext());
         }
         cursor.close();
+        db.close();
         return returnList;
     }
 
@@ -224,19 +225,22 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
             ArrayList<String> imageNames = new ArrayList<>();
             queryString = "SELECT * FROM " + IMAGE_NAME_TABLE + " WHERE " + COLUMN_EXERCISE_ID + " = ? ORDER BY " + COLUMN_SNUMBER + " ASC" ;
-            cursor = db.rawQuery(queryString, new String[]{String.valueOf(id)});
-            if(cursor.moveToFirst()){
-                do {
-                    imageNames.add(cursor.getString(1));
-;                }while (cursor.moveToNext());
+            try {
+                cursor = db.rawQuery(queryString, new String[]{String.valueOf(id)});
+                if (cursor.moveToFirst()) {
+                    do {
+                        imageNames.add(cursor.getString(1));
+                    } while (cursor.moveToNext());
+                }
+            }
+            finally {
+                if(cursor != null) cursor.close();
             }
             exercise = new ExerciseModel(id,exerciseName,exerciseDescription,previewImageName,imageNames,null,exerciseLength,exerciseCount,type);
-
         }
         else {
             exercise = new ExerciseModel();
         }
-        cursor.close();
         return exercise;
     }
     public void editExercise(ExerciseModel exercise){
@@ -386,6 +390,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             }while (cursor.moveToNext());
         }
         cursor.close();
+        db.close();
         return workouts;
     }
     public ArrayList<ExerciseModel> getAllExercisesOfWorkout(String workoutId){
@@ -406,6 +411,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             }while (cursor.moveToNext());
         }
         cursor.close();
+        db.close();
         return exercises;
     }
     public boolean exerciseBelongToWorkout(int id){

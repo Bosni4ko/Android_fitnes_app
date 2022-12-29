@@ -33,13 +33,15 @@
 
         <TextView
             android:id="@+id/exerciseName"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
+            android:paddingLeft="10dp"
             android:layout_height="wrap_content"
             android:text="TextView"
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="20dp"/>
 
         <LinearLayout
             android:id="@+id/exerciseLength"
@@ -179,50 +181,55 @@
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoLayout">
+        app:layout_constraintTop_toBottomOf="@+id/infoLayout"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="10dp">
 
         <TextView
             android:id="@+id/exerciseDescriptionTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/description" />
+            android:text="@string/description"
+            android:textSize="20dp" />
 
 
         <LinearLayout
-            android:layout_width="350dp"
+            android:id="@+id/collapsedDescriptionLayout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/exerciseDescriptionTitle"
-            android:id="@+id/collapsedDescriptionLayout">
+            android:layout_marginTop="14dp">
+
             <TextView
                 android:id="@+id/exerciseDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="326dp"/>
+                android:maxWidth="340dp" />
 
             <ImageButton
                 android:id="@+id/expandDescription"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/arrow_down" />
+                android:src="@drawable/arrow_down"
+                android:visibility="gone"/>
         </LinearLayout>
         <LinearLayout
-            android:layout_width="350dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/exerciseDescriptionTitle"
             android:id="@+id/expandedDescriptionLayout"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:layout_marginTop="14dp">
             <TextView
                 android:id="@+id/exerciseExpandedDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="326dp"/>
+                android:maxWidth="340dp"/>
             <ImageButton
                 android:id="@+id/collapseDescription"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/arrow_up"/>
-            <!--                android:layout_toRightOf="@id/exerciseDescription"-->
-            <!--                android:layout_alignBottom="@id/exerciseDescription"-->
 
         </LinearLayout>
 
@@ -234,20 +241,11 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="@string/add_exercise_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/backBtn" />
-
-    <Button
-        android:id="@+id/backBtn"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="@string/back"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/addExerciseBtn"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/descriptionLayout"
-        app:layout_constraintVertical_bias="0.85" />
+        app:layout_constraintTop_toBottomOf="@+id/descriptionLayout"
+        app:layout_constraintVertical_bias="0.9" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
