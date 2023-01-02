@@ -68,9 +68,11 @@ public class DashboardFragment extends Fragment {
         adapter.setWorkouts(workouts);
         if(workouts.isEmpty()){
             workoutsText.setText(R.string.no_workouts);
+            workoutsText.setVisibility(View.VISIBLE);
         }
         else {
             workoutsText.setText(R.string.your_workouts);
+            workoutsText.setVisibility(View.GONE);
         }
     }
     @Override

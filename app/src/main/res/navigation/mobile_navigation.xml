@@ -20,6 +20,6 @@
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.coursework.fitnessapp.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
+        android:label="@string/title_exercises"
         tools:layout="@layout/fragment_notifications" />
 </navigation>

@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Fitness app</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home">Workouts</string>
+    <string name="title_dashboard">Your workouts</string>
+    <string name="title_exercises">Exercises</string>
     <string name="title_logout">Logout</string>
     <string name="add_exercise_btn">Add exercise</string>
     <string name="add_workout_btn">Add workout</string>
