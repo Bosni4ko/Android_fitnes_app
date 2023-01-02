@@ -2,6 +2,8 @@ package com.coursework.fitnessapp.workout;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -10,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,10 +20,14 @@ import android.widget.TextView;
 import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
 import com.coursework.fitnessapp.R;
 import com.coursework.fitnessapp.enums.Enums;
+import com.coursework.fitnessapp.exercises.ViewImagesRecViewAdapter;
 import com.coursework.fitnessapp.models.ExerciseModel;
+import com.coursework.fitnessapp.models.InternalStoragePhoto;
 import com.coursework.fitnessapp.models.SavedWorkoutProgressModel;
 import com.coursework.fitnessapp.models.WorkoutModel;
 import com.coursework.fitnessapp.supportclasses.TimeDuration;
+
+import java.util.ArrayList;
 
 public class StartedWorkoutActivity extends AppCompatActivity {
     private ImageView previewImg;
@@ -29,6 +36,7 @@ public class StartedWorkoutActivity extends AppCompatActivity {
     private TextView exerciseAmount;
     private TextView exerciseDescription;
     private TextView workoutTimer;
+    private RecyclerView imageRecView;
 
     private ImageButton playBtn;
     private ImageButton skipBtn;
@@ -37,6 +45,7 @@ public class StartedWorkoutActivity extends AppCompatActivity {
     DataBaseHelper dataBaseHelper;
     WorkoutModel workout;
     ExerciseModel currentExercise;
+    ViewImagesRecViewAdapter adapter = new ViewImagesRecViewAdapter();
 
     private boolean isStarted = false;
     private boolean isPaused = true;
@@ -147,6 +156,9 @@ public class StartedWorkoutActivity extends AppCompatActivity {
         exerciseAmount = findViewById(R.id.exerciseAmount);
         exerciseDescription = findViewById(R.id.exerciseDescription);
         workoutTimer = findViewById(R.id.workoutTimer);
+        imageRecView = findViewById(R.id.imgCarousel);
+        imageRecView.setAdapter(adapter);
+        imageRecView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
 
         playBtn = findViewById(R.id.startBtn);
         skipBtn = findViewById(R.id.skipBtn);
@@ -178,11 +190,15 @@ public class StartedWorkoutActivity extends AppCompatActivity {
         }
         exerciseTimer.setText(currentExercise.getLength().getToStringDuration());
         if(currentExercise.getPreviewImageName() != null){
-            previewImg.setImageURI(Uri.parse(currentExercise.getPreviewImageName()));
+            previewImg.setImageBitmap(InternalStoragePhoto.loadImageFromInternalStorage(StartedWorkoutActivity.this,currentExercise.getPreviewImageName()).get(0).getBmp());
         }else previewImg.setImageResource(R.drawable.default_preview_img);
         exerciseName.setText(currentExercise.getName());
         exerciseAmount.setText(String.valueOf(currentExercise.getCount()));
         exerciseDescription.setText(currentExercise.getDescription());
+        ArrayList<String> emptyImages = new ArrayList<>();
+        if(currentExercise.getImageNames() != null && !currentExercise.getImageNames().isEmpty()){
+            adapter.setImages(currentExercise.getImageNames());
+        }else adapter.setImages(emptyImages);
         dataBaseHelper.deleteCurrentWorkouts();
     }
     private TimeDuration calculateFullDuration(){

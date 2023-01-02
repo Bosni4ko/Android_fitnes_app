@@ -223,24 +223,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             int exerciseCount = cursor.getInt(6);
             String type = cursor.getString(7);
 
+            cursor.close();
             ArrayList<String> imageNames = new ArrayList<>();
             queryString = "SELECT * FROM " + IMAGE_NAME_TABLE + " WHERE " + COLUMN_EXERCISE_ID + " = ? ORDER BY " + COLUMN_SNUMBER + " ASC" ;
-            try {
-                cursor = db.rawQuery(queryString, new String[]{String.valueOf(id)});
-                if (cursor.moveToFirst()) {
-                    do {
-                        imageNames.add(cursor.getString(1));
-                    } while (cursor.moveToNext());
-                }
-            }
-            finally {
-                if(cursor != null) cursor.close();
+            cursor = db.rawQuery(queryString, new String[]{String.valueOf(id)});
+            if (cursor.moveToFirst()) {
+                do {
+                    imageNames.add(cursor.getString(1));
+                } while (cursor.moveToNext());
             }
             exercise = new ExerciseModel(id,exerciseName,exerciseDescription,previewImageName,imageNames,null,exerciseLength,exerciseCount,type);
         }
         else {
             exercise = new ExerciseModel();
         }
+        cursor.close();
         return exercise;
     }
     public void editExercise(ExerciseModel exercise){

@@ -49,9 +49,9 @@
             android:inputType="time"
             android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/exerciseName">
+            app:layout_constraintTop_toBottomOf="@+id/exerciseName"
+            android:paddingLeft="20dp">
 
         </TextView>
 
@@ -71,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:paddingLeft="10dp"
+                android:paddingLeft="20dp"
                 android:paddingRight="5dp"
                 android:text="@string/exercise_count" />
 
@@ -93,7 +93,8 @@
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoLayout">
+        app:layout_constraintTop_toBottomOf="@+id/infoLayout"
+        android:paddingLeft="16dp">
 
         <TextView
             android:id="@+id/exerciseDescriptionTitle"
@@ -118,7 +119,8 @@
                 android:id="@+id/expandDescription"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/arrow_down" />
+                android:src="@drawable/arrow_down"
+                android:visibility="gone"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="350dp"
@@ -148,26 +150,18 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2"
+        android:paddingLeft="14dp"
+        android:layout_marginTop="20dp"/>
+
 
     <Button
-        android:id="@+id/backBtn"
+        android:id="@+id/editExerciseBtn"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="@string/back"
+        android:text="@string/edit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
-
-    <Button
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/backBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/backBtn"
-        app:layout_constraintTop_toTopOf="@+id/backBtn"
-        android:text="@string/edit"
-        android:id="@+id/editExerciseBtn"/>
+        app:layout_constraintTop_toBottomOf="@+id/exerciseImages" />
 </androidx.constraintlayout.widget.ConstraintLayout>

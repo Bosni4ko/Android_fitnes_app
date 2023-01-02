@@ -40,7 +40,6 @@ public class ViewExerciseActivity extends AppCompatActivity {
     private LinearLayout collapsedDescriptionLayout;
     private Boolean isExpanded = false;
 
-    private Button backBtn;
     private Button editExerciseBtn;
 
     ViewImagesRecViewAdapter adapter;
@@ -80,8 +79,6 @@ public class ViewExerciseActivity extends AppCompatActivity {
         expandDescription.setOnClickListener(changeDescription);
         collapseDescription.setOnClickListener(changeDescription);
 
-        backBtn = findViewById(R.id.backBtn);
-        backBtn.setOnClickListener(back);
         editExerciseBtn = findViewById(R.id.editExerciseBtn);
         editExerciseBtn.setOnClickListener(editExercise);
     }
@@ -134,12 +131,6 @@ public class ViewExerciseActivity extends AppCompatActivity {
                 collapsedDescriptionLayout.setVisibility(View.VISIBLE);
                 isExpanded = !isExpanded;
             }
-        }
-    };
-    View.OnClickListener back = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            finish();
         }
     };
     View.OnClickListener editExercise = new View.OnClickListener() {

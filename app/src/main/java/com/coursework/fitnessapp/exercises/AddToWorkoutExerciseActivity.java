@@ -2,6 +2,8 @@ package com.coursework.fitnessapp.exercises;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
 import com.coursework.fitnessapp.R;
 import com.coursework.fitnessapp.models.ExerciseModel;
+import com.coursework.fitnessapp.models.InternalStoragePhoto;
 import com.coursework.fitnessapp.supportclasses.InputFilterMinMax;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -46,12 +49,14 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
     private ImageButton minutesArrowDown;
     private ImageButton secondsArrowUp;
     private ImageButton secondsArrowDown;
+    private RecyclerView imagesRecView;
 
     private Button addExerciseBtn;
 
     private TextInputLayout errorLayout;
 
     ExerciseModel exercise;
+    ViewImagesRecViewAdapter adapter = new ViewImagesRecViewAdapter();
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -75,6 +80,9 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
         exercisePreviewImg = findViewById(R.id.exercisePreviewImg);
         exerciseDescription = findViewById(R.id.exerciseDescription);
         exerciseExpandedDescription = findViewById(R.id.exerciseExpandedDescription);
+        imagesRecView = findViewById(R.id.exerciseImages);
+        imagesRecView.setAdapter(adapter);
+        imagesRecView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
 
         txtHours = findViewById(R.id.hours);
         txtMinutes = findViewById(R.id.minutes);
@@ -216,7 +224,10 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
         exerciseCount.setText(String.valueOf(exercise.getDefaultCount()));
         setDescription(exercise);
         if(exercise.getPreviewImageName() != null){
-            exercisePreviewImg.setImageURI(Uri.parse(exercise.getPreviewImageName()));
+            exercisePreviewImg.setImageBitmap(InternalStoragePhoto.loadImageFromInternalStorage(AddToWorkoutExerciseActivity.this,exercise.getPreviewImageName()).get(0).getBmp());
+        }
+        if(exercise.getImageNames() != null && !exercise.getImageNames().isEmpty()){
+            adapter.setImages(exercise.getImageNames());
         }
     }
 

@@ -7,6 +7,16 @@
     tools:context=".authentication.LoginActivity">
 
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_google_text"
+        app:layout_constraintBottom_toTopOf="@+id/googleSignInBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingBottom="20dp"
+        android:textSize="20dp"
+        android:textColor="@color/purple_200" />
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/credentialsLayout"
         android:layout_width="wrap_content"
@@ -16,8 +26,8 @@
         app:layout_constraintTop_toBottomOf="@+id/googleSignInBtn" />
     <com.google.android.gms.common.SignInButton
         android:id="@+id/googleSignInBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="180dp"
+        android:layout_height="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

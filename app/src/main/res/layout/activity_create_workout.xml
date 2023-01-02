@@ -10,11 +10,13 @@
         android:id="@+id/exercisesLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:orientation="vertical">
+        app:layout_constraintTop_toBottomOf="@+id/dateTimeLayout"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="6dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/exercisesRecycleView"
@@ -25,6 +27,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
+
         <Button
             android:id="@+id/addExerciseBtn"
             android:layout_width="fill_parent"
@@ -55,16 +58,17 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/workoutDescriptionLayout"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:ems="10"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/exercisesLayout"
-        app:layout_constraintVertical_bias="0.45"
-        android:id="@+id/workoutDescriptionLayout">
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="6dp">
+
         <EditText
             android:id="@+id/workoutDescription"
             android:layout_width="match_parent"

@@ -236,6 +236,14 @@
 
     </RelativeLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/exerciseImages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/addExerciseBtn"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionLayout"
+        android:layout_marginLeft="14dp"
+        android:paddingRight="10dp"/>
     <Button
         android:id="@+id/addExerciseBtn"
         android:layout_width="150dp"

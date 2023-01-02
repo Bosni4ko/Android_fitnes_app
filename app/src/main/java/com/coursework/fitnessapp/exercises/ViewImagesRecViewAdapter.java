@@ -39,7 +39,9 @@ public class ViewImagesRecViewAdapter extends RecyclerView.Adapter<ViewImagesRec
 
     @Override
     public int getItemCount() {
-        return images.size();
+        if(images != null){
+            return images.size();
+        }else return 0;
     }
 
     public void setImages(ArrayList<String> images){

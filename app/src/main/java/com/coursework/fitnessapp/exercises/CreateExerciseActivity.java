@@ -348,7 +348,7 @@ public class CreateExerciseActivity extends AppCompatActivity {
         }else if(requestCode == 2 && resultCode == Activity.RESULT_OK){
             if(data.getData() != null){
                 String imageURL = data.getData().toString();
-                if(exercise.getPreviewImageName() != null){
+                if(exercise != null && exercise.getPreviewImageName() != null){
                     InternalStoragePhoto.deleteImageFromInternalStorage(exercise.getPreviewImageName(),CreateExerciseActivity.this);
                 }
                 exercisePreviewImg.setImageURI(Uri.parse(imageURL));
