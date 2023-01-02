@@ -39,7 +39,6 @@ public class ViewWorkoutActivity extends AppCompatActivity {
     private LinearLayout collapsedDescriptionLayout;
     private Boolean isExpanded = false;
 
-    private Button backBtn;
     private Button editBtn;
 
     private RecyclerView exercisesRecycleView;
@@ -93,9 +92,7 @@ public class ViewWorkoutActivity extends AppCompatActivity {
             collapseDescription.setOnClickListener(changeDescription);
         }
 
-        backBtn = findViewById(R.id.backBtn);
         editBtn = findViewById(R.id.editWorkoutBtn);
-        backBtn.setOnClickListener(back);
         if(getIntent().getExtras().get("action") != null && getIntent().getExtras().get("action").equals(Enums.WorkoutAction.Start.toString())){
             editBtn.setText(R.string.start);
             editBtn.setOnClickListener(startWorkout);
@@ -117,12 +114,6 @@ public class ViewWorkoutActivity extends AppCompatActivity {
                 collapsedDescriptionLayout.setVisibility(View.VISIBLE);
                 isExpanded = !isExpanded;
             }
-        }
-    };
-    View.OnClickListener back = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            finish();
         }
     };
     View.OnClickListener editWorkout = new View.OnClickListener() {

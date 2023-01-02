@@ -26,7 +26,6 @@ public class ViewExercisesActivity extends AppCompatActivity {
     private String action;
     private TextView noExercisesText;
     private RecyclerView exercisesRecView;
-    private Button backBtn;
 
     private DataBaseHelper dataBaseHelper;
     private ExercisesRecViewAdapter adapter;
@@ -53,14 +52,6 @@ public class ViewExercisesActivity extends AppCompatActivity {
         }else {
             noExercisesText.setVisibility(View.VISIBLE);
         }
-        backBtn = findViewById(R.id.backBtn);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
     }
 
     @Override

@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/parent">
+    android:id="@+id/parent"
+    android:paddingBottom="15dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -13,16 +14,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/workoutDate"
-        android:layout_toRightOf="@id/workoutName"
+        android:layout_toLeftOf="@id/workoutTime"
         android:inputType="date"
-        android:layout_marginLeft="15dp"/>
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="100dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/workoutTime"
-        android:layout_toRightOf="@id/workoutDate"
+        android:layout_toLeftOf="@id/removeWorkout"
         android:inputType="time"
-        android:layout_marginLeft="15dp"/>
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="50dp"/>
 
     <TextView
         android:id="@+id/workoutDurationText"

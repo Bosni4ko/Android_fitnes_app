@@ -58,7 +58,6 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ExerciseModel exercise = exercises.get(position);
         holder.exerciseName.setText(exercise.getName());
-        holder.exerciseCount.setText(String.valueOf(exercise.getDefaultCount()));
         holder.exerciseLength.setText(exercise.getDefaultLength().getToStringDuration());
         if(exercise.getPreviewImageName()!= null){
             holder.exercisePreviewImg.setImageBitmap(InternalStoragePhoto.loadImageFromInternalStorage(context,exercise.getPreviewImageName()).get(0).getBmp());
@@ -141,7 +140,6 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView exerciseName;
-        private TextView exerciseCount;
         private TextView exerciseLength;
         private ImageView exercisePreviewImg;
         private ImageButton removeExerciseBtn;
@@ -150,7 +148,6 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
             super(itemView);
             parent = itemView.findViewById(R.id.parent);
             exerciseName = itemView.findViewById(R.id.exerciseName);
-            exerciseCount = itemView.findViewById(R.id.exerciseCount);
             exerciseLength = itemView.findViewById(R.id.exerciseLength);
             exercisePreviewImg = itemView.findViewById(R.id.exercisePreviewImg);
             removeExerciseBtn = itemView.findViewById(R.id.removeExercise);

@@ -2,7 +2,8 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/parent">
+    android:id="@+id/parent"
+    android:layout_marginBottom="15dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,7 +16,7 @@
 
             <TextView
                 android:id="@+id/workoutName"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:minWidth="50dp" />
 
@@ -29,7 +30,7 @@
 
             <TextView
                 android:id="@+id/workoutDurationText"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/workoutName"
                 android:text="@string/duration" />

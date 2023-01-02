@@ -21,16 +21,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/quantity"
-        android:layout_marginLeft="20dp"/>
-    <TextView
-        android:id="@+id/exerciseCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:text="@string/duration"/>
     <TextView
@@ -38,6 +28,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"/>
+    <Space
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"/>
     <ImageButton
         android:id="@+id/removeExercise"
         android:layout_width="wrap_content"

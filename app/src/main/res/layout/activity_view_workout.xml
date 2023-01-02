@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".workout.ViewWorkoutActivity">
+    tools:context=".workout.ViewWorkoutActivity"
+    android:paddingLeft="14dp"
+    android:paddingRight="10dp">
 
     <TextView
         android:id="@+id/workoutName"
@@ -14,7 +16,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="30dp"/>
+        android:layout_marginTop="30dp"
+        android:textSize="20dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -120,26 +123,14 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/backBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/editWorkoutBtn"
-        app:layout_constraintHorizontal_bias="0.3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exercisesListLayout"
-        app:layout_constraintVertical_bias="0.8" />
 
     <Button
         android:id="@+id/editWorkoutBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/backBtn"
+        android:text="@string/edit"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.86"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/backBtn"
-        android:text="@string/edit"/>
+        app:layout_constraintTop_toBottomOf="@+id/exercisesListLayout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

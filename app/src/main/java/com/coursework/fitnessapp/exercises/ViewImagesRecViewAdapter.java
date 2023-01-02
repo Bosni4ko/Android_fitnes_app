@@ -34,7 +34,10 @@ public class ViewImagesRecViewAdapter extends RecyclerView.Adapter<ViewImagesRec
     @Override
     public void onBindViewHolder(@NonNull ViewImagesRecViewAdapter.ViewHolder holder, int position) {
         String image = images.get(position);
-        holder.image.setImageBitmap(InternalStoragePhoto.loadImageFromInternalStorage(context,image).get(0).getBmp());
+        ArrayList<InternalStoragePhoto> loadedImage = InternalStoragePhoto.loadImageFromInternalStorage(context,image);
+        if(!loadedImage.isEmpty()){
+            holder.image.setImageBitmap(loadedImage.get(0).getBmp());
+        }
     }
 
     @Override

@@ -25,5 +25,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/workoutsText" />
+        app:layout_constraintTop_toBottomOf="@+id/workoutsText"
+        android:layout_marginTop="30dp"
+        android:paddingLeft="14dp"
+        android:paddingRight="10dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
