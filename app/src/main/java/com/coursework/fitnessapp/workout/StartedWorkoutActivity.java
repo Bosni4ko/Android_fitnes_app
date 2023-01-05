@@ -211,6 +211,7 @@ public class StartedWorkoutActivity extends AppCompatActivity {
     }
 
     View.OnClickListener startWorkout = new View.OnClickListener() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void onClick(View view) {
             if(!isStarted){

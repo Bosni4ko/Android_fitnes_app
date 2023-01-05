@@ -12,7 +12,9 @@
         android:text="@string/empty_exercises"
         android:gravity="center"
         android:visibility="gone"
-        android:id="@+id/noExercisesText"/>
+        android:id="@+id/noExercisesText"
+        android:textSize="20dp"
+        android:layout_marginTop="30dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/exercisesRecycleView"

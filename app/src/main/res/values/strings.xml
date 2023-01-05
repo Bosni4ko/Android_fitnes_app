@@ -43,6 +43,9 @@
     <string name="failed_registration">Failed to register! Try again!</string>
     <string name="verify_email">Check your email to verify your account</string>
     <string name="select_pictures">Select pictures</string>
+    <string name="date">Date: </string>
+    <string name="time">Time: </string>
+    <string name="exercise_timer">Exercise timer: </string>
 
 
     <string name="empty_name_error">Name cannot be empty</string>
@@ -54,6 +57,7 @@
     <string name="wrong_values">Please enter correct values!</string>
     <string name="delete_exercise_error">You cannot delete this exercise</string>
 
+    <string name="welcome_text">Welcome</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>

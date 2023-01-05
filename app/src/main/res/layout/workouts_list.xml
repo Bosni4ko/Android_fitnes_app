@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/parent"
-    android:paddingBottom="15dp">
+    android:layout_marginBottom="20dp"
+    android:background="@drawable/gray_border">
 
     <TextView
         android:layout_width="wrap_content"
@@ -17,7 +18,7 @@
         android:layout_toLeftOf="@id/workoutTime"
         android:inputType="date"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="100dp"/>
+        android:layout_marginRight="170dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,7 +26,7 @@
         android:layout_toLeftOf="@id/removeWorkout"
         android:inputType="time"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="50dp"/>
+        android:layout_marginRight="60dp"/>
 
     <TextView
         android:id="@+id/workoutDurationText"
@@ -47,6 +48,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:src="@drawable/ic_remove_cross" />
+        android:src="@drawable/ic_remove_cross"
+        android:backgroundTint="@color/pale_gray"
+        android:scaleY="1.5"
+        android:scaleX="1.5"/>
 
 </RelativeLayout>

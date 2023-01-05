@@ -203,7 +203,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             }while(cursor.moveToNext());
         }
         cursor.close();
-        db.close();
+        //db.close();
         return returnList;
     }
 
@@ -288,7 +288,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
         else workout = new WorkoutModel();
         cursor.close();
-        db.close();
+        //db.close();
         return workout;
     }
 
@@ -314,7 +314,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             }while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
         return  workouts;
     }
     public ArrayList<WorkoutModel> getWorkoutsByDate(String workoutDate){
@@ -387,7 +386,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             }while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
+        //db.close();
         return workouts;
     }
     public ArrayList<ExerciseModel> getAllExercisesOfWorkout(String workoutId){
@@ -408,7 +407,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             }while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
+        //db.close();
         return exercises;
     }
     public boolean exerciseBelongToWorkout(int id){

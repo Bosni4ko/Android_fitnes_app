@@ -14,7 +14,6 @@ public class Enums {
         WAITING,
         STOPPED,
         STARTED
-        //TODO:started
     }
     public enum WorkoutType{
         DEFAULT,

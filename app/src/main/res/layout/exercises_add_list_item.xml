@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:id="@+id/parent"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:layout_marginBottom="15dp">
 
     <ImageView
         android:layout_width="60dp"
@@ -14,7 +15,7 @@
 
     <TextView
         android:id="@+id/exerciseName"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:text="TextView"
         android:layout_marginLeft="10dp"/>

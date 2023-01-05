@@ -53,7 +53,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/ic_remove_cross" />
+                android:src="@drawable/ic_remove_cross"
+                android:backgroundTint="@color/white"/>
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"

@@ -8,15 +8,35 @@
 
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/login_google_text"
-        app:layout_constraintBottom_toTopOf="@+id/googleSignInBtn"
+        android:backgroundTint="@color/white"
+        android:text="@string/welcome"
+        android:textAlignment="center"
+        android:textSize="38dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.19999999" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/app_icon"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:paddingBottom="20dp"
-        android:textSize="20dp"
-        android:textColor="@color/purple_200" />
+        android:text="@string/login_google_text"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/googleSignInBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/credentialsLayout"
         android:layout_width="wrap_content"

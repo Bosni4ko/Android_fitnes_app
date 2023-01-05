@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="30dp"
+    android:layout_height="60dp"
     android:orientation="horizontal"
     android:id="@+id/parent"
-    android:background="@android:color/darker_gray"
-    android:paddingLeft="5dp"
-    android:gravity="center">
+    android:background="@drawable/gray_border_narrow"
+    android:gravity="center"
+    android:layout_marginBottom="10dp">
 
     <TextView
         android:layout_width="120dp"
@@ -49,8 +49,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:src="@drawable/ic_remove_cross"
-        android:background="@color/white"
+        android:background="@color/pale_gray"
         android:id="@+id/removeExercise"
-        android:backgroundTint="@android:color/darker_gray"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:paddingRight="5dp"/>
 </LinearLayout>

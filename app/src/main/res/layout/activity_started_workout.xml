@@ -28,32 +28,49 @@
 
         <RelativeLayout
             android:id="@+id/infoLayout"
-            android:layout_width="235dp"
+            android:layout_width="220dp"
             android:layout_height="200dp"
             android:layout_toRightOf="@+id/exercisePreviewImg"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/exercisePreviewImg"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="5dp">
 
             <TextView
                 android:id="@+id/exerciseName"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:textSize="24dp"
+                android:textStyle="bold"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/exerciseName"
+                android:text="@string/exercise_timer"
+                android:id="@+id/exerciseTimerText"/>
             <TextView
                 android:id="@+id/exerciseTimer"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:layout_below="@id/exerciseName"
-                android:paddingLeft="15dp"/>
+                android:layout_toRightOf="@id/exerciseTimerText"
+                android:layout_marginLeft="10dp"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/exerciseTimer"
+                android:text="@string/quantity"
+                android:id="@+id/exerciseAmountText"/>
             <TextView
                 android:id="@+id/exerciseAmount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/exerciseTimer"
-                android:paddingLeft="15dp"/>
+                android:paddingLeft="15dp"
+                android:layout_toRightOf="@id/exerciseAmountText"/>
 
         </RelativeLayout>
     </RelativeLayout>
