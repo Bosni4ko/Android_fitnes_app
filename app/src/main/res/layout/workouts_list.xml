@@ -7,9 +7,9 @@
     android:background="@drawable/gray_border">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:minWidth="50dp"
+        android:maxLines="3"
         android:id="@+id/workoutName" />
     <TextView
         android:layout_width="wrap_content"
@@ -32,14 +32,14 @@
         android:id="@+id/workoutDurationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/workoutDate"
+        android:layout_below="@+id/workoutName"
         android:text="@string/duration" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/workoutDuration"
         android:layout_toRightOf="@+id/workoutDurationText"
-        android:layout_below="@id/workoutDate"
+        android:layout_below="@id/workoutName"
         android:layout_marginLeft="15dp"
         />
 

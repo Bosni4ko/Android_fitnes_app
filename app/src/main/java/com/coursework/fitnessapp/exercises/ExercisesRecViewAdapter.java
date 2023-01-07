@@ -77,8 +77,15 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     Boolean inWorkout = false;
                                     for (WorkoutModel workout:dataBaseHelper.getAllUserWorkouts()) {
-                                        if(workout.getExerciseModels().contains(exercise) && workout.getStatus().equals(Enums.WorkoutStatus.WAITING.toString())){
-                                            inWorkout = true;
+                                       if(workout.getStatus().equals(Enums.WorkoutStatus.WAITING.toString())){
+                                            for (ExerciseModel exerciseModel:workout.getExerciseModels()){
+                                                if(exerciseModel.getId().equals(exercise.getId())){
+                                                    inWorkout = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        if (inWorkout){
                                             break;
                                         }
                                     }

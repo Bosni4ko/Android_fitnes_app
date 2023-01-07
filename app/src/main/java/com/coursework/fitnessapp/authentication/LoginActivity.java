@@ -52,19 +52,21 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //#Sign in request
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
                 Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
                 handleSignInResult(task);
-
             }
         });
+        //#Get last logged account if it exist go to main app
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if(account != null){
             goToApp();
         }
         initLayout();
+        //#Sign in button
         googleSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,6 +81,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
     }
+    //#Initialise layout
     private void initLayout(){
         credentialsLayout = findViewById(R.id.credentialsLayout);
         googleSignInButton = findViewById(R.id.googleSignInBtn);
@@ -86,19 +89,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    //#Handle sign in layout
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            // Signed in successfully, show authenticated UI.
-            //Log.e(TAG,"handleSignInResult" + account.getEmail());
             goToApp();
         } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            //Log.e(TAG, "signInResult:failed code=" + e.getMessage());
             credentialsLayout.setError(getResources().getString(R.string.login_failed));
         }
     }
+    //#Go to the main app
     private void goToApp(){
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK | intent.FLAG_ACTIVITY_CLEAR_TASK);

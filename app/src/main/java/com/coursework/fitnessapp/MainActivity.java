@@ -19,6 +19,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
 import com.coursework.fitnessapp.authentication.LoginActivity;
 import com.coursework.fitnessapp.databinding.ActivityMainBinding;
+import com.coursework.fitnessapp.enums.Enums;
 import com.coursework.fitnessapp.services.NextWorkoutNotificationService;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -35,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DataBaseHelper dataBaseHelper = new DataBaseHelper(MainActivity.this);
+        if(dataBaseHelper.getAllExercisesOfType(Enums.ExerciseType.Default.toString()).isEmpty()){
+            dataBaseHelper.fillDatabase();
+        }
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         BottomNavigationView navView = findViewById(R.id.nav_view);

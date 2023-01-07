@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -26,6 +25,7 @@ import com.coursework.fitnessapp.models.InternalStoragePhoto;
 import com.coursework.fitnessapp.supportclasses.InputFilterMinMax;
 import com.google.android.material.textfield.TextInputLayout;
 
+//#Activity for adding exercise to workout
 public class AddToWorkoutExerciseActivity extends AppCompatActivity {
 
     private TextView exerciseName;
@@ -74,6 +74,7 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
         setExerciseValues(exercise);
     }
 
+    //#Initialise layout
     private void initLayout(){
         exerciseName = findViewById(R.id.exerciseName);
         exerciseCount = findViewById(R.id.exerciseCount);
@@ -116,6 +117,7 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
         addExerciseBtn = findViewById(R.id.addExerciseBtn);
         addExerciseBtn.setOnClickListener(addExercise);
     }
+    //#Set increase/decrease time function on arrow buttons
     View.OnClickListener changeTimeListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -165,6 +167,7 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
             text.setText(resultString);
         }
     };
+    //#Expand/collapse exercise description function
     View.OnClickListener changeDescription = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -180,6 +183,7 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
             }
         }
     };
+    //#Add exercise to workout function
     View.OnClickListener addExercise = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -194,12 +198,14 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
         }
     };
 
+    //# Format time(hours/minutes or seconds) into 2 digit format
     private String formatTimeValue(String timeValue){
         while(timeValue.length() < 2){
             timeValue = "0" + timeValue;
         }
         return timeValue;
     }
+    //#Validate input values
     private boolean validateValues(){
         boolean isValid = true;
         if((!editFieldIsValid(txtHours) && !editFieldIsValid(txtMinutes) && !editFieldIsValid(txtSeconds)) || !editFieldIsValid(exerciseCount)){
@@ -208,6 +214,8 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
         }
         return isValid;
     }
+
+    //# Validate edit field
     private boolean editFieldIsValid(EditText field){
         boolean isValid = true;
         if(field.getText().toString().equals("") || (Integer.parseInt(field.getText().toString()) < 1)){
@@ -215,6 +223,8 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
         }
         return  isValid;
     }
+
+    //#Set all exercise values
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setExerciseValues(ExerciseModel exercise){
         exerciseName.setText(exercise.getName());
@@ -231,16 +241,14 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
         }
     }
 
+    //# Set exercise description
     private void setDescription(ExerciseModel exercise){
         exerciseDescription.setText(exercise.getDescription());
         exerciseExpandedDescription.setText(exercise.getDescription());
-        exerciseDescription.post(new Runnable() {
-            @Override
-            public void run() {
-                if(exerciseDescription.getLineCount() > 2){
-                    exerciseDescription.setMaxLines(2);
-                    expandDescription.setVisibility(View.VISIBLE);
-                }
+        exerciseDescription.post(() -> {
+            if(exerciseDescription.getLineCount() > 2){
+                exerciseDescription.setMaxLines(2);
+                expandDescription.setVisibility(View.VISIBLE);
             }
         });
     }

@@ -85,15 +85,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout3" />
 
-    <TextView
-        android:id="@+id/exerciseDescription"
+    <ScrollView
+        android:id="@+id/exerciseDescriptionScrollview"
         android:layout_width="match_parent"
         android:layout_height="160dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgCarousel"
         android:paddingLeft="14dp"
-        android:paddingTop="15dp"/>
+        android:paddingTop="15dp">
+    <TextView
+        android:id="@+id/exerciseDescription"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    </ScrollView>
 
     <TextView
         android:id="@+id/workoutTimerText"
@@ -103,7 +108,8 @@
         android:text="@string/time_remaining"
         app:layout_constraintEnd_toStartOf="@+id/workoutTimer"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exerciseDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/exerciseDescriptionScrollview"
+        android:layout_marginTop="10dp"/>
 
     <TextView
         android:id="@+id/workoutTimer"
@@ -135,7 +141,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exerciseDescription"
+        app:layout_constraintTop_toBottomOf="@+id/exerciseDescriptionScrollview"
         android:backgroundTint="@color/white"
         android:scaleType="centerCrop"
         android:id="@+id/startBtn"/>

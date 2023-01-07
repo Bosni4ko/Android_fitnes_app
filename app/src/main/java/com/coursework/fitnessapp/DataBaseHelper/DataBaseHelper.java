@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class DataBaseHelper extends SQLiteOpenHelper {
+    //#List of table and column names in DB
     public static final String EXERCISE_TABLE = "EXERCISE_TABLE";
     public static final String WORKOUT_TABLE = "WORKOUT_TABLE";
     public static final String CURRENT_WORKOUT_TABLE = "CURRENT_WORKOUT_TABLE";
@@ -46,13 +47,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_WORKOUT_ID = "Workout_ID";
     public static final String COLUMN_USER_EMAIL = "User_Email";
 
-    private GoogleSignInAccount account;
+    private final GoogleSignInAccount account;
 
     public DataBaseHelper(@Nullable Context context) {
         super(context, "fitness_app.db" , null, 1);
         account = GoogleSignIn.getLastSignedInAccount(context);
     }
 
+    //#Database creation
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String createExerciseTableStatement = "CREATE TABLE " + EXERCISE_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " nvarchar(30) NOT NULL, " + COLUMN_DESCRIPTION + " Text NOT NULL," + COLUMN_PREVIEW_IMG_URL + " Text," + COLUMN_VIDEO_URL + " Text," + COLUMN_DURATION + " nvarchar(8) NOT NULL," + COLUMN_DEFAULT_COUNT + " INT NOT NULL," + COLUMN_TYPE + " nvarchar(12) NOT NULL," + COLUMN_USER_EMAIL + " nvarchar(320) )";
@@ -70,7 +72,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String createCurrentWorkoutTableStatement = "CREATE TABLE " + CURRENT_WORKOUT_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, Current_exercise_index INT NOT NULL, Current_exercise_timer INT NOT NULL, Current_workout_timer INT NOT NULL," + COLUMN_WORKOUT_ID + " nvarchar(12) NOT NULL,FOREIGN KEY(" + COLUMN_WORKOUT_ID + ") REFERENCES " + WORKOUT_TABLE +"(" +COLUMN_ID + ")) ";
         sqLiteDatabase.execSQL(createCurrentWorkoutTableStatement);
 
-        //fillDatabase();
     }
 
     @Override
@@ -78,6 +79,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
 
+    //#Add exercise to the DB
     public boolean addExercise(ExerciseModel exercise){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -114,6 +116,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 imgCv.put(COLUMN_EXERCISE_ID,exercise.getId());
                 counter++;
                 insert = db.insert(IMAGE_NAME_TABLE,null,imgCv);
+                cursor.close();
                 if(insert == -1){
                     return false;
                 }
@@ -123,17 +126,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         else return true;
     }
 
+    //#Delete exercise from the DB
     public boolean deleteExercise(int id){
         SQLiteDatabase db = getWritableDatabase();
         System.out.println(!getExerciseById(id).getType().equals(Enums.ExerciseType.Default.toString()));
         System.out.println(exerciseBelongToWorkout(id));
-        if(!getExerciseById(id).getType().equals(Enums.ExerciseType.Default.toString()) && !exerciseBelongToWorkout(id)){
+        if(!getExerciseById(id).getType().equals(Enums.ExerciseType.Default.toString())){
             db.delete(EXERCISE_TABLE, COLUMN_ID + " = ?",new String[]{String.valueOf(id)});
             return true;
         }
         else return false;
 
     }
+    //#Add workout to the DB
     public boolean addWorkout(WorkoutModel workout){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -145,7 +150,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_DATE, String.valueOf(workout.getDate()) +' '+ workout.getTime().toString());
         cv.put(COLUMN_STATUS,workout.getStatus());
         cv.put(COLUMN_TYPE,workout.getType());
-        if(workout.getType() == Enums.WorkoutType.CUSTOM.toString()){
+        if(workout.getType().equals( Enums.WorkoutType.CUSTOM.toString())){
             cv.put(COLUMN_USER_EMAIL,account.getEmail());
         }
         long insert = db.insert(WORKOUT_TABLE,null,cv);
@@ -170,6 +175,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    //#Fill database with default exercises
     public void fillDatabase(){
         ExerciseData exerciseData = new ExerciseData();
         for(ExerciseModel exercise: exerciseData.exercises){
@@ -177,6 +183,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    //#Get all exercises of certain type from DB
     public ArrayList<ExerciseModel> getAllExercisesOfType(String type){
         ArrayList<ExerciseModel> returnList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -207,6 +214,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return returnList;
     }
 
+    //#Get exercise with inputted id from DB
     public ExerciseModel getExerciseById(int id){
         ExerciseModel exercise;
         String queryString = "SELECT * FROM " + EXERCISE_TABLE + " WHERE " + COLUMN_ID + " = ?" ;
@@ -240,8 +248,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return exercise;
     }
+    //#Change exercise data
     public void editExercise(ExerciseModel exercise){
-        if(exercise.getType() != Enums.ExerciseType.Default.toString()){
+        if(exercise.getType().equals(Enums.ExerciseType.Default.toString())){
             SQLiteDatabase db = getWritableDatabase();
             String queryString = "DELETE FROM " + IMAGE_NAME_TABLE + " WHERE " + COLUMN_EXERCISE_ID + " = ?";
             db.execSQL(queryString,new String[]{String.valueOf(exercise.getId())});
@@ -266,8 +275,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 }
             }
         }
-
     }
+    //#Get workout with inputted id from DB
     public WorkoutModel getWorkoutById(String id){
         WorkoutModel workout;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -292,6 +301,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return workout;
     }
 
+    //#Get list of all workouts of the current user
     public ArrayList<WorkoutModel> getAllUserWorkouts(){
         ArrayList<WorkoutModel> workouts = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -316,6 +326,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return  workouts;
     }
+    //#Get all workouts of the current user, WAITING status and with date which is equals or > than inputted
     public ArrayList<WorkoutModel> getWorkoutsByDate(String workoutDate){
         workoutDate = String.format(workoutDate, Enums.formatter);
         ArrayList<WorkoutModel> workouts = new ArrayList<>();
@@ -341,6 +352,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return workouts;
     }
+    //#Change workout data
     public void editWorkout(WorkoutModel workout){
         SQLiteDatabase db = getWritableDatabase();
         String queryString = "DELETE FROM " + WORKOUT_EXERCISES_TABLE + " WHERE " + COLUMN_WORKOUT_ID + " = ?";
@@ -366,8 +378,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
 
     }
+    //#Get all workouts with inputted status
     public ArrayList<WorkoutModel> getAllWorkoutsWithStatus(String status){
-        ArrayList<WorkoutModel> workouts = new ArrayList<WorkoutModel>();
+        ArrayList<WorkoutModel> workouts = new ArrayList<>();
         String queryString = "SELECT * FROM " + WORKOUT_TABLE + " WHERE " + COLUMN_STATUS + " = ? AND " + COLUMN_USER_EMAIL + " = ?";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(queryString, new String[]{status,account.getEmail()});
@@ -389,6 +402,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         //db.close();
         return workouts;
     }
+    //#Get all exercises which are included in the workout
     public ArrayList<ExerciseModel> getAllExercisesOfWorkout(String workoutId){
         ArrayList<ExerciseModel> exercises = new ArrayList<>();
         String queryString = "SELECT * FROM " + WORKOUT_EXERCISES_TABLE + " WHERE " + COLUMN_WORKOUT_ID + " = ? ORDER BY " + COLUMN_SNUMBER + " ASC";
@@ -410,15 +424,22 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         //db.close();
         return exercises;
     }
+
+    //#Check if exercise belong to at least 1 workout
     public boolean exerciseBelongToWorkout(int id){
         String queryString = "SELECT * FROM " + WORKOUT_EXERCISES_TABLE + " WHERE " + COLUMN_EXERCISE_ID + " = ?";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(id)});
         if(cursor.moveToFirst()){
+            cursor.close();
             return true;
         }
-        else return false;
+        else {
+            cursor.close();
+            return false;
+        }
     }
+    //#Delete workout from DB
     public void deleteWorkout(String workoutId){
         String queryString = "DELETE FROM " + WORKOUT_EXERCISES_TABLE + " WHERE " + COLUMN_WORKOUT_ID + " = ?";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -428,6 +449,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL(queryString,new String[]{workoutId});
     }
 
+    //#Add current workout to DB
     public void addCurrentWorkout(SavedWorkoutProgressModel savedWorkoutProgressModel){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -440,8 +462,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.insert(CURRENT_WORKOUT_TABLE,null,cv);
     }
 
+    //#Get current workout from DB
     public SavedWorkoutProgressModel getCurrentWorkout(){
-        SavedWorkoutProgressModel savedWorkoutProgress = savedWorkoutProgress = new SavedWorkoutProgressModel();
+        SavedWorkoutProgressModel savedWorkoutProgress = new SavedWorkoutProgressModel();
         SQLiteDatabase db = this.getReadableDatabase();
         String queryString = "SELECT * FROM " + CURRENT_WORKOUT_TABLE;
         Cursor cursor = db.rawQuery(queryString,null);
@@ -456,6 +479,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return savedWorkoutProgress;
     }
+
+    //#Delete current workout from DB
     public void deleteCurrentWorkouts(){
         SQLiteDatabase db = this.getWritableDatabase();
         String queryString = "DELETE FROM " + CURRENT_WORKOUT_TABLE;

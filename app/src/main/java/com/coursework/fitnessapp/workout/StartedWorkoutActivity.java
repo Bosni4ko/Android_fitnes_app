@@ -275,7 +275,7 @@ public class StartedWorkoutActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void saveCurrentProgress(){
-        if(isStarted && !finishedWorkout){
+        if(!finishedWorkout){
             if(!isRunningTask){
                 wrkTimer = wrkTimer - counter;
             }
