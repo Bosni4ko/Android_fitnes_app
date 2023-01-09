@@ -25,6 +25,7 @@ import com.coursework.fitnessapp.supportclasses.WorkoutSortComparator;
 import java.util.ArrayList;
 import java.util.Collections;
 
+//#Fragment for showing workout list
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class DashboardFragment extends Fragment {
 
@@ -42,10 +43,6 @@ public class DashboardFragment extends Fragment {
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-//        final TextView textView = binding.textDashboard;
-//        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-
         return root;
     }
 
@@ -62,6 +59,7 @@ public class DashboardFragment extends Fragment {
         workoutsRecView.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
 
+    //#Set workout data
     public void setFragmentContent(){
         workouts = dataBaseHelper.getAllWorkoutsWithStatus(Enums.WorkoutStatus.WAITING.toString());
         Collections.sort(workouts,new WorkoutSortComparator());

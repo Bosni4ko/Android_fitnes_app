@@ -5,6 +5,7 @@ import com.coursework.fitnessapp.supportclasses.TimeDuration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+//#Model to store workout data
 public class WorkoutModel {
 
     private String id;

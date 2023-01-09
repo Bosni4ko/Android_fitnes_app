@@ -22,6 +22,7 @@ import com.coursework.fitnessapp.exercises.CreateExerciseActivity;
 import com.coursework.fitnessapp.exercises.ViewExercisesActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+//#Fragment responsible for choosing exercise type to see exercise list
 public class NotificationsFragment extends Fragment {
 
     private Button defaultExercisesBtn;
@@ -31,20 +32,17 @@ public class NotificationsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        //NotificationsViewModel notificationsViewModel =
-         //       new ViewModelProvider(this).get(NotificationsViewModel.class);
 
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        //final TextView textView = binding.chooseExerciseTypeTitle;
-        //notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //#Initialise fragment layout
         defaultExercisesBtn = view.findViewById(R.id.selectDefaultExerciseBtn);
         customExercisesBtn = view.findViewById(R.id.selectCustomExercisesBtn);
         defaultExercisesBtn.setOnClickListener(onTypeSelected);
@@ -53,6 +51,7 @@ public class NotificationsFragment extends Fragment {
         addFab.setOnClickListener(addExercise);
 
     }
+    //#Listener for opening exercise list with selected type
     View.OnClickListener onTypeSelected = new View.OnClickListener() {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override

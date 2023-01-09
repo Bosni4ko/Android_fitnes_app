@@ -3,6 +3,7 @@ package com.coursework.fitnessapp.supportclasses;
 import java.util.Arrays;
 import java.util.List;
 
+//Class to store workout and exercise duration
 public class TimeDuration {
     private String hours = "00";
     private String minutes = "00";

@@ -1,7 +1,6 @@
 package com.coursework.fitnessapp.supportclasses;
 
-import android.content.Intent;
-
+//#Class to validate duration field
 public class DurationFieldValidator {
     public static boolean validate(String text){
         boolean isValid = true;

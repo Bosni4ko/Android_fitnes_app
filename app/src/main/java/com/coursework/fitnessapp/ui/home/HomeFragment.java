@@ -32,6 +32,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 
+//Fragment for showing today's workout
 public class HomeFragment extends Fragment {
     private DataBaseHelper dataBaseHelper;
 
@@ -71,6 +72,7 @@ public class HomeFragment extends Fragment {
         thread.start();
     }
 
+    //#Initialise layout
     private void initLayout(View view){
         todaysWorkoutsText = view.findViewById(R.id.todaysWorkoutsText);
         noWorkoutText = view.findViewById(R.id.noWorkoutText);
@@ -81,6 +83,7 @@ public class HomeFragment extends Fragment {
         adapter = new TodaysWorkoutsRecViewAdapter();
         workoutRecView.setAdapter(adapter);
         workoutRecView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        //listener for starting a CreateWorkout activity
         addFab.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -91,11 +94,14 @@ public class HomeFragment extends Fragment {
         notificationLayout = view.findViewById(R.id.notificationLayout);
         noWorkoutNotificationLayout = view.findViewById(R.id.noWorkoutNotificationLayout);
     }
+    //Set fragment content
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setFragmentContent(){
+        //#Get all actual workouts,sort them and remove outdated workout
         workouts = dataBaseHelper.getWorkoutsByDate(LocalDate.now().toString());
         Collections.sort(workouts,new WorkoutSortComparator());
         workouts.removeIf(workout -> workout.getDate().isAfter(LocalDate.now()));
+        //#Update view if depending on workout presence
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -112,7 +118,7 @@ public class HomeFragment extends Fragment {
         });
         updateContent();
     }
-
+    //#Thread which is execute every second and update today's workout view
     Runnable checkTime = new Runnable() {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
@@ -129,6 +135,7 @@ public class HomeFragment extends Fragment {
             }
         }
     };
+    //#Update today's workout view depending on actual workouts
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateContent(){
         Activity activity = getActivity();
@@ -138,7 +145,6 @@ public class HomeFragment extends Fragment {
             allUserWorkouts.removeIf(workout -> (!workout.getStatus().equals(Enums.WorkoutStatus.WAITING.toString())));
             if (allUserWorkouts.isEmpty()) {
                 activity.runOnUiThread(new Runnable() {
-                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void run() {
                         noWorkoutNotificationLayout.setVisibility(View.VISIBLE);
@@ -163,7 +169,6 @@ public class HomeFragment extends Fragment {
                     });
                     if (LocalTime.now().isAfter(nextWorkout.getTime())) {
                         if (nextWorkout.getTime().plusHours(1).isBefore(LocalTime.now())) {
-                            System.out.println("Skipped because of now");
                             nextWorkout.setStatus(Enums.WorkoutStatus.SKIPPED.toString());
                             dataBaseHelper.editWorkout(nextWorkout);
                             setFragmentContent();
@@ -184,7 +189,6 @@ public class HomeFragment extends Fragment {
                         });
                     }
                 } else if (nextWorkout.getDate().isBefore(LocalDate.now())) {
-                    System.out.println("Skipped because of today");
                     nextWorkout.setStatus(Enums.WorkoutStatus.SKIPPED.toString());
                     dataBaseHelper.editWorkout(nextWorkout);
                     setFragmentContent();

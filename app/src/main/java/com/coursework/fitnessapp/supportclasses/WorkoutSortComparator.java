@@ -8,6 +8,7 @@ import com.coursework.fitnessapp.models.WorkoutModel;
 
 import java.util.Comparator;
 
+//#Sort workout by date and time
 public class WorkoutSortComparator implements Comparator<WorkoutModel> {
 
     @RequiresApi(api = Build.VERSION_CODES.O)

@@ -25,7 +25,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
+//#Service which send notification about next workout and remove outdated workouts
 public class NextWorkoutNotificationService extends Service {
 
     private String channelId = "Workout notification channel";
@@ -39,6 +39,7 @@ public class NextWorkoutNotificationService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        //#Create notification channel and start it on foreground
         context = this;
         dataBaseHelper = new DataBaseHelper(this);
         new Thread(sendNotifications).start();
@@ -46,7 +47,7 @@ public class NextWorkoutNotificationService extends Service {
         channel = new NotificationChannel(CHANNEL_ID,CHANNEL_ID,NotificationManager.IMPORTANCE_LOW);
         getSystemService(NotificationManager.class).createNotificationChannel(channel);
         Notification.Builder notification = new Notification.Builder(context,CHANNEL_ID)
-                .setContentText("Workout notifications are running");
+                .setContentText("Workout notifications are running").setAutoCancel(true);
         startForeground(1001,notification.build());
         return super.onStartCommand(intent, flags, startId);
     }
@@ -57,6 +58,7 @@ public class NextWorkoutNotificationService extends Service {
         return null;
     }
 
+    //#Thread which check workouts and send notification
     private Runnable sendNotifications= new Runnable(){
         WorkoutModel notifiedWorkout;
         @RequiresApi(api = Build.VERSION_CODES.O)
@@ -70,10 +72,12 @@ public class NextWorkoutNotificationService extends Service {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                //get all workouts with today's date and sort them
                 ArrayList<WorkoutModel> workouts = dataBaseHelper.getWorkoutsByDate(LocalDate.now().toString());
                 Collections.sort(workouts,new WorkoutSortComparator());
                 workouts.removeIf(workout -> workout.getDate().isAfter(LocalDate.now()));
                 checkForSkippedWorkouts(workouts);
+                //if workout is after 15 minutes or less and no notification about this workout was sent,send a notification about it
                 if(!workouts.isEmpty()){
                     WorkoutModel workout = workouts.get(0);
                     if(workout.getTime().minusMinutes(15).isBefore(LocalTime.now())){
@@ -83,7 +87,7 @@ public class NextWorkoutNotificationService extends Service {
                                     .setContentTitle(getResources().getString(R.string.workout_notification_title))
                                     .setContentText(workout.getName() + " " + getResources().getString(R.string.workout_notification_at) + " " + workout.getTime())
                                     .setAutoCancel(true)
-                                    .setSmallIcon(R.drawable.ic_app_foreground);
+                                    .setSmallIcon(R.drawable.app_icon);
                             NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
                             managerCompat.notify(1,builder.build());
                             notifiedWorkout = workout;
@@ -93,6 +97,8 @@ public class NextWorkoutNotificationService extends Service {
 
             }
         }
+
+        //#Change first workout status to skipped if you skipp workout at least for an hour
         @RequiresApi(api = Build.VERSION_CODES.O)
         private ArrayList<WorkoutModel> checkForSkippedWorkouts(ArrayList<WorkoutModel> workouts){
             while(!workouts.isEmpty() && workouts.get(0).getTime().plusHours(1).isBefore(LocalTime.now())){

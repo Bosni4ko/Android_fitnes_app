@@ -24,6 +24,7 @@ import com.coursework.fitnessapp.workout.ViewWorkoutActivity;
 
 import java.util.ArrayList;
 
+//#WorkoutsRecViewAdapter adapter is responsible for showing the list of workouts
 public class WorkoutsRecViewAdapter extends RecyclerView.Adapter<WorkoutsRecViewAdapter.ViewHolder>{
     private ArrayList<WorkoutModel> workouts = new ArrayList<>();
     private DataBaseHelper dataBaseHelper;
@@ -41,8 +42,7 @@ public class WorkoutsRecViewAdapter extends RecyclerView.Adapter<WorkoutsRecView
 
     @Override
     public void onBindViewHolder(@NonNull WorkoutsRecViewAdapter.ViewHolder holder, int position) {
-
-
+        //#Set workout content
         WorkoutModel workout = workouts.get(position);
         holder.workoutName.setText(workout.getName());
         holder.workoutDate.setText(workout.getDate().toString());
@@ -53,6 +53,7 @@ public class WorkoutsRecViewAdapter extends RecyclerView.Adapter<WorkoutsRecView
         }
         TimeDuration workoutTimeDuration = new TimeDuration(duration);
         holder.workoutDuration.setText(workoutTimeDuration.getToStringDuration());
+        //#Listener to open dialog window for removing workout
         holder.removeWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,6 +75,7 @@ public class WorkoutsRecViewAdapter extends RecyclerView.Adapter<WorkoutsRecView
                         }).show();
             }
         });
+        //#Listener to open detailed workout view
         holder.parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,14 +95,15 @@ public class WorkoutsRecViewAdapter extends RecyclerView.Adapter<WorkoutsRecView
         notifyDataSetChanged();
     }
 
+    //#Initialise viewholder layout
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        private View parent;
-        private TextView workoutName;
-        private TextView workoutDate;
-        private TextView workoutTime;
-        private TextView workoutDuration;
-        private ImageButton removeWorkout;
+        private final View parent;
+        private final TextView workoutName;
+        private final TextView workoutDate;
+        private final TextView workoutTime;
+        private final TextView workoutDuration;
+        private final ImageButton removeWorkout;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             parent = itemView.findViewById(R.id.parent);

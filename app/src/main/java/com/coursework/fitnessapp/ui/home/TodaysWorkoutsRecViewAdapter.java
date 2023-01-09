@@ -1,10 +1,8 @@
 package com.coursework.fitnessapp.ui.home;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +25,7 @@ import com.coursework.fitnessapp.workout.ViewWorkoutActivity;
 
 import java.util.ArrayList;
 
+//#TodaysWorkoutsRecViewAdapter is responsible for showing list of today's workouts
 public class TodaysWorkoutsRecViewAdapter extends RecyclerView.Adapter<TodaysWorkoutsRecViewAdapter.ViewHolder>{
     private ArrayList<WorkoutModel> workouts = new ArrayList<>();
     private DataBaseHelper dataBaseHelper;
@@ -56,6 +55,7 @@ public class TodaysWorkoutsRecViewAdapter extends RecyclerView.Adapter<TodaysWor
         holder.workoutStatus.setText(workout.getStatus());
         TimeDuration workoutTimeDuration = new TimeDuration(duration);
         holder.workoutDuration.setText(workoutTimeDuration.getToStringDuration());
+        //#Button which opens confirmation dialog for workout removal and removes it
         holder.removeWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,6 +77,7 @@ public class TodaysWorkoutsRecViewAdapter extends RecyclerView.Adapter<TodaysWor
                         }).show();
             }
         });
+        //#listener for expanding and collapsing layout
         holder.collapsedLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,6 +90,7 @@ public class TodaysWorkoutsRecViewAdapter extends RecyclerView.Adapter<TodaysWor
                 holder.isExpanded = !holder.isExpanded;
             }
         });
+        //#Button which open workout detailed view in start mode
         holder.startWorkoutBtn.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -110,7 +112,7 @@ public class TodaysWorkoutsRecViewAdapter extends RecyclerView.Adapter<TodaysWor
         this.workouts = workouts;
         notifyDataSetChanged();
     }
-
+//#Initialise vieholder layout
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         private View parent;
