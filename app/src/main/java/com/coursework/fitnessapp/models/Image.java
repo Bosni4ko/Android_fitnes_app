@@ -2,8 +2,7 @@ package com.coursework.fitnessapp.models;
 
 import android.net.Uri;
 
-import java.util.ArrayList;
-
+//#Model to store imported image Uri and name
 public class Image {
     private Uri image;
     private String name;

@@ -46,6 +46,8 @@
     <string name="date">Date: </string>
     <string name="time">Time: </string>
     <string name="exercise_timer">Exercise timer: </string>
+    <string name="finished_workout">You finished your workout</string>
+    <string name="finish_button">Finish</string>
 
 
     <string name="empty_name_error">Name cannot be empty</string>

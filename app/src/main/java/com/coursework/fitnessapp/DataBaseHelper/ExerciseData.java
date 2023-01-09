@@ -24,7 +24,6 @@ public class ExerciseData
                         "Push up off your right foot and return to the starting position. Repeat with your left leg. This is one rep.",
                 null,
                 null,
-                null,
                 new TimeDuration("00:01:00"),
                 10,
                 "Default"
@@ -34,7 +33,6 @@ public class ExerciseData
                 "Pushups",
                 "Start in a plank position. Your core should be tight, shoulders pulled down and back, and your neck neutral.\n" +
                         "Bend your elbows and begin to lower your body down to the floor. When your chest grazes it, extend your elbows and return to the start. Focus on keeping your elbows close to your body during the movement.",
-                null,
                 null,
                 null,
                 new TimeDuration("00:00:40"),
@@ -47,7 +45,6 @@ public class ExerciseData
                 "Start by standing straight, with your feet slightly wider than shoulder-width apart, and your arms at your sides.\n" +
                         "Brace your core and, keeping your chest and chin up, push your hips back and bend your knees as if you’re going to sit in a chair.\n" +
                         "Ensuring your knees don’t bow inward or outward, drop down until your thighs are parallel to the ground, bringing your arms out in front of you in a comfortable position. Pause for 1 second, then extend your legs and return to the starting position.",
-                null,
                 null,
                 null,
                 new TimeDuration("00:00:50"),
@@ -63,7 +60,6 @@ public class ExerciseData
                         "Return to the starting position and repeat with the left arm. This is one rep.",
                 null,
                 null,
-                null,
                 new TimeDuration("00:00:30"),
                 10,
                 "Default"
@@ -75,7 +71,6 @@ public class ExerciseData
                         "With your hands out in front of you, start to squat down. When your hands reach the ground, pop your legs straight back into a pushup position.\n" +
                         "Jump your feet up to your palms by hinging at the waist. Get your feet as close to your hands as you can get, landing them outside your hands if necessary.\n" +
                         "Stand up straight, bringing your arms above your head, and jump.",
-                null,
                 null,
                 null,
                 new TimeDuration("00:01:30"),
@@ -90,7 +85,6 @@ public class ExerciseData
                         "Return to start in a controlled manner. ",
                 null,
                 null,
-                null,
                 new TimeDuration("00:02:00"),
                 15,
                 "Default"
@@ -101,7 +95,6 @@ public class ExerciseData
                 "Begin in a pushup position with your hand and toes firmly planted on the ground, your back straight, and your core tight.\n" +
                         "Keep your chin slightly tucked and your gaze just in front of your hands.\n" +
                         "Take deep, controlled breaths while maintaining tension throughout your entire body, so your abs, shoulders, triceps, glutes, and quads are all engaged. ",
-                null,
                 null,
                 null,
                 new TimeDuration("00:00:30"),

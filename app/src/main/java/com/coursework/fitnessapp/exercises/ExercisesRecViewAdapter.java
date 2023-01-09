@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,15 +25,13 @@ import com.coursework.fitnessapp.models.ExerciseModel;
 import com.coursework.fitnessapp.models.InternalStoragePhoto;
 import com.coursework.fitnessapp.models.WorkoutModel;
 
-import org.w3c.dom.Text;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 
+//#ExercisesRecViewAdapter adapter is responsible for showing the list of exercises
 public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecViewAdapter.ViewHolder> {
     private ArrayList<ExerciseModel> exercises;
-    private String action;
-    private String type;
+    private final String action;
+    private final String type;
     Context context;
     DataBaseHelper dataBaseHelper;
     public ExercisesRecViewAdapter(String action,String type) {
@@ -56,65 +53,65 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        //#Get exercise of current position
         ExerciseModel exercise = exercises.get(position);
+        //#Set exercise data
         holder.exerciseName.setText(exercise.getName());
         holder.exerciseLength.setText(exercise.getDefaultLength().getToStringDuration());
         if(exercise.getPreviewImageName()!= null){
             holder.exercisePreviewImg.setImageBitmap(InternalStoragePhoto.loadImageFromInternalStorage(context,exercise.getPreviewImageName()).get(0).getBmp());
         }
+        //#If exercise type is default don't show remove button
         if(type.equals(Enums.ExerciseType.Default.toString())){
             holder.removeExerciseBtn.setVisibility(View.GONE);
         }
+        //#Listener for deleting exercises from the list
         else {
-            holder.removeExerciseBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    AlertDialog.Builder builder =  new AlertDialog.Builder(holder.parent.getContext());
-                    builder.setTitle("Are you sure")
-                            .setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
-                                @RequiresApi(api = Build.VERSION_CODES.O)
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    Boolean inWorkout = false;
-                                    for (WorkoutModel workout:dataBaseHelper.getAllUserWorkouts()) {
-                                       if(workout.getStatus().equals(Enums.WorkoutStatus.WAITING.toString())){
-                                            for (ExerciseModel exerciseModel:workout.getExerciseModels()){
-                                                if(exerciseModel.getId().equals(exercise.getId())){
-                                                    inWorkout = true;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        if (inWorkout){
+            holder.removeExerciseBtn.setOnClickListener(view -> {
+                //#Show dialog to confirm exercise deletion
+                AlertDialog.Builder builder =  new AlertDialog.Builder(holder.parent.getContext());
+                builder.setTitle("Are you sure")
+                        .setNegativeButton(R.string.delete, (dialogInterface, i) -> {
+                            //#Check if exercise is in waiting workout
+                            Boolean inWorkout = false;
+                            for (WorkoutModel workout:dataBaseHelper.getAllUserWorkouts()) {
+                               if(workout.getStatus().equals(Enums.WorkoutStatus.WAITING.toString())){
+                                    for (ExerciseModel exerciseModel:workout.getExerciseModels()){
+                                        if(exerciseModel.getId().equals(exercise.getId())){
+                                            inWorkout = true;
                                             break;
                                         }
                                     }
-                                    if(!inWorkout && dataBaseHelper.deleteExercise(exercise.getId())){
-                                        InternalStoragePhoto.deleteImageFromInternalStorage(exercise.getPreviewImageName()+".jpg",context);
-                                        if(exercise.getImageNames() != null){
-                                            for (String image:exercise.getImageNames()) {
-                                                InternalStoragePhoto.deleteImageFromInternalStorage(image+".jpg",context);
-                                            }
-                                        }
-                                        exercises.remove(exercise);
-                                        notifyDataSetChanged();
-                                    }
-                                    else {
-                                        Toast.makeText(context, R.string.delete_exercise_error,Toast.LENGTH_LONG).show();
+                                }
+                                if (inWorkout){
+                                    break;
+                                }
+                            }
+                            //#Delete exercise and images from the DB and internal storage
+                            if(!inWorkout && dataBaseHelper.deleteExercise(exercise.getId())){
+                                InternalStoragePhoto.deleteImageFromInternalStorage(exercise.getPreviewImageName()+".jpg",context);
+                                if(exercise.getImageNames() != null){
+                                    for (String image:exercise.getImageNames()) {
+                                        InternalStoragePhoto.deleteImageFromInternalStorage(image+".jpg",context);
                                     }
                                 }
-                            }).setNeutralButton(R.string.back, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    builder.setCancelable(true);
-                                }
-                            }).show();
-                }
+                                exercises.remove(exercise);
+                                notifyDataSetChanged();
+                            }
+                            else {
+                                Toast.makeText(context, R.string.delete_exercise_error,Toast.LENGTH_LONG).show();
+                            }
+                        }).setNeutralButton(R.string.back, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                builder.setCancelable(true);
+                            }
+                        }).show();
             });
         }
 
+        //#Listener to open exercise detailed view
         holder.parent.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
                 if(action.equals(Enums.ExerciseAction.View.toString())){
@@ -145,12 +142,13 @@ public class ExercisesRecViewAdapter extends RecyclerView.Adapter<ExercisesRecVi
         notifyDataSetChanged();
     }
 
+    //#Initialise viewholder layout
     public class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView exerciseName;
-        private TextView exerciseLength;
-        private ImageView exercisePreviewImg;
-        private ImageButton removeExerciseBtn;
-        private View parent;
+        private final TextView exerciseName;
+        private final TextView exerciseLength;
+        private final ImageView exercisePreviewImg;
+        private final ImageButton removeExerciseBtn;
+        private final View parent;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             parent = itemView.findViewById(R.id.parent);

@@ -24,6 +24,7 @@ import com.coursework.fitnessapp.models.InternalStoragePhoto;
 import java.io.File;
 import java.util.ArrayList;
 
+//#Activity for showing detailed exercise view
 public class ViewExerciseActivity extends AppCompatActivity {
 
     private TextView exerciseName;
@@ -55,6 +56,7 @@ public class ViewExerciseActivity extends AppCompatActivity {
         dataBaseHelper = new DataBaseHelper(ViewExerciseActivity.this);
 
         initLayout();
+        //#Get exercise id from the intent
         Intent intent = getIntent();
         int id = Integer.parseInt(intent.getStringExtra("exercise"));
 
@@ -62,6 +64,7 @@ public class ViewExerciseActivity extends AppCompatActivity {
         setExerciseValues();
     }
 
+    //#Initialise layout
     private void initLayout(){
         exerciseName = findViewById(R.id.exerciseName);
         exerciseDuration = findViewById(R.id.exerciseDuration);
@@ -82,6 +85,7 @@ public class ViewExerciseActivity extends AppCompatActivity {
         editExerciseBtn = findViewById(R.id.editExerciseBtn);
         editExerciseBtn.setOnClickListener(editExercise);
     }
+    //#Set data of the exercise
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setExerciseValues(){
         exerciseName.setText(exercise.getName());
@@ -118,6 +122,7 @@ public class ViewExerciseActivity extends AppCompatActivity {
             }
         });
     }
+    //#Listenet for expanding and collapsing description data
     View.OnClickListener changeDescription = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -133,6 +138,7 @@ public class ViewExerciseActivity extends AppCompatActivity {
             }
         }
     };
+    //#Listener for starting CreateExerciseActivity in editing mode
     View.OnClickListener editExercise = new View.OnClickListener() {
         @Override
         public void onClick(View view) {

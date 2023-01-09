@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.media.MediaPlayer;
@@ -80,7 +81,7 @@ public class StartedWorkoutActivity extends AppCompatActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    if(!isPaused) {
+                    if(!isPaused && !finishedWorkout) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -105,12 +106,25 @@ public class StartedWorkoutActivity extends AppCompatActivity {
                             exTimer = currentExercise.getLength().getTimeInSeconds();
                             taskBreak.run();
                             isRunningTask = false;
-                            //TODO:play sound
                         }else {
-                            //TODO:play sound
+                            finishedWorkout = true;
+                            MediaPlayer mediaPlayer;
+                            mediaPlayer = MediaPlayer.create(StartedWorkoutActivity.this,R.raw.finished);
+                            mediaPlayer.start();
                             workout.setStatus(Enums.WorkoutStatus.FINISHED.toString());
                             dataBaseHelper.editWorkout(workout);
                             dataBaseHelper.deleteCurrentWorkouts();
+                            AlertDialog.Builder builder =  new AlertDialog.Builder(StartedWorkoutActivity.this);
+                            StartedWorkoutActivity.this.runOnUiThread(() ->
+                                    builder.setTitle(getResources().getString(R.string.finished_workout))
+                                    .setPositiveButton(R.string.finish_button, new DialogInterface.OnClickListener() {
+                                        @RequiresApi(api = Build.VERSION_CODES.O)
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            finish();
+                                        }
+                                    }).setCancelable(false).show());
+
                         }
                     }
                 }
@@ -125,7 +139,6 @@ public class StartedWorkoutActivity extends AppCompatActivity {
             mediaPlayer = MediaPlayer.create(StartedWorkoutActivity.this,R.raw.simple_countdown_beep);
             counter = 5;
             while(counter >= 0){
-                //TODO:tick sound and change style
                 mediaPlayer.start();
                 runOnUiThread(new Runnable() {
                     @Override
@@ -229,7 +242,7 @@ public class StartedWorkoutActivity extends AppCompatActivity {
     View.OnClickListener skipExercise = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(isStarted && workout.getExerciseModels().indexOf(currentExercise) != (workout.getExerciseModels().size() - 1) && isRunningTask){
+            if(isStarted && workout.getExerciseModels().indexOf(currentExercise) != (workout.getExerciseModels().size()) && isRunningTask){
                 wrkTimer = wrkTimer - exTimer;
                 workoutDuration.setTime(wrkTimer);
                 exTimer = 0;

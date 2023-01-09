@@ -1,5 +1,6 @@
 package com.coursework.fitnessapp.models;
 
+//#Model to store current workout progress
 public class SavedWorkoutProgressModel {
     private Integer exerciseIndex;
     private Integer exTimer;

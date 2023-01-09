@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
@@ -20,6 +19,7 @@ import com.coursework.fitnessapp.models.ExerciseModel;
 
 import java.util.ArrayList;
 
+//#Activity for showing list of exercises
 public class ViewExercisesActivity extends AppCompatActivity {
     ArrayList<ExerciseModel> exercises;
     private String type;
@@ -35,13 +35,14 @@ public class ViewExercisesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_exercises);
 
+        //#Get exercises type and action from the intent
         Intent intent = getIntent();
         type = intent.getExtras().get("type").toString();
         action = intent.getExtras().get("action").toString();
         dataBaseHelper = new DataBaseHelper(this);
         exercises = dataBaseHelper.getAllExercisesOfType(type);
-        System.out.println(type);
 
+        //Show list of exercises or no exercise message if there are no exercises in the list
         noExercisesText = findViewById(R.id.noExercisesText);
         if(!exercises.isEmpty()){
             exercisesRecView = findViewById(R.id.exercisesRecycleView);
@@ -54,10 +55,10 @@ public class ViewExercisesActivity extends AppCompatActivity {
         }
     }
 
+    //#Get result from intent and return to workout creation activity(if user adding exercise to the workout )
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if(requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 setResult(Activity.RESULT_OK, data);
@@ -65,6 +66,7 @@ public class ViewExercisesActivity extends AppCompatActivity {
             }
         }
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onResume() {

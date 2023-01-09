@@ -58,7 +58,6 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
     ExerciseModel exercise;
     ViewImagesRecViewAdapter adapter = new ViewImagesRecViewAdapter();
 
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +66,7 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_to_workout_exercise);
         initLayout();
+        //#Get exercise id from intent
         Intent intent = getIntent();
         int id = Integer.parseInt(intent.getStringExtra("exercise"));
 
@@ -122,7 +122,7 @@ public class AddToWorkoutExerciseActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             EditText text = txtHours;
-            Boolean increase = false;
+            boolean increase = false;
             switch(view.getId()){
                 case R.id.hoursArrowUp:
                     text = txtHours;

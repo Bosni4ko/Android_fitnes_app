@@ -5,27 +5,25 @@ import com.coursework.fitnessapp.supportclasses.TimeDuration;
 
 import java.util.ArrayList;
 
-
+//#Model to store exercise
 public class ExerciseModel {
     private Integer id;
     private String name;
     private String description;
     private String previewImageName;
     private ArrayList<String> imageNames;
-    private String videoUrl;
     private TimeDuration defaultLength;
     private TimeDuration length;
     private int defaultCount;
     private int count;
     private String type;
 
-    public ExerciseModel(Integer id, String name, String description, String previewImageName, ArrayList<String> imageNames, String videoUrl, TimeDuration defaultLength, int defaultCount, String type) {
-        this.id = id == null ? null : id;
+    public ExerciseModel(Integer id, String name, String description, String previewImageName, ArrayList<String> imageNames, TimeDuration defaultLength, int defaultCount, String type) {
+        this.id = id;
         this.name = name;
         this.description = description;
-        this.previewImageName = previewImageName == null ? null : previewImageName;
-        this.imageNames = imageNames == null ? null : imageNames;
-        this.videoUrl = videoUrl == null ? null : videoUrl;
+        this.previewImageName = previewImageName;
+        this.imageNames = imageNames;
         this.defaultLength = defaultLength;
         this.defaultCount = defaultCount;
         this.type = type;
@@ -65,14 +63,6 @@ public class ExerciseModel {
 
     public void setImageNames(ArrayList<String> imageNames) {
         this.imageNames = imageNames;
-    }
-
-    public String getVideoUrl() {
-        return videoUrl;
-    }
-
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
     }
 
     public TimeDuration getLength() {

@@ -1,15 +1,11 @@
 package com.coursework.fitnessapp.exercises;
 
-import static java.nio.file.Files.delete;
-import static java.nio.file.Files.readAllBytes;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.PackageManagerCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,8 +15,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,10 +26,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.coursework.fitnessapp.DataBaseHelper.DataBaseHelper;
-import com.coursework.fitnessapp.MainActivity;
 import com.coursework.fitnessapp.R;
 import com.coursework.fitnessapp.enums.Enums;
 import com.coursework.fitnessapp.models.ExerciseModel;
@@ -46,24 +38,17 @@ import com.coursework.fitnessapp.supportclasses.InputFilterMinMax;
 import com.coursework.fitnessapp.supportclasses.TimeDuration;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Locale;
 
+//#Activity for creating or editing exercise
 public class CreateExerciseActivity extends AppCompatActivity {
 
     private TextInputLayout exerciseNameLayout;
     private TextInputLayout exerciseDescriptionLayout;
     private TextInputLayout exerciseDurationLayout;
     private TextInputLayout exerciseCountLayout;
-    private RelativeLayout imagesLayout;
 
     private EditText exerciseName;
     private EditText exerciseDescription;
@@ -84,7 +69,6 @@ public class CreateExerciseActivity extends AppCompatActivity {
     private Button addImagesBtn;
     private Button addExerciseBtn;
 
-    Boolean isPreviewImageSet = false;
     ExerciseModel exercise;
     Image previewImage;
     DataBaseHelper dataBaseHelper;
@@ -101,6 +85,7 @@ public class CreateExerciseActivity extends AppCompatActivity {
         dataBaseHelper = new DataBaseHelper(CreateExerciseActivity.this);
 
         initLayout();
+        //#Change mode to editing if there are an intent,then get exercise id and sets data
         Intent intent = getIntent();
         if(intent.getExtras() != null){
             isEditMode = true;
@@ -109,10 +94,13 @@ public class CreateExerciseActivity extends AppCompatActivity {
             setExerciseValues();
         }
 
+        //#Check app permission to access external storage and request this permission if there are no any
         if(ContextCompat.checkSelfPermission(CreateExerciseActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(CreateExerciseActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},Read_Permission);
         }
+
     }
+    //#Initialise layout
     private void initLayout(){
         exerciseName = findViewById(R.id.exerciseName);
         exerciseCount = findViewById(R.id.exerciseCount);
@@ -120,7 +108,6 @@ public class CreateExerciseActivity extends AppCompatActivity {
         exerciseDescription = findViewById(R.id.exerciseDescription);
         exerciseImagesRecView = findViewById(R.id.exerciseImages);
 
-        imagesLayout = findViewById(R.id.imagesLayout);
         exerciseNameLayout = findViewById(R.id.exerciseNameLayout);
         exerciseDescriptionLayout = findViewById(R.id.descriptionLayout);
         exerciseDurationLayout = findViewById(R.id.exerciseDurationLayout);
@@ -149,6 +136,8 @@ public class CreateExerciseActivity extends AppCompatActivity {
         adapter.setImages(images);
         exerciseImagesRecView.setAdapter(adapter);
         exerciseImagesRecView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+
+        //#Allow user to change image positions by holding and moving it
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT,0) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder dragged, @NonNull RecyclerView.ViewHolder target) {
@@ -172,6 +161,8 @@ public class CreateExerciseActivity extends AppCompatActivity {
         addExerciseBtn = findViewById(R.id.addExerciseBtn);
         addExerciseBtn.setOnClickListener(addExercise);
     }
+
+    //#Listener to add an image as preview image from external storage
     View.OnClickListener addPreviewImage = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -182,6 +173,8 @@ public class CreateExerciseActivity extends AppCompatActivity {
             startActivityForResult(Intent.createChooser(intent,getString(R.string.select_pictures)),2);
         }
     };
+
+    //#Listener to add images from external storage
     View.OnClickListener addImages = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -190,14 +183,15 @@ public class CreateExerciseActivity extends AppCompatActivity {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent,getString(R.string.select_pictures)),1);
-            //TODO:maybe change startActivity
         }
     };
+
+    //#Listener to change time field value
     View.OnClickListener changeTimeListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             EditText text = txtHours;
-            Boolean increase = false;
+            boolean increase = false;
             switch(view.getId()){
                 case R.id.hoursArrowUp:
                     text = txtHours;
@@ -238,12 +232,26 @@ public class CreateExerciseActivity extends AppCompatActivity {
                 value--;
             }
             String resultString = String.valueOf(value);
-            if(resultString.length() < 2){
-                resultString = "0" + resultString;
-            }
-            text.setText(resultString);
+            text.setText(reformatTimeValue(resultString));
         }
     };
+
+    //#Format time field value to 2 digit format
+    private String reformatTimeValue(String timeString){
+        if(timeString.length() < 2){
+            timeString = "0" + timeString;
+        }
+        return timeString;
+    }
+
+    //#Format all time field values to 2 digit format
+    private void reformatTimeValues(){
+        txtHours.setText(reformatTimeValue(txtHours.getText().toString()));
+        txtMinutes.setText(reformatTimeValue(txtMinutes.getText().toString()));
+        txtSeconds.setText(reformatTimeValue(txtSeconds.getText().toString()));
+    }
+
+    //#Listener for add exercise button
     View.OnClickListener addExercise = new View.OnClickListener() {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
@@ -251,13 +259,16 @@ public class CreateExerciseActivity extends AppCompatActivity {
             if(validateInput()){
                 String name = exerciseName.getText().toString();
                 String description = exerciseDescription.getText().toString();
+                reformatTimeValues();
                 TimeDuration duration = new TimeDuration(txtHours.getText().toString(),txtMinutes.getText().toString(),txtSeconds.getText().toString());
                 int count = Integer.parseInt(exerciseCount.getText().toString());
                 if(previewImage == null){
                     previewImage = new Image(null,null);
                 }else {
+                    //save preview image to the internal storage
                     try {
-                        previewImage.setName(previewImage.getName() + String.valueOf(Math.floor(Math.random() * (9*Math.pow(10,9))) + Math.pow(10,(9))));
+                        //generate unique image name for image
+                        previewImage.setName(previewImage.getName() + Math.floor(Math.random() * (9*Math.pow(10,9))) + Math.pow(10,(9)));
                         InternalStoragePhoto.saveImageToInternalStorage(previewImage.getName(), MediaStore.Images.Media.getBitmap(CreateExerciseActivity.this.getContentResolver(),previewImage.getImage()),CreateExerciseActivity.this);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -266,7 +277,9 @@ public class CreateExerciseActivity extends AppCompatActivity {
                 ArrayList<String> imageNames = new ArrayList<>();
                 images = adapter.getImages();
                 for (Image imageToSave:images) {
-                    imageToSave.setName(imageToSave.getName() + String.valueOf(Math.floor(Math.random() * (9*Math.pow(10,9))) + Math.pow(10,(9))));
+                    //generate unique image names for images
+                    imageToSave.setName(imageToSave.getName() + Math.floor(Math.random() * (9*Math.pow(10,9))) + Math.pow(10,(9)));
+                    //save images to the internal storage
                     try {
                         InternalStoragePhoto.saveImageToInternalStorage(imageToSave.getName(), MediaStore.Images.Media.getBitmap(CreateExerciseActivity.this.getContentResolver(),imageToSave.getImage()),CreateExerciseActivity.this);
                         imageNames.add(imageToSave.getName());
@@ -274,7 +287,8 @@ public class CreateExerciseActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-                ExerciseModel newExercise = new ExerciseModel(null,name,description,previewImage.getName(),imageNames,null,duration,count, Enums.ExerciseType.Custom.toString());
+                //creates a new exercise model and save it to the DB if not in edit mode and edit existed exercise if in edit mode
+                ExerciseModel newExercise = new ExerciseModel(null,name,description,previewImage.getName(),imageNames,duration,count, Enums.ExerciseType.Custom.toString());
                 if(isEditMode && !dataBaseHelper.getExerciseById(exercise.getId()).getType().equals(Enums.ExerciseType.Default.toString())){
                     newExercise.setId(exercise.getId());
                     dataBaseHelper.editExercise(newExercise);
@@ -287,7 +301,7 @@ public class CreateExerciseActivity extends AppCompatActivity {
         }
     };
 
-
+    //#Set values of exercise
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setExerciseValues(){
         exerciseName.setText(exercise.getName());
@@ -308,6 +322,7 @@ public class CreateExerciseActivity extends AppCompatActivity {
         }
 
     }
+    //#Validate exercise input fields
     private boolean validateInput(){
         boolean hasError = false;
         if(exerciseName.getText().toString().isEmpty()){
@@ -329,25 +344,31 @@ public class CreateExerciseActivity extends AppCompatActivity {
         return !hasError;
     }
 
+    //#Handle images or preview image import from external storage
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        //#If images was added
         if(requestCode == 1 && resultCode == Activity.RESULT_OK){
-            if(data.getClipData() != null){
+            if(data != null && data.getClipData() != null){
                 for(int i = 0;i < data.getClipData().getItemCount();i++){
                     images.add(new Image(data.getClipData().getItemAt(i).getUri(),getFileName(data.getClipData().getItemAt(i).getUri())));
                 }
 
             }
-            else if(data.getData() != null){
+            else if(data != null && data.getData() != null){
                 String imageURL = data.getData().toString();
                 images.add(new Image(Uri.parse(imageURL),getFileName(Uri.parse(imageURL))));
             }
             adapter.setImages(images);
-        }else if(requestCode == 2 && resultCode == Activity.RESULT_OK){
-            if(data.getData() != null){
+        }
+        //#If preview image was added
+        else if(requestCode == 2 && resultCode == Activity.RESULT_OK){
+            if(data != null && data.getData() != null){
                 String imageURL = data.getData().toString();
+                //#Delete current preview image if it exists
                 if(exercise != null && exercise.getPreviewImageName() != null){
                     InternalStoragePhoto.deleteImageFromInternalStorage(exercise.getPreviewImageName(),CreateExerciseActivity.this);
                 }
@@ -355,19 +376,16 @@ public class CreateExerciseActivity extends AppCompatActivity {
                 previewImage = new Image(Uri.parse(imageURL),getFileName(Uri.parse(imageURL)));
             }
         }
-
     }
 
+    //#Get image file name from image uri
     private String getFileName(Uri uri){
         String result = null;
         if (uri.getScheme().equals("content")) {
-            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-            try {
+            try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
                     result = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
                 }
-            } finally {
-                cursor.close();
             }
         }
         if (result == null) {

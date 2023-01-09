@@ -18,6 +18,7 @@ import com.coursework.fitnessapp.models.InternalStoragePhoto;
 
 import java.util.ArrayList;
 
+//#ImagesRecViewAdapter is responsible for showing list of images in exercise detailed view
 public class ViewImagesRecViewAdapter extends RecyclerView.Adapter<ViewImagesRecViewAdapter.ViewHolder>{
 
     private ArrayList<String> images;

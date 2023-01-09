@@ -13,10 +13,8 @@ public class Enums {
         SKIPPED,
         WAITING,
         STOPPED,
-        STARTED
     }
     public enum WorkoutType{
-        DEFAULT,
         CUSTOM
     }
     public enum ExerciseType{

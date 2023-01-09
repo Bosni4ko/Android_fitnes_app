@@ -13,8 +13,8 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 
+//#Model to save,load and delete images from internal storage
 public class InternalStoragePhoto {
     private String name;
     private Bitmap bmp;
@@ -42,7 +42,7 @@ public class InternalStoragePhoto {
 
     public static Boolean saveImageToInternalStorage(String fileName, Bitmap bmp, Context context){
         try{
-            FileOutputStream fos = context.openFileOutput(fileName + ".jpg",context.MODE_PRIVATE);
+            FileOutputStream fos = context.openFileOutput(fileName + ".jpg",Context.MODE_PRIVATE);
             if(!bmp.compress(Bitmap.CompressFormat.JPEG, 95,fos)){
                 throw new IOException("Couldn't save bitmap");
             }
@@ -74,19 +74,6 @@ public class InternalStoragePhoto {
         return internalImages;
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static ArrayList<String> loadImagePathsFromInternalStorage(Context context, String fileName){
-        ArrayList<String> filePaths = new ArrayList<>();
-        File[] files = context.getFilesDir().listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File file,String name) {
-                return(file.canRead() && file.canRead() && name.startsWith(fileName));
-            }
-        });
-        for (File file:files) {
-            filePaths.add(file.toPath().toString());
-        }
-        return filePaths;
-    }
     public static boolean deleteImageFromInternalStorage(String fileName,Context context){
         return context.deleteFile(fileName+".jpg");
     }

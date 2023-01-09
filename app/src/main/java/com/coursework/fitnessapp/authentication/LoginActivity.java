@@ -4,45 +4,24 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.strictmode.FragmentStrictMode;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.coursework.fitnessapp.MainActivity;
 import com.coursework.fitnessapp.R;
-import com.coursework.fitnessapp.models.ExerciseModel;
-import com.coursework.fitnessapp.supportclasses.TimeDuration;
-import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.auth.api.identity.Identity;
-import com.google.android.gms.auth.api.identity.SignInClient;
-import com.google.android.gms.auth.api.identity.SignInCredential;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 
+//#Activity for logging in the app
 public class LoginActivity extends AppCompatActivity {
     private TextInputLayout credentialsLayout;
     private SignInButton googleSignInButton;
@@ -52,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //#Sign in request
+        //#Creating activity result launcher for receiving sign in request result
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
@@ -60,13 +39,13 @@ public class LoginActivity extends AppCompatActivity {
                 handleSignInResult(task);
             }
         });
-        //#Get last logged account if it exist go to main app
+        //#Get last logged in account, if it exist go to app main page
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if(account != null){
             goToApp();
         }
         initLayout();
-        //#Sign in button
+        //#Sending sign in request
         googleSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,19 +68,19 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    //#Handle sign in layout
+    //#Handle sign in result by logging in or giving error message
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            completedTask.getResult(ApiException.class);
             goToApp();
         } catch (ApiException e) {
             credentialsLayout.setError(getResources().getString(R.string.login_failed));
         }
     }
-    //#Go to the main app
+    //#Go to the app main page
     private void goToApp(){
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK | intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent );
     }
 

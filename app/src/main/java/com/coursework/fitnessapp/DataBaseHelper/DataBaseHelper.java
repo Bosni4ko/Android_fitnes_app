@@ -46,6 +46,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_EXERCISE_ID = "Exercise_ID";
     public static final String COLUMN_WORKOUT_ID = "Workout_ID";
     public static final String COLUMN_USER_EMAIL = "User_Email";
+    public static final String CURRENT_EXERCISE_TIMER_COLUMN = "Current_exercise_timer";
+    public static final String CURRENT_EXERCISE_INDEX_COLUMN = "Current_exercise_index";
+    public static final String CURRENT_WORKOUT_TIMER_COLUMN = "Current_workout_timer";
 
     private final GoogleSignInAccount account;
 
@@ -69,7 +72,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String createWorkoutExercisesTableStatement = "CREATE TABLE " + WORKOUT_EXERCISES_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_SNUMBER + " INT NOT NULL," + COLUMN_DURATION + " INT NOT NULL, " + COLUMN_COUNT + " INT NOT NULL," + COLUMN_WORKOUT_ID + " nvarchar(12) NOT NULL," + COLUMN_EXERCISE_ID + " INTEGER NOT NULL,FOREIGN KEY(" + COLUMN_WORKOUT_ID + ") REFERENCES " + WORKOUT_TABLE +"(" +COLUMN_ID + "),FOREIGN KEY(" + COLUMN_EXERCISE_ID + ") REFERENCES " + EXERCISE_TABLE +"(" +COLUMN_ID +")  )";
         sqLiteDatabase.execSQL(createWorkoutExercisesTableStatement);
 
-        String createCurrentWorkoutTableStatement = "CREATE TABLE " + CURRENT_WORKOUT_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, Current_exercise_index INT NOT NULL, Current_exercise_timer INT NOT NULL, Current_workout_timer INT NOT NULL," + COLUMN_WORKOUT_ID + " nvarchar(12) NOT NULL,FOREIGN KEY(" + COLUMN_WORKOUT_ID + ") REFERENCES " + WORKOUT_TABLE +"(" +COLUMN_ID + ")) ";
+        String createCurrentWorkoutTableStatement = "CREATE TABLE " + CURRENT_WORKOUT_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CURRENT_EXERCISE_INDEX_COLUMN + " INT NOT NULL, " + CURRENT_EXERCISE_TIMER_COLUMN + " INT NOT NULL, " + CURRENT_WORKOUT_TIMER_COLUMN + " INT NOT NULL," + COLUMN_WORKOUT_ID + " nvarchar(12) NOT NULL,FOREIGN KEY(" + COLUMN_WORKOUT_ID + ") REFERENCES " + WORKOUT_TABLE +"(" +COLUMN_ID + ")) ";
         sqLiteDatabase.execSQL(createCurrentWorkoutTableStatement);
 
     }
@@ -89,9 +92,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_DESCRIPTION,exercise.getDescription());
         if(exercise.getPreviewImageName() != null){
             cv.put(COLUMN_PREVIEW_IMG_URL,exercise.getPreviewImageName());
-        }
-        if(exercise.getVideoUrl() != null) {
-            cv.put(COLUMN_VIDEO_URL,exercise.getVideoUrl());
         }
         cv.put(COLUMN_DURATION, exercise.getDefaultLength().getToStringDuration());
         cv.put(COLUMN_DEFAULT_COUNT,exercise.getDefaultCount());
@@ -205,7 +205,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 String previewImageName = cursor.getString(3);
                 TimeDuration exerciseLength = new TimeDuration(cursor.getString(5)) ;
                 int exerciseCount = cursor.getInt(6);
-                ExerciseModel newExercise = new ExerciseModel(id,exerciseName,exerciseDescription,previewImageName,null,null,exerciseLength,exerciseCount,type);
+                ExerciseModel newExercise = new ExerciseModel(id,exerciseName,exerciseDescription,previewImageName,null,exerciseLength,exerciseCount,type);
                 returnList.add(newExercise);
             }while(cursor.moveToNext());
         }
@@ -240,7 +240,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     imageNames.add(cursor.getString(1));
                 } while (cursor.moveToNext());
             }
-            exercise = new ExerciseModel(id,exerciseName,exerciseDescription,previewImageName,imageNames,null,exerciseLength,exerciseCount,type);
+            exercise = new ExerciseModel(id,exerciseName,exerciseDescription,previewImageName,imageNames,exerciseLength,exerciseCount,type);
         }
         else {
             exercise = new ExerciseModel();
@@ -258,7 +258,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             cv.put(COLUMN_NAME,exercise.getName());
             cv.put(COLUMN_DESCRIPTION,exercise.getDescription());
             cv.put(COLUMN_PREVIEW_IMG_URL,exercise.getPreviewImageName());
-            cv.put(COLUMN_VIDEO_URL,exercise.getVideoUrl());
             cv.put(COLUMN_DURATION,exercise.getDefaultLength().getToStringDuration());
             cv.put(COLUMN_DEFAULT_COUNT,exercise.getDefaultCount());
             cv.put(COLUMN_TYPE,exercise.getType());
@@ -454,9 +453,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
-        cv.put("Current_exercise_index",savedWorkoutProgressModel.getExerciseIndex());
-        cv.put("Current_exercise_timer",savedWorkoutProgressModel.getExTimer());
-        cv.put("Current_workout_timer",savedWorkoutProgressModel.getWrkTimer());
+        cv.put(CURRENT_EXERCISE_INDEX_COLUMN,savedWorkoutProgressModel.getExerciseIndex());
+        cv.put(CURRENT_EXERCISE_TIMER_COLUMN,savedWorkoutProgressModel.getExTimer());
+        cv.put(CURRENT_WORKOUT_TIMER_COLUMN,savedWorkoutProgressModel.getWrkTimer());
         cv.put(COLUMN_WORKOUT_ID, savedWorkoutProgressModel.getWorkoutId());
 
         db.insert(CURRENT_WORKOUT_TABLE,null,cv);
